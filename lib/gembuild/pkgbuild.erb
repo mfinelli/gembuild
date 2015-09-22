@@ -1,0 +1,26 @@
+# Maintainer: Mario Finelli
+
+_gemname=<%= gemname %>
+pkgname=ruby-$_gemname
+pkgver=<%= pkgver %>
+pkgrel=<%= pkgrel %>
+<% unless epoch.zero? -%>
+epoch=<%= epoch %>
+<% end -%>
+pkgdesc='<%= description %>'
+arch=('<%= arch.join("' '") %>')
+url='<%= url %>'
+license=('<%= license.join("' '") %>')
+options=(<%= options.join(' ') %>)
+noextract=(<%= noextract.join(' ') %>)
+depends=('<%= depends.join("' '") %>')
+makedepends=('<%= makedepends.join("' '") %>')
+source('<%= source.join("' '") %>')
+<%= checksum_type %>sums=('<%= checksum %>')
+
+package() {
+  cd "$srcdir"
+  local _gemdir="$(ruby -e'puts Gem.default_dir')"
+
+  gem install --ignore-dependencies --no-user-install -i "$pkgdir/$_gemdir" -n "$pkgdir/usr/bin" $_gemname-$pkgver.gem
+}

@@ -1,5 +1,7 @@
 # encoding: utf-8
 
+require 'erb'
+
 module Gembuild
   class Pkgbuild
 
@@ -27,6 +29,18 @@ module Gembuild
       s.scrape!
 
       pkgbuild
+    end
+
+    def render
+      ERB.new(template, 0, '-').result(binding)
+    end
+
+    def template
+      File.read(File.join(File.dirname(__FILE__), 'pkgbuild.erb'))
+    end
+
+    def write
+      File.write('PKGBUILD', render)
     end
 
   end
