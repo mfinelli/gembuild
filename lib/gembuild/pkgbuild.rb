@@ -7,7 +7,8 @@ module Gembuild
 
     attr_accessor :gemname, :pkgname, :pkgver, :pkgrel, :epoch, :arch,
                   :description, :url, :license, :depends, :makedepends,
-                  :source, :options, :noextract, :checksum, :checksum_type
+                  :source, :options, :noextract, :checksum, :checksum_type,
+                  :maintainer
 
     def initialize(gemname)
       @gemname = gemname
@@ -22,8 +23,12 @@ module Gembuild
     end
 
     def self.create(gemname)
+      maintainer = Gembuild.configure
+
       s = Gembuild::GemScraper.new(gemname)
       pkgbuild = s.scrape!
+
+      pkgbuild.maintainer = "#{maintainer[:name]} <#{maintainer[:email].gsub('@', ' at ').gsub('.', ' dot ')}>"
 
       s = Gembuild::AurScraper.new(pkgbuild)
       s.scrape!
