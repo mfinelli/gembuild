@@ -12,6 +12,11 @@ module Gembuild
       @pkgname = "ruby-#{@gemname}"
       @checksum_type = 'sha256'
       @arch = ['any']
+      @makedepends = ['rubygems']
+      @depends = ['ruby']
+      @source = ['https://rubygems.org/downloads/$_gemname-$pkgver.gem']
+      @noextract = ['$_gemname-$pkgver.gem']
+      @options = ['!emptydirs']
     end
 
     def self.create(gemname)
