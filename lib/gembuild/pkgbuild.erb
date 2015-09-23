@@ -16,7 +16,7 @@ options=(<%= options.join(' ') %>)
 noextract=(<%= noextract.join(' ') %>)
 depends=('<%= depends.join("' '") %>')
 makedepends=('<%= makedepends.join("' '") %>')
-source('<%= source.join("' '") %>')
+source=("<%= source.join("\" \"") %>")
 <%= checksum_type %>sums=('<%= checksum %>')
 
 package() {
