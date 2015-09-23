@@ -12,8 +12,15 @@ module Gembuild
       unless File.file?(conf_file)
         name = get_git_name
         email = get_git_email
+        pkgdir = get_pkgdir
 
-        File.write(conf_file, {name: name, email: email}.to_yaml)
+        File.write(
+            conf_file,
+            {
+                name: name,
+                email: email,
+                pkgdir: pkgdir
+            }.to_yaml)
       end
 
       YAML.load_file(conf_file)
@@ -57,6 +64,11 @@ module Gembuild
         puts 'Please enter desired email: '
         gets.chomp
       end
+    end
+
+    def get_pkgdir
+      puts 'Where should projects be checked out?'
+      File.expand_path(gets.chomp)
     end
 
   end
