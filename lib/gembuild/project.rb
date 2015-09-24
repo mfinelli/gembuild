@@ -14,7 +14,7 @@ module Gembuild
     end
 
     def git_configure(name, email)
-      `cd #{File.join(@path, @pkgname)} && git config user.name #{name}`
+      `cd #{File.join(@path, @pkgname)} && git config user.name "#{name}"`
       `cd #{File.join(@path, @pkgname)} && git config user.email #{email}`
     end
 
