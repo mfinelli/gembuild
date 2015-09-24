@@ -19,7 +19,8 @@ module Gembuild
     end
 
     def stage_changes
-      `cd #{File.join(@path, @pkgname)} && git add .`
+
+      `cd #{File.join(@path, @pkgname)} && mksrcinfo && git add .`
     end
 
     def commit_message(version)
@@ -47,6 +48,7 @@ module Gembuild
       pkgbuild = Gembuild::Pkgbuild.create(gem)
       File.write(File.join(@path, @pkgname, 'PKGBUILD'), pkgbuild.render)
 
+      stage_changes
       `cd #{File.join(@path, @pkgname)} && git commit -m "#{commit_message(pkgbuild.pkgver)}"`
     end
 
