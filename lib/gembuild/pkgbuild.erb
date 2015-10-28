@@ -11,7 +11,9 @@ epoch=<%= epoch %>
 pkgdesc='<%= description %>'
 arch=('<%= arch.join("' '") %>')
 url='<%= url %>'
+<% unless license.nil? -%>
 license=('<%= license.join("' '") %>')
+<% end -%>
 options=(<%= options.join(' ') %>)
 noextract=(<%= noextract.join(' ') %>)
 depends=('<%= depends.join("' '") %>')
