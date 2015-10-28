@@ -25,6 +25,7 @@ module Gembuild
 
       pkgbuild.description = response.fetch(:description)
       pkgbuild.description = response.fetch(:summary) if pkgbuild.description.empty?
+      pkgbuild.description.strip!
       pkgbuild.description += '.' unless pkgbuild.description[-1, 1] == '.'
 
       pkgbuild.checksum = response.fetch(:sha)
