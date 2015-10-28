@@ -40,7 +40,14 @@ module Gembuild
         pkgbuild.epoch = epoch
         pkgbuild.pkgrel = pkgrel
 
-        Gem::Version.new(version)
+        aur_version = Gem::Version.new(version)
+        gem_version = Gem::Version.new(pkgbuild.pkgver)
+
+        if gem_version == aur_version
+          pkgbuild.pkgrel += 1
+        else
+          pkgbuild.pkgrel = 1
+        end
       end
     end
 
