@@ -5,12 +5,13 @@ require 'mechanize'
 module Gembuild
   class AurScraper
 
-    attr_reader :agent, :pkgbuild, :pkgname, :url
+    attr_reader :agent, :pkgname, :url
 
-    def initialize(pkgbuild)
+    def initialize(pkgname)
+      raise Gembuild::UndefinedPkgnameError if pkgname.nil?
+
       @agent = Mechanize.new
-      @pkgbuild = pkgbuild
-      @pkgname = pkgbuild.pkgname
+      @pkgname = pkgname
 
       @url = "https://aur.archlinux.org/rpc.php?type=info&arg=#{pkgname}"
     end
