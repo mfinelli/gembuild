@@ -56,4 +56,53 @@ describe Gembuild::AurScraper do
       end
     end
   end
+
+  describe '#package_exists?' do
+    context 'with package that exists: ruby-mina' do
+      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
+
+      it 'should return true' do
+        VCR.use_cassette('aur_scraper_ruby_mina') do
+          expect(aur_scraper.package_exists?(aur_scraper.query_aur)).to eql(true)
+        end
+      end
+    end
+
+    context 'with package that does not exist: ruby-asdfg' do
+      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-asdfg') }
+
+      it 'should return false' do
+        VCR.use_cassette('aur_scraper_ruby_asdfg') do
+          expect(aur_scraper.package_exists?(aur_scraper.query_aur)).to eql(false)
+        end
+      end
+    end
+  end
+
+  describe '#get_version_hash' do
+    context 'with package with no epoch' do
+      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
+      let(:results) {
+        VCR.use_cassette('aur_scraper_ruby_mina') do
+          aur_scraper.get_version_hash(aur_scraper.query_aur)
+        end
+      }
+
+      it 'should return a hash' do
+        expect(results).to be_a(Hash)
+      end
+
+      it 'should have no epoch' do
+        expect(results[:epoch]).to eql(0)
+      end
+
+      it 'should have the right version' do
+        expect(results[:pkgver]).to eql('0.3.7')
+      end
+
+      it 'should have the right release' do
+        expect(results[:pkgrel]).to eql(1)
+      end
+    end
+  end
 end

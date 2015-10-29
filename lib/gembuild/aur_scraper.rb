@@ -28,6 +28,28 @@ module Gembuild
       JSON.parse(agent.get(url).body, symbolize_names: true)
     end
 
+    # Determine whether the package already exists on the AUR by the number of
+    # results returned.
+    #
+    # @param [Hash] The JSON parsed response from the AUR.
+    # @return [Boolean] whether or not the package exists already on the AUR
+    def package_exists?(response)
+      response[:results].count.zero? ? false : true
+    end
+
+    def get_version_hash(response)
+      version = response[:results][:Version].split('-')
+
+      pkgrel = version.pop.to_i
+      version = version.join
+
+      version = version.split(':')
+      epoch = version.count == 1 ? 0 : version.shift
+      version = version.join
+
+      { epoch: epoch, pkgver: version, pkgrel: pkgrel }
+    end
+
     def scrape!
       response = JSON.parse(agent.get(url).body, symbolize_names: true)
 
