@@ -1,0 +1,66 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://aur.archlinux.org/rpc.php?arg=ruby-mina&type=info
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - aur.archlinux.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.8.0
+      Date:
+      - Thu, 29 Oct 2015 02:46:37 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Expires:
+      - Tue, 11 Oct 1988 22:00:00 GMT
+      Cache-Control:
+      - public, must-revalidate, max-age=0
+      Etag:
+      - W/"9baf91d57224ad536d0e9f5a5516da0d"
+      Strict-Transport-Security:
+      - max-age=16070400
+      Content-Encoding:
+      - gzip
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA11Qy07DMBD8lcjnNI8mpZAjVEiV+lKBnnLZJpvGIrEje10p
+        VP13Nikg4GBpd2dnPDsXcUZjpVYii31BfYciE1JVWvjCoHUNFdopGtFbb0V2
+        EcuFyKbJfXQ39cUG2oFk3LGftFIBM3dQvMMJH8HisBlHcfow/TP+Rzh8mxBR
+        kATzScyzBdrCyI5u8z1C0/ReBZa8ErtG92g8UKVn0ZyH0pFuYVj2SOsmYIG3
+        /YqJNVGX5WEeniTV7hgUus1DBSUYlHn49f/GtQdNyLdFvtg62lYLIDapXNP4
+        Yg1SET80rGddh6YFI4eInqWx9OKOrSTCki9N0zSZpdGcZVZsda1LWclfSJzM
+        GJEFqjGD9fL1ZnQHVHOfhwXbzENwJhgLq6CztebqJ66AgMEP5j2xx5M2/Zjx
+        9foJI4RKBMwBAAA=
+    http_version: 
+  recorded_at: Thu, 29 Oct 2015 02:46:38 GMT
+recorded_with: VCR 2.9.3

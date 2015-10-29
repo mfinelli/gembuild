@@ -16,6 +16,14 @@ module Gembuild
       @url = "https://aur.archlinux.org/rpc.php?type=info&arg=#{pkgname}"
     end
 
+    # Query the AUR for information about a package and then parse the JSON
+    # results.
+    #
+    # @return [Hash] the information about the package
+    def query_aur
+      JSON.parse(agent.get(url).body, symbolize_names: true)
+    end
+
     def scrape!
       response = JSON.parse(agent.get(url).body, symbolize_names: true)
 
