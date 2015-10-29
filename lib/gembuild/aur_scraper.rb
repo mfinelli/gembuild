@@ -31,12 +31,24 @@ module Gembuild
     # Determine whether the package already exists on the AUR by the number of
     # results returned.
     #
-    # @param [Hash] The JSON parsed response from the AUR.
+    # @param [Hash] response The JSON parsed response from the AUR.
     # @return [Boolean] whether or not the package exists already on the AUR
     def package_exists?(response)
       response[:results].count.zero? ? false : true
     end
 
+    # Parse the version from the AUR response.
+    #
+    # A version string is expected to either look like 0.1.2-3 or like
+    # 1:2.3.4-5. So the strategy is to first split on the dash to get the
+    # package release number. Then with the remaining string attempt a split
+    # on the colon. If there is only one part then it means that there is no
+    # epoch (or rather that the epoch is zero). If there are two parts then we
+    # use the first as the epoch value. Finally, whatever is left is the
+    # actual version of the gem.
+    #
+    # @param [Hash] response The JSON parsed response from the AUR.
+    # @return [Hash] a hash of the different version parts
     def get_version_hash(response)
       version = response[:results][:Version].split('-')
 
@@ -44,7 +56,7 @@ module Gembuild
       version = version.join
 
       version = version.split(':')
-      epoch = version.count == 1 ? 0 : version.shift
+      epoch = version.count == 1 ? 0 : version.shift.to_i
       version = version.join
 
       { epoch: epoch, pkgver: version, pkgrel: pkgrel }

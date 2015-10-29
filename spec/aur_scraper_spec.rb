@@ -103,6 +103,39 @@ describe Gembuild::AurScraper do
       it 'should have the right release' do
         expect(results[:pkgrel]).to eql(1)
       end
+
+      it 'should only have three values' do
+        expect(results.keys.count).to eql(3)
+      end
+    end
+
+    context 'with package with an epoch' do
+      let(:aur_scraper) { Gembuild::AurScraper.new('vim-puppet') }
+      let(:results) {
+        VCR.use_cassette('aur_scraper_vim_puppet') do
+          aur_scraper.get_version_hash(aur_scraper.query_aur)
+        end
+      }
+
+      it 'should return a hash' do
+        expect(results).to be_a(Hash)
+      end
+
+      it 'should have no epoch' do
+        expect(results[:epoch]).to eql(1)
+      end
+
+      it 'should have the right version' do
+        expect(results[:pkgver]).to eql('4.2.1')
+      end
+
+      it 'should have the right release' do
+        expect(results[:pkgrel]).to eql(1)
+      end
+
+      it 'should only have three values' do
+        expect(results.keys.count).to eql(3)
+      end
     end
   end
 end
