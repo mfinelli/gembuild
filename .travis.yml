@@ -4,7 +4,7 @@ rvm:
     - "2.1"
     - "2.2"
 
-script: bundle exec rspec
+script: bundle && bundle exec rspec
 
 # Ensure that the mksrcinfo script is available.
 install:
