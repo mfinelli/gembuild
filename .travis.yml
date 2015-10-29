@@ -11,3 +11,6 @@ install:
     - wget https://github.com/falconindy/pkgbuild-introspection/archive/7.tar.gz
     - tar -zxvf 7.tar.gz
     - cd pkgbuild-introspection-7 && make && sudo make install
+
+notifications:
+    email: false
