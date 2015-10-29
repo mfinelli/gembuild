@@ -4,7 +4,7 @@ rvm:
     - "2.2"
 
 # Ensure that the mksrcinfo script is available.
-install:
+before_install:
     - wget https://github.com/falconindy/pkgbuild-introspection/archive/7.tar.gz
     - tar -zxvf 7.tar.gz
     - cd pkgbuild-introspection-7 && make && sudo make install
