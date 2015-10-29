@@ -4,8 +4,6 @@ rvm:
     - "2.1"
     - "2.2"
 
-script: bundle && bundle exec rspec
-
 # Ensure that the mksrcinfo script is available.
 install:
     - wget https://github.com/falconindy/pkgbuild-introspection/archive/7.tar.gz
