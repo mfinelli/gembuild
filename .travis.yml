@@ -1,7 +1,6 @@
 language: ruby
 
 rvm:
-    - "2.1"
     - "2.2"
 
 # Ensure that the mksrcinfo script is available.
