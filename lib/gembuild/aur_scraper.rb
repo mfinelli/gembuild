@@ -62,40 +62,15 @@ module Gembuild
       { epoch: epoch, pkgver: version, pkgrel: pkgrel }
     end
 
+    # Query the AUR and returned the parsed results.
+    #
+    # @return [nil|Hash] the version hash or nil if the package doesn't exist
     def scrape!
-      response = JSON.parse(agent.get(url).body, symbolize_names: true)
+      response = query_aur
 
-      if response[:results].count.zero?
-        pkgbuild.epoch = 0
-        pkgbuild.pkgrel = 1
-      else
-        response = response[:results]
+      return nil unless package_exists?(response)
 
-        version = response[:Version].split('-')
-
-        pkgrel = version.pop
-        version = version.join
-
-        version = version.split(':')
-        if version.count == 1
-          epoch = 0
-        else
-          epoch = version.shift
-        end
-        version = version.join
-
-        pkgbuild.epoch = epoch
-        pkgbuild.pkgrel = pkgrel
-
-        aur_version = Gem::Version.new(version)
-        gem_version = Gem::Version.new(pkgbuild.pkgver)
-
-        if gem_version == aur_version
-          pkgbuild.pkgrel += 1
-        else
-          pkgbuild.pkgrel = 1
-        end
-      end
+      get_version_hash(response)
     end
   end
 end

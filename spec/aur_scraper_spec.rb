@@ -138,4 +138,36 @@ describe Gembuild::AurScraper do
       end
     end
   end
+
+  describe '#scrape!' do
+    context 'with package that exists' do
+      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
+      let(:results) {
+        VCR.use_cassette('aur_scraper_ruby_mina') do
+          aur_scraper.scrape!
+        end
+      }
+
+      it 'should return a hash' do
+        expect(results).to be_a(Hash)
+      end
+
+      it 'should have the correct results' do
+        expect(results).to eql({ epoch: 0, pkgver: '0.3.7', pkgrel: 1 })
+      end
+    end
+
+    context 'with package that doesn\'t exist' do
+      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-asdfg') }
+      let(:results) {
+        VCR.use_cassette('aur_scraper_ruby_asdfg') do
+          aur_scraper.scrape!
+        end
+      }
+
+      it 'should return a hash' do
+        expect(results).to be_nil
+      end
+    end
+  end
 end
