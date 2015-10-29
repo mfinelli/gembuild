@@ -3,12 +3,16 @@
 require 'mechanize'
 
 module Gembuild
+  # This class is used to query the AUR for information about a package.
   class AurScraper
-
     attr_reader :agent, :pkgname, :url
 
+    # Creates a new AurScraper instance.
+    #
+    # @param [String] pkgname The name of the package about which to query.
+    # @return [Gembuild::AurScraper] a new AurScraper instance
     def initialize(pkgname)
-      raise Gembuild::UndefinedPkgnameError if pkgname.nil?
+      fail Gembuild::UndefinedPkgnameError if pkgname.nil?
 
       @agent = Mechanize.new
       @pkgname = pkgname
@@ -59,6 +63,5 @@ module Gembuild
         end
       end
     end
-
   end
 end

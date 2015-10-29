@@ -3,20 +3,22 @@
 describe Gembuild::AurScraper do
   describe '#initialize' do
     context 'with normal package name' do
+      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
+
       it 'should return an AurScraper instance' do
-        expect(Gembuild::AurScraper.new('ruby-mina')).to be_a(Gembuild::AurScraper)
+        expect(aur_scraper).to be_a(Gembuild::AurScraper)
       end
 
       it 'should have a mechanize agent' do
-        expect(Gembuild::AurScraper.new('ruby-mina').agent).to be_a(Mechanize)
+        expect(aur_scraper.agent).to be_a(Mechanize)
       end
 
       it 'should have the pkgname set to the parameter' do
-        expect(Gembuild::AurScraper.new('ruby-mina').pkgname).to eql('ruby-mina')
+        expect(aur_scraper.pkgname).to eql('ruby-mina')
       end
 
       it 'should have the correct aur URL' do
-        expect(Gembuild::AurScraper.new('ruby-mina').url).to eql('https://aur.archlinux.org/rpc.php?type=info&arg=ruby-mina')
+        expect(aur_scraper.url).to eql('https://aur.archlinux.org/rpc.php?type=info&arg=ruby-mina')
       end
     end
 
