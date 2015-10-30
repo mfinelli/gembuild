@@ -53,5 +53,15 @@ describe Gembuild::GemScraper do
         end
       end
     end
+
+    context 'with gem that doesn\'t exist' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('asdfg') }
+
+      it 'should raise an exception' do
+        VCR.use_cassette('gem_scraper_versions_asdfg') do
+          expect { gem_scraper.query_latest_version }.to raise_exception(Gembuild::GemNotFoundError)
+        end
+      end
+    end
   end
 end
