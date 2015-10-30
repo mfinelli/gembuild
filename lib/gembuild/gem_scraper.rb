@@ -93,9 +93,7 @@ module Gembuild
         Gem::Version.new(v[:number]) == version
       end
 
-      dependencies[:dependencies].map do |dependency|
-        dependency.first
-      end
+      dependencies[:dependencies].map(&:first)
     end
 
     # Scrape the rubygems.org frontend for the gem's homepage URL.
