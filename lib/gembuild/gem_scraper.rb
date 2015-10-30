@@ -23,6 +23,14 @@ module Gembuild
       @gem = "https://rubygems.org/gems/#{gemname}"
     end
 
+    # Query the rubygems version api for the latest version.
+    #
+    # @return [String] the latest version of the gem
+    def query_latest_version
+      response = JSON.parse(agent.get(url).body, symbolize_names: true)
+      response.first.fetch(:number)
+    end
+
     def scrape!
       response = JSON.parse(agent.get(url).body, symbolize_names: true).first
 

@@ -36,4 +36,22 @@ describe Gembuild::GemScraper do
       end
     end
   end
+
+  describe '#query_latest_version' do
+    context 'with normal gem' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+
+      it 'should return a string' do
+        VCR.use_cassette('gem_scraper_versions_netrc') do
+          expect(gem_scraper.query_latest_version).to be_a(String)
+        end
+      end
+
+      it 'should return the correct version' do
+        VCR.use_cassette('gem_scraper_versions_netrc') do
+          expect(gem_scraper.query_latest_version).to eql('0.11.0')
+        end
+      end
+    end
+  end
 end
