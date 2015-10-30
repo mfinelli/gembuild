@@ -33,12 +33,28 @@ module Gembuild
       raise Gembuild::GemNotFoundError
     end
 
-    # Gets the version number from the parsed response
+    # Gets the version number from the parsed response.
     #
     # @param [Hash] response The JSON parsed results from rubygems.org.
     # @return [Gem::Version] the current version of the gem
     def get_version_from_response(response)
       Gem::Version.new(response.fetch(:number))
+    end
+
+    # Gets a well-formed gem description from the parsed response.
+    #
+    # @param [Hash] response The JSON parsed results from rubygems.org.
+    # @return [String] the gem description or summary ending in a full-stop
+    def format_description_from_response(response)
+      description = response.fetch(:description)
+      description = response.fetch(:summary) if description.empty?
+
+      description.strip!
+
+      # Ensure that the description ends in a full-stop.
+      description += '.' unless description[-1, 1] == '.'
+
+      description
     end
 
     def scrape!

@@ -83,4 +83,32 @@ describe Gembuild::GemScraper do
       end
     end
   end
+
+  describe '#format_description_from_response' do
+    context 'with a normal gem' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+      let(:results) {
+        VCR.use_cassette('gem_scraper_versions_netrc') do
+          gem_scraper.query_latest_version
+        end
+      }
+
+      it 'should return a string' do
+        expect(gem_scraper.format_description_from_response(results)).to be_a(String)
+      end
+
+      it 'should have the correct description' do
+        expect(gem_scraper.format_description_from_response(results)).to eql('This library can read and update netrc files, preserving formatting including comments and whitespace.')
+      end
+    end
+
+    context 'with a gem without a description' do
+    end
+
+    context 'with a gem not ending in a full-stop' do
+    end
+
+    context 'with a gem with extra whitespace' do
+    end
+  end
 end
