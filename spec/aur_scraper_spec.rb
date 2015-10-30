@@ -165,7 +165,7 @@ describe Gembuild::AurScraper do
         end
       }
 
-      it 'should return a hash' do
+      it 'should return nil' do
         expect(results).to be_nil
       end
     end
