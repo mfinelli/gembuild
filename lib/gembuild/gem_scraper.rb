@@ -30,9 +30,7 @@ module Gembuild
       response = JSON.parse(agent.get(url).body, symbolize_names: true)
 
       # Skip any release marked as a "prerelease"
-      while response.first[:prerelease]
-        response.shift
-      end
+      response.shift while response.first[:prerelease]
 
       response.first
     rescue Mechanize::ResponseCodeError, Net::HTTPNotFound
