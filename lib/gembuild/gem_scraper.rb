@@ -96,6 +96,20 @@ module Gembuild
       dependencies[:dependencies]
     end
 
+    # Scrape the rubygems.org frontend for the gem's homepage URL.
+    #
+    # @return [String] the homepage URL of the gem
+    def scrape_frontend_for_homepage_url
+      html = agent.get(gem).body
+      links = Nokogiri::HTML(html).css('a')
+
+      homepage_link = links.find do |a|
+        a.text.strip == 'Homepage'
+      end
+
+      homepage_link[:href]
+    end
+
     def scrape!
       response = JSON.parse(agent.get(url).body, symbolize_names: true).first
 

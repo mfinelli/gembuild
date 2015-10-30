@@ -279,4 +279,16 @@ describe Gembuild::GemScraper do
       end
     end
   end
+
+  describe '#scrape_frontend_for_homepage_url' do
+    context 'with normal gem' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('oj') }
+
+      it 'should return the correct homepage' do
+        VCR.use_cassette('gem_scraper_frontend_oj') do
+          expect(gem_scraper.scrape_frontend_for_homepage_url).to eql('http://www.ohler.com/oj')
+        end
+      end
+    end
+  end
 end
