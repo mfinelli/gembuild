@@ -291,4 +291,58 @@ describe Gembuild::GemScraper do
       end
     end
   end
+
+  describe '#scrape!' do
+    context 'with normal gem: netrc' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+      let(:results) {
+        VCR.use_cassette('gem_scraper_netrc') do
+          gem_scraper.scrape!
+        end
+      }
+
+      it 'should return a hash' do
+        expect(results).to be_a(Hash)
+      end
+
+      it 'should return all of the correct values' do
+        expect(results).to eql(
+          {
+            version: Gem::Version.new('0.11.0'),
+            description: 'This library can read and update netrc files, preserving formatting including comments and whitespace.',
+            checksum: 'de1ce33da8c99ab1d97871726cba75151113f117146becbe45aa85cb3dabee3f',
+            license: ['MIT'],
+            dependencies: [],
+            homepage: 'https://github.com/geemus/netrc'
+          }
+        )
+      end
+    end
+
+    context 'with normal gem: netrc' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('twitter') }
+      let(:results) {
+        VCR.use_cassette('gem_scraper_twitter') do
+          gem_scraper.scrape!
+        end
+      }
+
+      it 'should return a hash' do
+        expect(results).to be_a(Hash)
+      end
+
+      it 'should return all of the correct values' do
+        expect(results).to eql(
+          {
+            version: Gem::Version.new('5.15.0'),
+            description: 'A Ruby interface to the Twitter API.',
+            checksum: '71856f234ab671c26c787f07032ce98acbc345c8fbb3194668f8de14a404bb41',
+            license: ['MIT'],
+            dependencies: ['simple_oauth', 'naught', 'memoizable', 'json', 'http_parser.rb', 'http', 'faraday', 'equalizer', 'buftok', 'addressable'],
+            homepage: 'http://sferik.github.com/twitter/'
+          }
+        )
+      end
+    end
+  end
 end
