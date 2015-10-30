@@ -242,7 +242,7 @@ describe Gembuild::GemScraper do
 
       it 'should have the correct dependencies' do
         VCR.use_cassette('gem_scraper_dependencies_oauth2_client') do
-          expect(gem_scraper.get_dependencies_for_version('2.0.0')).to eql([["addressable", "~> 2.3"], ["bcrypt-ruby", "~> 3.0"]])
+          expect(gem_scraper.get_dependencies_for_version('2.0.0')).to eql(['addressable', 'bcrypt-ruby'])
         end
       end
     end
@@ -258,7 +258,7 @@ describe Gembuild::GemScraper do
 
       it 'should have the correct dependencies' do
         VCR.use_cassette('gem_scraper_dependencies_httmultiparty') do
-          expect(gem_scraper.get_dependencies_for_version(Gem::Version.new('0.3.16'))).to eql([["mimemagic", ">= 0"], ["multipart-post", ">= 0"], ["httparty", ">= 0.7.3"]])
+          expect(gem_scraper.get_dependencies_for_version(Gem::Version.new('0.3.16'))).to eql(['mimemagic', 'multipart-post', 'httparty'])
         end
       end
     end
