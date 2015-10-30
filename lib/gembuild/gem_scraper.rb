@@ -27,12 +27,10 @@ module Gembuild
     #
     # @return [String] the latest version of the gem
     def query_latest_version
-      begin
-        response = JSON.parse(agent.get(url).body, symbolize_names: true)
-        response.first.fetch(:number)
-      rescue Mechanize::ResponseCodeError, Net::HTTPNotFound
-        raise Gembuild::GemNotFoundError
-      end
+      response = JSON.parse(agent.get(url).body, symbolize_names: true)
+      response.first.fetch(:number)
+    rescue Mechanize::ResponseCodeError, Net::HTTPNotFound
+      raise Gembuild::GemNotFoundError
     end
 
     def scrape!
