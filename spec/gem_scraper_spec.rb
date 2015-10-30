@@ -54,6 +54,22 @@ describe Gembuild::GemScraper do
       end
     end
 
+    context 'with a prerelease gem' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('pry') }
+
+      it 'should return a Hash' do
+        VCR.use_cassette('gem_scraper_versions_pry') do
+          expect(gem_scraper.query_latest_version).to be_a(Hash)
+        end
+      end
+
+      it 'should return the correct version' do
+        VCR.use_cassette('gem_scraper_versions_pry') do
+          expect(gem_scraper.query_latest_version[:number]).to eql('0.10.3')
+        end
+      end
+    end
+
     context 'with gem that doesn\'t exist' do
       let(:gem_scraper) { Gembuild::GemScraper.new('asdfg') }
 

@@ -28,6 +28,12 @@ module Gembuild
     # @return [Hash] the information about the latest version of the gem
     def query_latest_version
       response = JSON.parse(agent.get(url).body, symbolize_names: true)
+
+      # Skip any release marked as a "prerelease"
+      while response.first[:prerelease]
+        response.shift
+      end
+
       response.first
     rescue Mechanize::ResponseCodeError, Net::HTTPNotFound
       raise Gembuild::GemNotFoundError
