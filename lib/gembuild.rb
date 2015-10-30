@@ -1,4 +1,5 @@
 require 'gembuild/aur_scraper'
+require 'gembuild/exceptions'
 require 'gembuild/gem_scraper'
 require 'gembuild/pkgbuild'
 require 'gembuild/project'

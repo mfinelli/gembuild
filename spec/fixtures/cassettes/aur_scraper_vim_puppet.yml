@@ -1,0 +1,66 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://aur.archlinux.org/rpc.php?arg=vim-puppet&type=info
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - aur.archlinux.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.8.0
+      Date:
+      - Thu, 29 Oct 2015 11:54:03 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Expires:
+      - Tue, 11 Oct 1988 22:00:00 GMT
+      Cache-Control:
+      - public, must-revalidate, max-age=0
+      Etag:
+      - W/"0ea10a31172ad1f01b828dc439d6dbc7"
+      Strict-Transport-Security:
+      - max-age=16070400
+      Content-Encoding:
+      - gzip
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA11Ry27CMBD8lcjnEJMQtSW3tqhSJV5qVU6+mLBJrCa2Za8R
+        FPHv3STlQA+W1jOe2Z31hR3BeWU0K9KY4dkCK5jSlWExc+BDi6UJGgd2vHtW
+        XNj7ghVZNp3m85itZdeLjqqb2GAtIEm3svyWNbxID/3T+WOaPdyh/wW72xQs
+        LfIkS9JJSugCfOmUxZHZDo+jVuo6kE3kzxrlKWpU3bR0UOk6qoyLyDgh8dfH
+        kkQNovWF4ILXCpuwT0rTCT72beXe32rB0QEI3kmP4ASHE0HkJDhZrUO3MwgU
+        fRqzTcBNtZBIGXRo25itpKJBlAZH/Xyw4DrpVL/BN+U8foZ9pxDhQEvMZ/Ns
+        NkufyGZJjVbmoCp1x+TEqBL0sKJnK8sGxixbiQ1BgpcURHAZXDIUXkvrGzNO
+        +7fQBCWxPyR8pTlr4879L6TX6y8B1PnM7wEAAA==
+    http_version: 
+  recorded_at: Thu, 29 Oct 2015 11:54:03 GMT
+recorded_with: VCR 2.9.3
