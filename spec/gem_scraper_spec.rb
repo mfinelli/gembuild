@@ -41,15 +41,15 @@ describe Gembuild::GemScraper do
     context 'with normal gem' do
       let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
 
-      it 'should return a string' do
+      it 'should return a Hash' do
         VCR.use_cassette('gem_scraper_versions_netrc') do
-          expect(gem_scraper.query_latest_version).to be_a(String)
+          expect(gem_scraper.query_latest_version).to be_a(Hash)
         end
       end
 
       it 'should return the correct version' do
         VCR.use_cassette('gem_scraper_versions_netrc') do
-          expect(gem_scraper.query_latest_version).to eql('0.11.0')
+          expect(gem_scraper.query_latest_version[:sha]).to eql('de1ce33da8c99ab1d97871726cba75151113f117146becbe45aa85cb3dabee3f')
         end
       end
     end
@@ -61,6 +61,25 @@ describe Gembuild::GemScraper do
         VCR.use_cassette('gem_scraper_versions_asdfg') do
           expect { gem_scraper.query_latest_version }.to raise_exception(Gembuild::GemNotFoundError)
         end
+      end
+    end
+  end
+
+  describe '#get_version_from_response' do
+    context 'with normal gem' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+      let(:results) {
+        VCR.use_cassette('gem_scraper_versions_netrc') do
+          gem_scraper.query_latest_version
+        end
+      }
+
+      it 'should return a gem version' do
+        expect(gem_scraper.get_version_from_response(results)).to be_a(Gem::Version)
+      end
+
+      it 'should be the correct version' do
+        expect(gem_scraper.get_version_from_response(results).to_s).to eql('0.11.0')
       end
     end
   end

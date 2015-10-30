@@ -25,12 +25,20 @@ module Gembuild
 
     # Query the rubygems version api for the latest version.
     #
-    # @return [String] the latest version of the gem
+    # @return [Hash] the information about the latest version of the gem
     def query_latest_version
       response = JSON.parse(agent.get(url).body, symbolize_names: true)
-      response.first.fetch(:number)
+      response.first
     rescue Mechanize::ResponseCodeError, Net::HTTPNotFound
       raise Gembuild::GemNotFoundError
+    end
+
+    # Gets the version number from the parsed response
+    #
+    # @param [Hash] response The JSON parsed results from rubygems.org.
+    # @return [Gem::Version] the current version of the gem
+    def get_version_from_response(response)
+      Gem::Version.new(response.fetch(:number))
     end
 
     def scrape!
