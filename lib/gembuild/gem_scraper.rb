@@ -79,6 +79,23 @@ module Gembuild
       response.fetch(:licenses)
     end
 
+    # Get all other gem dependencies for the given version.
+    #
+    # @param [String|Gem::Version] version The version for which to get the
+    #   dependencies.
+    # @return [Array] list of other gems upon which the gem depends
+    def get_dependencies_for_version(version)
+      version = Gem::Version.new(version) if version.is_a?(String)
+
+      payload = Marshal.load(agent.get(deps).body)
+
+      dependencies = payload.find do |v|
+        Gem::Version.new(v[:number]) == version
+      end
+
+      dependencies[:dependencies]
+    end
+
     def scrape!
       response = JSON.parse(agent.get(url).body, symbolize_names: true).first
 

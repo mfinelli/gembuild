@@ -1,0 +1,60 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://rubygems.org/api/v1/dependencies?gems=http_parser.rb
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - rubygems.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 30 Oct 2015 03:17:33 GMT
+      Content-Type:
+      - application/octet-stream
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Content-Type-Options:
+      - nosniff
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAE3hMlYAA6SSzQuCQBDFPYS5RZB46+i9xQ+U0HMH7948xJpbGbnJqln4
+        zxcLkX2Bjsdl9vfmzZsZKdGiQR5iJKOBrh3KMt/khBeUYx7LnrwOvSmrspjy
+        QJ8Y2MG27MuhN8tPpNydeRbo8+vKXWYp29e2JWpqQnPKEsq2KS0iqUG+9K38
+        +OiP25K+EuiIV/FNPFAvThMWijpltrV0je4K1lPhc4ieeE/j5rC2r7yO5EIA
+        dsF5mcCBLZBjFxugfm2ucz9VcDimJYHY/Y13dt3GoSEbw67KBF4VbEcOZEfv
+        3PAr/qNwBwAA//8DALx/tWgUBQAA
+    http_version: 
+  recorded_at: Fri, 30 Oct 2015 03:17:33 GMT
+recorded_with: VCR 2.9.3

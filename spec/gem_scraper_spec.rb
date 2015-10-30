@@ -229,4 +229,54 @@ describe Gembuild::GemScraper do
       end
     end
   end
+
+  describe '#get_dependencies_for_version' do
+    context 'with a gem with dependencies and a string version' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('oauth2-client') }
+
+      it 'should return an array' do
+        VCR.use_cassette('gem_scraper_dependencies_oauth2_client') do
+          expect(gem_scraper.get_dependencies_for_version('2.0.0')).to be_a(Array)
+        end
+      end
+
+      it 'should have the correct dependencies' do
+        VCR.use_cassette('gem_scraper_dependencies_oauth2_client') do
+          expect(gem_scraper.get_dependencies_for_version('2.0.0')).to eql([["addressable", "~> 2.3"], ["bcrypt-ruby", "~> 3.0"]])
+        end
+      end
+    end
+
+    context 'with a gem with dependencies and a version version' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('httmultiparty') }
+
+      it 'should return an array' do
+        VCR.use_cassette('gem_scraper_dependencies_httmultiparty') do
+          expect(gem_scraper.get_dependencies_for_version(Gem::Version.new('0.3.16'))).to be_a(Array)
+        end
+      end
+
+      it 'should have the correct dependencies' do
+        VCR.use_cassette('gem_scraper_dependencies_httmultiparty') do
+          expect(gem_scraper.get_dependencies_for_version(Gem::Version.new('0.3.16'))).to eql([["mimemagic", ">= 0"], ["multipart-post", ">= 0"], ["httparty", ">= 0.7.3"]])
+        end
+      end
+    end
+
+    context 'with a gem with no dependencies' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('http_parser.rb') }
+
+      it 'should return an array' do
+        VCR.use_cassette('gem_scraper_dependencies_http_parser_rb') do
+          expect(gem_scraper.get_dependencies_for_version(Gem::Version.new('0.6.0'))).to be_a(Array)
+        end
+      end
+
+      it 'should have no dependencies' do
+        VCR.use_cassette('gem_scraper_dependencies_http_parser_rb') do
+          expect(gem_scraper.get_dependencies_for_version(Gem::Version.new('0.6.0')).count).to be_zero
+        end
+      end
+    end
+  end
 end
