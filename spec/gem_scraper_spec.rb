@@ -106,9 +106,39 @@ describe Gembuild::GemScraper do
     end
 
     context 'with a gem not ending in a full-stop' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('benchmark_suite') }
+      let(:results) {
+        VCR.use_cassette('gem_scraper_versions_benchmark_suite') do
+          gem_scraper.query_latest_version
+        end
+      }
+      let(:description) { gem_scraper.format_description_from_response(results) }
+
+      it 'should be a string' do
+        expect(description).to be_a(String)
+      end
+
+      it 'should have the correct description' do
+        expect(description).to eql('A set of enhancements to the standard library benchmark.rb.')
+      end
     end
 
     context 'with a gem with extra whitespace' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('addressable') }
+      let(:results) {
+        VCR.use_cassette('gem_scraper_versions_addressable') do
+          gem_scraper.query_latest_version
+        end
+      }
+      let(:description) { gem_scraper.format_description_from_response(results) }
+
+      it 'should be a string' do
+        expect(description).to be_a(String)
+      end
+
+      it 'should have the correct description' do
+        expect(description).to eql('Addressable is a replacement for the URI implementation that is part of Ruby\'s standard library. It more closely conforms to the relevant RFCs and adds support for IRIs and URI templates.')
+      end
     end
   end
 end

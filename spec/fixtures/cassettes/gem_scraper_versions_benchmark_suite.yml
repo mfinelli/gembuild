@@ -1,0 +1,77 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://rubygems.org/api/v1/versions/benchmark_suite.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - rubygems.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 30 Oct 2015 02:13:41 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Status:
+      - 200 OK
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Etag:
+      - W/"0f08eadd183031c1a9b573c38d7abd97"
+      Last-Modified:
+      - Wed, 18 Feb 2015 05:49:27 GMT
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 7335546b-26de-4e91-9163-30b403d46b9d
+      X-Runtime:
+      - '0.009721'
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Content-Encoding:
+      - gzip
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA9WRT4vbMBDFv4rR2Qmjf7bkWw+97yGnlhJG0hibteWsJG8b
+        lnz3Kht6Ki2F0kPFgEB6evNGv89vDPcybSmzgX18xdg8TRvF+RtrmdvnpZyx
+        1BsBXBxAHoQ6AQzvdQSAT1XlE2Gh8LNODsAHIY5c27suUPZpvpR5i9XwQ5Op
+        NNvYUJwwelopltyUrSkTNblgDJhCs8wuYbo2jqKfVkzPx+TuVtvXuGwY8tlv
+        e6z5pFUALVupYMCCbHi7tSzuq6NUe/FjDVuf5X2tHte/7X5ZsIxbWqtP2t21
+        Gt+38yul/D5b3JelZZdEiRbCTGwYccnUsmX2FDPVn35IEr3sc3qM/uMsTzU9
+        M6EuwYV11nWWOxkARymFsSgMaA2aUBmlEaVEb0dtOuQ+gPNdsNQhu7V/zJUf
+        QB1An6D/PdeHrjtVqLVkX7maf81VGGV/iRWO5j/D6lzPlYJADrjXIHttg5e+
+        t0QkudB9cBZIWceh8wYFWSdUB8EqNIrLkd2+fAcdgSMesAMAAA==
+    http_version: 
+  recorded_at: Fri, 30 Oct 2015 02:13:41 GMT
+recorded_with: VCR 2.9.3

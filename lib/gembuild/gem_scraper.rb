@@ -49,7 +49,9 @@ module Gembuild
       description = response.fetch(:description)
       description = response.fetch(:summary) if description.empty?
 
-      description.strip!
+      # Replace any newlines or tabs (which would mess up a PKGBUILD) with
+      # spaces. Then, make sure there is no
+      description = description.gsub(/[[:space:]]+/, ' ').strip
 
       # Ensure that the description ends in a full-stop.
       description += '.' unless description[-1, 1] == '.'
