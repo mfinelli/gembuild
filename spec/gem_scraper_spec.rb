@@ -187,4 +187,46 @@ describe Gembuild::GemScraper do
       end
     end
   end
+
+  describe '#get_licenses_from_response' do
+    context 'with no license' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('mina') }
+      let(:results) {
+        VCR.use_cassette('gem_scraper_versions_mina') do
+          gem_scraper.query_latest_version
+        end
+      }
+      let(:license) { gem_scraper.get_licenses_from_response(results) }
+
+      it 'should be an array' do
+        expect(license).to be_a(Array)
+      end
+
+      it 'should be empty' do
+        expect(license.count).to be_zero
+      end
+    end
+
+    context 'with a normal gem' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+      let(:results) {
+        VCR.use_cassette('gem_scraper_versions_netrc') do
+          gem_scraper.query_latest_version
+        end
+      }
+      let(:license) { gem_scraper.get_licenses_from_response(results) }
+
+      it 'should be an array' do
+        expect(license).to be_a(Array)
+      end
+
+      it 'should have one license' do
+        expect(license.count).to eql(1)
+      end
+
+      it 'should have the correct license' do
+        expect(license).to eql(['MIT'])
+      end
+    end
+  end
 end

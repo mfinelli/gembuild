@@ -71,6 +71,14 @@ module Gembuild
       response.fetch(:sha)
     end
 
+    # Get the array of licenses under which the gem is licensed.
+    #
+    # @param [Hash] response The JSON parsed results from rubygems.org.
+    # @return [Array] the licenses for the gem
+    def get_licenses_from_response(response)
+      response.fetch(:licenses)
+    end
+
     def scrape!
       response = JSON.parse(agent.get(url).body, symbolize_names: true).first
 
