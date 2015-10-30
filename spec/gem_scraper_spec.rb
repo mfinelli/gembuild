@@ -119,6 +119,21 @@ describe Gembuild::GemScraper do
     end
 
     context 'with a gem without a description' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('git') }
+      let(:results) {
+        VCR.use_cassette('gem_scraper_versions_git') do
+          gem_scraper.query_latest_version
+        end
+      }
+      let(:description) { gem_scraper.format_description_from_response(results) }
+
+      it 'should be a string' do
+        expect(description).to be_a(String)
+      end
+
+      it 'should have the correct description' do
+        expect(description).to eql('Ruby/Git is a Ruby library that can be used to create, read and manipulate Git repositories by wrapping system calls to the git binary.')
+      end
     end
 
     context 'with a gem not ending in a full-stop' do
