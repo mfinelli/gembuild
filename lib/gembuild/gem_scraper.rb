@@ -63,6 +63,14 @@ module Gembuild
       description
     end
 
+    # Gets the sha256 checksum returned from the rubygems.org API.
+    #
+    # @param [Hash] response The JSON parsed results from rubygems.org.
+    # @return [String] the sha256 sum of the gem file
+    def get_checksum_from_response(response)
+      response.fetch(:sha)
+    end
+
     def scrape!
       response = JSON.parse(agent.get(url).body, symbolize_names: true).first
 

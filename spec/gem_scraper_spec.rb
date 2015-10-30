@@ -172,4 +172,19 @@ describe Gembuild::GemScraper do
       end
     end
   end
+
+  describe '#get_checksum_from_response' do
+    context 'with normal gem' do
+      let(:gem_scraper) { Gembuild::GemScraper.new('http') }
+      let(:results) {
+        VCR.use_cassette('gem_scraper_versions_http') do
+          gem_scraper.query_latest_version
+        end
+      }
+
+      it 'should return the correct sha' do
+        expect(gem_scraper.get_checksum_from_response(results)).to eql('517790c159adc2755c0a6dac5b64d719d4dd8fb4437409e443f4a42b31ea89d2')
+      end
+    end
+  end
 end
