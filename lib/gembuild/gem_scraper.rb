@@ -4,11 +4,17 @@ require 'mechanize'
 require 'nokogiri'
 
 module Gembuild
+  # This class is used to query for various information from rubygems.org.
   class GemScraper
-
     attr_reader :agent, :deps, :gem, :gemname, :url
 
+    # Creates a new GemScraper instance
+    #
+    # @param [String] gemname The gem about which to query.
+    # @return [Gembuild::GemScraper] a new GemScraper instance
     def initialize(gemname)
+      fail Gembuild::UndefinedGemNameError if gemname.nil?
+
       @gemname = gemname
       @agent = Mechanize.new
 
