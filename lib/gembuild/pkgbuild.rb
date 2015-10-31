@@ -10,7 +10,9 @@ module Gembuild
                   :source, :options, :noextract, :checksum, :checksum_type,
                   :maintainer
 
-    def initialize(gemname)
+    def initialize(gemname, existing_pkgbuild = nil)
+      fail Gembuild::InvalidPkgbuildError unless existing_pkgbuild.nil? or existing_pkgbuild.is_a?(String)
+
       @gemname = gemname
       @pkgname = "ruby-#{@gemname}"
       @checksum_type = 'sha256'

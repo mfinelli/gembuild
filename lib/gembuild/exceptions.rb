@@ -9,4 +9,7 @@ module Gembuild
 
   # Exception raised when rubygems.org returns a 404 error.
   class GemNotFoundError < StandardError; end
+
+  # Exception raised when a non-string pkgbuild is passed.
+  class InvalidPkgbuildError < StandardError; end
 end
