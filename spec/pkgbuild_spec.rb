@@ -70,6 +70,42 @@ describe Gembuild::Pkgbuild do
       it 'should have the correct options' do
         expect(pkgbuild.options).to eql(['!emptydirs'])
       end
+
+      it 'should have no checksum' do
+        expect(pkgbuild.checksum).to be_nil
+      end
+
+      it 'should have no maintainer' do
+        expect(pkgbuild.maintainer).to be_nil
+      end
+
+      it 'should have no contributor' do
+        expect(pkgbuild.contributor).to be_nil
+      end
+
+      it 'should have no description' do
+        expect(pkgbuild.description).to be_nil
+      end
+
+      it 'should have no epoch' do
+        expect(pkgbuild.epoch).to be_nil
+      end
+
+      it 'should have no license' do
+        expect(pkgbuild.license).to be_nil
+      end
+
+      it 'should have no pkgrel' do
+        expect(pkgbuild.pkgrel).to be_nil
+      end
+
+      it 'should have no pkgver' do
+        expect(pkgbuild.pkgver).to be_nil
+      end
+
+      it 'should have no url' do
+        expect(pkgbuild.url).to be_nil
+      end
     end
 
     context 'with string pkgbuild' do
