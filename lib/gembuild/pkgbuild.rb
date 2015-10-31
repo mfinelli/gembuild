@@ -5,11 +5,10 @@ require 'erb'
 module Gembuild
   # Class used to create a PKGBUILD file for a rubygem.
   class Pkgbuild
-
-    attr_accessor :gemname, :pkgname, :pkgver, :pkgrel, :epoch, :arch,
-                  :description, :url, :license, :depends, :makedepends,
-                  :source, :options, :noextract, :checksum, :checksum_type,
-                  :maintainer
+    attr_accessor :arch, :checksum, :checksum_type, :depends, :description,
+                  :epoch, :gemname, :license, :maintainer, :makedepends,
+                  :noextract, :options, :pkgname, :pkgrel, :pkgver, :source,
+                  :url
 
     # Create a new Pkgbuild instance.
     #
@@ -70,6 +69,5 @@ module Gembuild
 
       nil
     end
-
   end
 end
