@@ -17,7 +17,7 @@ module Gembuild
     #   maintainer anc contributor information.
     # @return [Gembuild::Pkgbuild] a new Pkgbuild instance
     def initialize(gemname, existing_pkgbuild = nil)
-      unless existing_pkgbuild.nil? or existing_pkgbuild.is_a?(String)
+      unless existing_pkgbuild.nil? || existing_pkgbuild.is_a?(String)
         fail Gembuild::InvalidPkgbuildError
       end
 
