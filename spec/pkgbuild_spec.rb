@@ -80,7 +80,7 @@ describe Gembuild::Pkgbuild do
       end
 
       it 'should have no contributor' do
-        expect(pkgbuild.contributor).to be_nil
+        expect(pkgbuild.contributor).to eql([])
       end
 
       it 'should have no description' do
@@ -149,6 +149,18 @@ describe Gembuild::Pkgbuild do
       it 'should not find any other dependencies' do
         expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:depends]).to eql([])
       end
+
+      it 'should set the pkgbuild maintainer' do
+        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
+      end
+
+      it 'should set the pkgbuild contributor' do
+        expect(pkgbuild.contributor).to eql(['Christopher Eby <kreed at kreed dot org>'])
+      end
+
+      it 'should leave the dependencies alone' do
+        expect(pkgbuild.depends).to eql(['ruby'])
+      end
     end
 
     context 'with multiple contributors' do
@@ -162,6 +174,13 @@ describe Gembuild::Pkgbuild do
       it 'should find the correct contributors' do
         expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:contributor]).to eql(['Anatol Pomozov <anatol.pomozov at gmail dot com>', 'oliparcol <oliparcol at gmail dot com>'])
       end
+
+      it 'should set the pkgbuild contributor' do
+        expect(pkgbuild.contributor).to eql(['Anatol Pomozov <anatol.pomozov at gmail dot com>', 'oliparcol <oliparcol at gmail dot com>'])
+      end
+    end
+
+    context 'with different maintainer' do
     end
 
     context 'with other dependencies' do
@@ -174,6 +193,10 @@ describe Gembuild::Pkgbuild do
 
       it 'should return the correct dependencies' do
         expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:depends]).to eql(['imagemagick'])
+      end
+
+      it 'should add the dependencies to the pkgbuild' do
+        expect(pkgbuild.depends).to eql(['ruby', 'imagemagick'])
       end
     end
 
@@ -190,6 +213,18 @@ describe Gembuild::Pkgbuild do
 
       it 'should return an empty dependencies array' do
         expect(pkgbuild.parse_existing_pkgbuild('')[:depends]).to eql([])
+      end
+
+      it 'should still have a nil maintainer in the pkgbuild' do
+        expect(pkgbuild.maintainer).to be_nil
+      end
+
+      it 'should still have no contributor in the pkgbuild' do
+        expect(pkgbuild.contributor).to eql([])
+      end
+
+      it 'should still only have ruby dependency' do
+        expect(pkgbuild.depends).to eql(['ruby'])
       end
     end
   end

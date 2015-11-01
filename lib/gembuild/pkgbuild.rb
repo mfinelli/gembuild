@@ -24,9 +24,9 @@ module Gembuild
       @gemname = gemname
       @pkgname = "ruby-#{@gemname}"
 
-      parse_existing_pkgbuild(existing_pkgbuild) unless existing_pkgbuild.nil?
-
       set_package_defaults
+
+      parse_existing_pkgbuild(existing_pkgbuild) unless existing_pkgbuild.nil?
     end
 
     # Parse the old pkgbuild (if it exists) to get information about old
@@ -36,13 +36,18 @@ module Gembuild
     # param [String] pkgbuild The old PKGBUILD to parse.
     # return [Hash] a hash containing the values scraped from the PKGBUILD
     def parse_existing_pkgbuild(pkgbuild)
-      maintainer = pkgbuild.match(/^# Maintainer: (.*)$/)[1] rescue nil
-      contributor = pkgbuild.scan(/^# Contributor: (.*)$/).flatten
+      @maintainer = pkgbuild.match(/^# Maintainer: (.*)$/)[1] rescue nil
+      @contributor = pkgbuild.scan(/^# Contributor: (.*)$/).flatten
+
+      dependencies = parse_existing_dependencies(pkgbuild)
+      dependencies.each do |dependency|
+        @depends << dependency
+      end
 
       {
         maintainer: maintainer,
         contributor: contributor,
-        depends: parse_existing_dependencies(pkgbuild)
+        depends: dependencies
       }
     end
 
@@ -85,6 +90,7 @@ module Gembuild
       @source = ['https://rubygems.org/downloads/$_gemname-$pkgver.gem']
       @noextract = ['$_gemname-$pkgver.gem']
       @options = ['!emptydirs']
+      @contributor = []
 
       nil
     end
