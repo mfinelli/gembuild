@@ -125,6 +125,7 @@ describe Gembuild::Pkgbuild do
     context 'with normal pkgbuild' do
       let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_choice')) }
       let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', pkgbuild_file) }
+
       it 'should return a hash' do
         expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)).to be_a(Hash)
       end
@@ -150,5 +151,33 @@ describe Gembuild::Pkgbuild do
       end
     end
 
+    context 'with multiple contributors' do
+      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_maruku')) }
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('maruku', pkgbuild_file) }
+
+      it 'should find two contributors' do
+        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:contributor].count).to eql(2)
+      end
+
+      it 'should find the correct contributors' do
+        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:contributor]).to eql(['Anatol Pomozov <anatol.pomozov at gmail dot com>', 'oliparcol <oliparcol at gmail dot com>'])
+      end
+    end
+
+    context 'with no matches in pkgbuild' do
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', '') }
+
+      it 'should return no maintainer' do
+        expect(pkgbuild.parse_existing_pkgbuild('')[:maintainer]).to be_nil
+      end
+
+      it 'should return an empty contributor array' do
+        expect(pkgbuild.parse_existing_pkgbuild('')[:contributor]).to eql([])
+      end
+
+      it 'should return an empty dependencies array' do
+        expect(pkgbuild.parse_existing_pkgbuild('')[:depends]).to eql([])
+      end
+    end
   end
 end
