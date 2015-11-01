@@ -42,7 +42,7 @@ module Gembuild
       {
         maintainer: maintainer,
         contributor: contributor,
-        depends: []
+        depends: parse_existing_dependencies(pkgbuild)
       }
     end
 
@@ -87,6 +87,19 @@ module Gembuild
       @options = ['!emptydirs']
 
       nil
+    end
+
+    # Scrape dependencies from an existing pkgbuild.
+    #
+    # @param [String] pkgbuild The PKGBUILD to search.
+    # @return [Array] all existing dependencies that are not ruby or gems
+    def parse_existing_dependencies(pkgbuild)
+      depends = pkgbuild.match(/^depends=\((.*?)\)$/m)[1].gsub(/[[:space:]]+/,' ').split("' '")
+      depends[0] = depends.first[1..-1] # remove leading "'"
+      depends[depends.count - 1] = depends.last[0..-2] # remove trailing "'"
+      depends = depends.reject{|e| e.match(/^ruby/) }
+    rescue
+      []
     end
   end
 end

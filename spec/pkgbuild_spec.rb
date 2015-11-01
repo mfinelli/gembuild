@@ -164,6 +164,19 @@ describe Gembuild::Pkgbuild do
       end
     end
 
+    context 'with other dependencies' do
+      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_mini_magick')) }
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('maruku', pkgbuild_file) }
+
+      it 'should return an array' do
+        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:depends]).to be_a(Array)
+      end
+
+      it 'should return the correct dependencies' do
+        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:depends]).to eql(['imagemagick'])
+      end
+    end
+
     context 'with no matches in pkgbuild' do
       let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', '') }
 
