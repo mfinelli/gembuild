@@ -37,9 +37,12 @@ module Gembuild
     # return [Hash] a hash containing the values scraped from the PKGBUILD
     def parse_existing_pkgbuild(pkgbuild)
       maintainer = pkgbuild.match(/^# Maintainer: (.*)$/)[1] rescue nil
+      contributor = pkgbuild.scan(/^# Contributor: (.*)$/).flatten
 
       {
-        maintainer: maintainer
+        maintainer: maintainer,
+        contributor: contributor,
+        depends: []
       }
     end
 

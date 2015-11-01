@@ -132,6 +132,22 @@ describe Gembuild::Pkgbuild do
       it 'should have found a maintainer' do
         expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:maintainer]).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
       end
+
+      it 'should return a contributor array' do
+        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:contributor]).to be_a(Array)
+      end
+
+      it 'should find one contributor' do
+        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:contributor]).to eql(['Christopher Eby <kreed at kreed dot org>'])
+      end
+
+      it 'should return an dependencies array' do
+        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:depends]).to be_a(Array)
+      end
+
+      it 'should not find any other dependencies' do
+        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:depends]).to eql([])
+      end
     end
 
   end
