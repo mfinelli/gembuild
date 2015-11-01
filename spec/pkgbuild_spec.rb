@@ -120,4 +120,19 @@ describe Gembuild::Pkgbuild do
       end
     end
   end
+
+  describe '#parse_existing_pkgbuild' do
+    context 'with normal pkgbuild' do
+      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_choice')) }
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', pkgbuild_file) }
+      it 'should return a hash' do
+        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)).to be_a(Hash)
+      end
+
+      it 'should have found a maintainer' do
+        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:maintainer]).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
+      end
+    end
+
+  end
 end

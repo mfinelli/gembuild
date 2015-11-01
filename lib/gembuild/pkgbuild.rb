@@ -24,7 +24,23 @@ module Gembuild
       @gemname = gemname
       @pkgname = "ruby-#{@gemname}"
 
+      parse_existing_pkgbuild(existing_pkgbuild) unless existing_pkgbuild.nil?
+
       set_package_defaults
+    end
+
+    # Parse the old pkgbuild (if it exists) to get information about old
+    # maintainers or contributors or about other dependencies that have been
+    # added but that can not be scraped from rubygems.org.
+    #
+    # param [String] pkgbuild The old PKGBUILD to parse.
+    # return [Hash] a hash containing the values scraped from the PKGBUILD
+    def parse_existing_pkgbuild(pkgbuild)
+      maintainer = pkgbuild.match(/^# Maintainer: (.*)$/)[1] rescue nil
+
+      {
+        maintainer: maintainer
+      }
     end
 
     def self.create(gemname)
