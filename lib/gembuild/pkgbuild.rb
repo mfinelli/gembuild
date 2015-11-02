@@ -99,16 +99,11 @@ module Gembuild
     def parse_existing_dependencies(pkgbuild)
       match = pkgbuild.match(/^depends=\((.*?)\)$/m)[1]
 
-      # Convert all whitespace to spaces (newlines, tabs, etc.), then make
-      # sure that strings are quoted with ' not ". Finally, split all
-      # all the packages into an array.
-      deps = match.gsub(/[[:space:]]+/, ' ').tr('"', "'").split("' '")
-
-      # Remove the leading "'" leftover from the split.
-      deps[0] = deps.first[1..-1]
-
-      # Remove the trailing "'" leftover from the split.
-      deps[deps.count - 1] = deps.last[0..-2]
+      # First step is to remove the leading and trailing quotes. Then convert
+      # all whitespace (newlines, tabs, multiple spaces, etc.) to single
+      # spaces. Then, make sure that strings are quoted with ' not ".
+      # Finally, split the packages into an array.
+      deps = match[1..-2].gsub(/[[:space:]]+/, ' ').tr('"', "'").split("' '")
 
       deps.reject { |e| e.match(/^ruby/) }
     rescue
