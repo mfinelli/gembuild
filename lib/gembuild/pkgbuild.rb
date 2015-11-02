@@ -33,8 +33,8 @@ module Gembuild
     # maintainers or contributors or about other dependencies that have been
     # added but that can not be scraped from rubygems.org.
     #
-    # param [String] pkgbuild The old PKGBUILD to parse.
-    # return [Hash] a hash containing the values scraped from the PKGBUILD
+    # @param [String] pkgbuild The old PKGBUILD to parse.
+    # @return [Hash] a hash containing the values scraped from the PKGBUILD
     def parse_existing_pkgbuild(pkgbuild)
       pkgbuild.match(/^# Maintainer: (.*)$/) { |m| @maintainer = m[1] }
 
