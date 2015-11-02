@@ -36,19 +36,16 @@ module Gembuild
     # param [String] pkgbuild The old PKGBUILD to parse.
     # return [Hash] a hash containing the values scraped from the PKGBUILD
     def parse_existing_pkgbuild(pkgbuild)
-      @maintainer = pkgbuild.match(/^# Maintainer: (.*)$/)[1] rescue nil
+      pkgbuild.match(/^# Maintainer: (.*)$/) { |m| @maintainer = m[1] }
+
       @contributor = pkgbuild.scan(/^# Contributor: (.*)$/).flatten
 
-      dependencies = parse_existing_dependencies(pkgbuild)
-      dependencies.each do |dependency|
-        @depends << dependency
+      deps = parse_existing_dependencies(pkgbuild)
+      deps.each do |dep|
+        @depends << dep
       end
 
-      {
-        maintainer: maintainer,
-        contributor: contributor,
-        depends: dependencies
-      }
+      { maintainer: maintainer, contributor: contributor, depends: deps }
     end
 
     def self.create(gemname)
@@ -100,10 +97,20 @@ module Gembuild
     # @param [String] pkgbuild The PKGBUILD to search.
     # @return [Array] all existing dependencies that are not ruby or gems
     def parse_existing_dependencies(pkgbuild)
-      depends = pkgbuild.match(/^depends=\((.*?)\)$/m)[1].gsub(/[[:space:]]+/,' ').split("' '")
-      depends[0] = depends.first[1..-1] # remove leading "'"
-      depends[depends.count - 1] = depends.last[0..-2] # remove trailing "'"
-      depends = depends.reject{|e| e.match(/^ruby/) }
+      match = pkgbuild.match(/^depends=\((.*?)\)$/m)[1]
+
+      # Convert all whitespace to spaces (newlines, tabs, etc.), then make
+      # sure that strings are quoted with ' not ". Finally, split all
+      # all the packages into an array.
+      deps = match.gsub(/[[:space:]]+/, ' ').gsub('"', "'").split("' '")
+
+      # Remove the leading "'" leftover from the split.
+      deps[0] = deps.first[1..-1]
+
+      # Remove the trailing "'" leftover from the split.
+      deps[deps.count - 1] = deps.last[0..-2]
+
+      deps.reject{|e| e.match(/^ruby/) }
     rescue
       []
     end
