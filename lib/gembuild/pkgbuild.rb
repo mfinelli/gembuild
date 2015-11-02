@@ -102,7 +102,7 @@ module Gembuild
       # Convert all whitespace to spaces (newlines, tabs, etc.), then make
       # sure that strings are quoted with ' not ". Finally, split all
       # all the packages into an array.
-      deps = match.gsub(/[[:space:]]+/, ' ').gsub('"', "'").split("' '")
+      deps = match.gsub(/[[:space:]]+/, ' ').tr('"', "'").split("' '")
 
       # Remove the leading "'" leftover from the split.
       deps[0] = deps.first[1..-1]
@@ -110,7 +110,7 @@ module Gembuild
       # Remove the trailing "'" leftover from the split.
       deps[deps.count - 1] = deps.last[0..-2]
 
-      deps.reject{|e| e.match(/^ruby/) }
+      deps.reject { |e| e.match(/^ruby/) }
     rescue
       []
     end
