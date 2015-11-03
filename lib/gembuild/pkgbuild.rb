@@ -11,7 +11,7 @@ module Gembuild
   # @!attribute [rw] checksum
   #   @see https://wiki.archlinux.org/index.php/PKGBUILD#sha256sums
   #   @return [String] the sha256 sum of the gemfile
-  # @!attribute [rw] checksume_type
+  # @!attribute [rw] checksum_type
   #   @see https://wiki.archlinux.org/index.php/PKGBUILD#sha256sums
   #   @return [String] the type of checksum (will always be sha256)
   # @!attribute [rw] contributor
