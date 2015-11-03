@@ -4,15 +4,24 @@ require 'mechanize'
 
 module Gembuild
   # This class is used to query the AUR for information about a package.
+  #
+  # @!attribute [r] agent
+  #   @return [Mechanize] the Mechanize agent
+  # @!attribute [r] pkgname
+  #   @return [String] the package about which to query the AUR
+  # @!attribute [r] url
+  #   @return [String] the AUR url for the package
   class AurScraper
     attr_reader :agent, :pkgname, :url
 
     # Creates a new AurScraper instance.
     #
-    # @param [String] pkgname The name of the package about which to query.
+    # @raise [Gembuild::UndefinedPkgnameError] if the pkgname is nil or empty
+    #
+    # @param pkgname [String] The name of the package about which to query.
     # @return [Gembuild::AurScraper] a new AurScraper instance
     def initialize(pkgname)
-      fail Gembuild::UndefinedPkgnameError if pkgname.nil?
+      fail Gembuild::UndefinedPkgnameError if pkgname.nil? || pkgname.empty?
 
       @agent = Mechanize.new
       @pkgname = pkgname
@@ -31,7 +40,7 @@ module Gembuild
     # Determine whether the package already exists on the AUR by the number of
     # results returned.
     #
-    # @param [Hash] response The JSON parsed response from the AUR.
+    # @param response [Hash] The JSON parsed response from the AUR.
     # @return [Boolean] whether or not the package exists already on the AUR
     def package_exists?(response)
       response[:results].count.zero? ? false : true
@@ -47,7 +56,7 @@ module Gembuild
     # use the first as the epoch value. Finally, whatever is left is the
     # actual version of the gem.
     #
-    # @param [Hash] response The JSON parsed response from the AUR.
+    # @param response [Hash] The JSON parsed response from the AUR.
     # @return [Hash] a hash of the different version parts
     def get_version_hash(response)
       version = response[:results][:Version].split('-')
@@ -64,7 +73,7 @@ module Gembuild
 
     # Query the AUR and returned the parsed results.
     #
-    # @return [nil|Hash] the version hash or nil if the package doesn't exist
+    # @return [nil, Hash] the version hash or nil if the package doesn't exist
     def scrape!
       response = query_aur
 
