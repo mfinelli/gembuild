@@ -4,6 +4,61 @@ require 'erb'
 
 module Gembuild
   # Class used to create a PKGBUILD file for a rubygem.
+  #
+  # @!attribute [rw] arch
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#arch
+  #   @return [Array] the supported architectures
+  # @!attribute [rw] checksum
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#sha256sums
+  #   @return [String] the sha256 sum of the gemfile
+  # @!attribute [rw] checksume_type
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#sha256sums
+  #   @return [String] the type of checksum (will always be sha256)
+  # @!attribute [rw] contributor
+  #   @return [Array] an array of the contributors to the pkgbuild
+  # @!attribute [rw] depends
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#depends
+  #   @return [Array] an array of the package's dependencies (always ruby
+  #     plus any other gems listed as dependencies)
+  # @!attribute [rw] description
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#pkgdesc
+  #   @return [String] the package description
+  # @!attribute [rw] epoch
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#epoch
+  #   @return [Fixnum] the package's epoch value
+  # @!attribute [rw] gemname
+  #   @return [String] the ruby gem for which to generate a PKGBUILD
+  # @!attribute [rw] license
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#license
+  #   @return [Array] an array of licenses for the gem
+  # @!attribute [rw] maintainer
+  #   @return [String] the package's maintainer
+  # @!attribute [rw] makedepends
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#makedepends
+  #   @return [Array] a list of the dependencies needed to build the package
+  #     (normally just the package rubygems)
+  # @!attribute [rw] noextract
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#noextract
+  #   @return [Array] a list of sources not to extract with bsdtar (namely,
+  #     the gemfile)
+  # @!attribute [rw] options
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#options
+  #   @return [Array] a list of options to pass to makepkg
+  # @!attribute [rw] pkgname
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#pkgname
+  #   @return [String] the name of the package (usually ruby-gem)
+  # @!attribute [rw] pkgrel
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#pkgrel
+  #   @return [Fixnum] the release number of the package
+  # @!attribute [rw] pkgver
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#pkgver
+  #   @return [Gem::Version] the version of the gem
+  # @!attribute [rw] source
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#source
+  #   @return [Array] a list of sources
+  # @!attribute [rw] url
+  #   @see https://wiki.archlinux.org/index.php/PKGBUILD#url
+  #   @return [String] the URL of the homepage of the gem
   class Pkgbuild
     attr_accessor :arch, :checksum, :checksum_type, :contributor, :depends,
                   :description, :epoch, :gemname, :license, :maintainer,
@@ -12,9 +67,12 @@ module Gembuild
 
     # Create a new Pkgbuild instance.
     #
-    # @param [String] gemname The rubygem for which to create a PKGBUILD.
-    # @param [String] existing_pkgbuild An old PKGBUILD that can be parsed for
-    #   maintainer anc contributor information.
+    # @raise [Gembuild::InvalidPkgbuildError] if something other than a
+    #   string or nil is passed as the existing pkgbuild
+    #
+    # @param gemname [String] The rubygem for which to create a PKGBUILD.
+    # @param existing_pkgbuild [nil, String] An old PKGBUILD that can be
+    #   parsed for maintainer anc contributor information.
     # @return [Gembuild::Pkgbuild] a new Pkgbuild instance
     def initialize(gemname, existing_pkgbuild = nil)
       unless existing_pkgbuild.nil? || existing_pkgbuild.is_a?(String)
@@ -33,7 +91,7 @@ module Gembuild
     # maintainers or contributors or about other dependencies that have been
     # added but that can not be scraped from rubygems.org.
     #
-    # @param [String] pkgbuild The old PKGBUILD to parse.
+    # @param pkgbuild [String] The old PKGBUILD to parse.
     # @return [Hash] a hash containing the values scraped from the PKGBUILD
     def parse_existing_pkgbuild(pkgbuild)
       pkgbuild.match(/^# Maintainer: (.*)$/) { |m| @maintainer = m[1] }
@@ -94,7 +152,7 @@ module Gembuild
 
     # Scrape dependencies from an existing pkgbuild.
     #
-    # @param [String] pkgbuild The PKGBUILD to search.
+    # @param pkgbuild [String] The PKGBUILD to search.
     # @return [Array] all existing dependencies that are not ruby or gems
     def parse_existing_dependencies(pkgbuild)
       match = pkgbuild.match(/^depends=\((.*?)\)$/m)[1]

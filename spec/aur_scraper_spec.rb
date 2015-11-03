@@ -102,8 +102,12 @@ describe Gembuild::AurScraper do
         expect(results[:epoch]).to eql(0)
       end
 
+      it 'should return a version object' do
+        expect(results[:pkgver]).to be_a(Gem::Version)
+      end
+
       it 'should have the right version' do
-        expect(results[:pkgver]).to eql('0.3.7')
+        expect(results[:pkgver]).to eql(Gem::Version.new('0.3.7'))
       end
 
       it 'should have the right release' do
@@ -131,8 +135,12 @@ describe Gembuild::AurScraper do
         expect(results[:epoch]).to eql(1)
       end
 
+      it 'should reurn a version object' do
+        expect(results[:pkgver]).to be_a(Gem::Version)
+      end
+
       it 'should have the right version' do
-        expect(results[:pkgver]).to eql('4.2.1')
+        expect(results[:pkgver]).to eql(Gem::Version.new('4.2.1'))
       end
 
       it 'should have the right release' do
@@ -159,7 +167,7 @@ describe Gembuild::AurScraper do
       end
 
       it 'should have the correct results' do
-        expect(results).to eql({ epoch: 0, pkgver: '0.3.7', pkgrel: 1 })
+        expect(results).to eql({ epoch: 0, pkgver: Gem::Version.new('0.3.7'), pkgrel: 1 })
       end
     end
 

@@ -66,7 +66,7 @@ module Gembuild
 
       version = version.split(':')
       epoch = version.count == 1 ? 0 : version.shift.to_i
-      version = version.join
+      version = Gem::Version.new(version.join)
 
       { epoch: epoch, pkgver: version, pkgrel: pkgrel }
     end
