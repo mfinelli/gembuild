@@ -228,4 +228,20 @@ describe Gembuild::Pkgbuild do
       end
     end
   end
+
+  describe '#format_contact_information' do
+    let(:pkgbuild) { Gembuild::Pkgbuild.new('test') }
+
+    context 'with normal information' do
+      it 'should have the characters exchanged' do
+        expect(pkgbuild.format_contact_information('Joe Smith <joe.smith@example.com>')).to eql('Joe Smith <joe dot smith at example dot com>')
+      end
+    end
+
+    context 'with no information to change' do
+      it 'should not change anything' do
+        expect(pkgbuild.format_contact_information('some information')).to eql('some information')
+      end
+    end
+  end
 end

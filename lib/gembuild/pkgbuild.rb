@@ -148,6 +148,28 @@ module Gembuild
       File.write('PKGBUILD', render)
     end
 
+    # Obfuscate the maintainer/contributors' email addresses to (help to)
+    # prevent spam.
+    #
+    # @param contact_information [String] The maintainer or contributor
+    #   byline.
+    # @return [String] the information with the @s and .s exchanged
+    def format_contact_information(contact_information)
+      contact_information.gsub('@', ' at ').gsub('.', ' dot ')
+    end
+
+    def fetch_maintainer
+      configured_maintainer = Gembuild.configure
+      m = "#{configured_maintainer[:name]} <#{configured_maintainer[:email]}>"
+      new_maintainer = format_contact_information(m)
+
+      if not maintainer.nil? and new_maintainer != maintainer
+        # TODO: make the old maintainer a contributor
+      end
+
+      maintainer = new_maintainer
+    end
+
     private
 
     # Set the static variables of a new pkgbuild.
