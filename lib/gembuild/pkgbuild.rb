@@ -123,12 +123,12 @@ module Gembuild
     end
 
     def self.create(gemname)
-      maintainer = Gembuild.configure
+      pkgbuild = Pkgbuild.new(gemname)
+
+      pkgbuild.fetch_maintainer
 
       s = Gembuild::GemScraper.new(gemname)
       pkgbuild = s.scrape!
-
-      pkgbuild.maintainer = "#{maintainer[:name]} <#{maintainer[:email].gsub('@', ' at ').gsub('.', ' dot ')}>"
 
       s = Gembuild::AurScraper.new(pkgbuild)
       s.scrape!
@@ -158,16 +158,27 @@ module Gembuild
       contact_information.gsub('@', ' at ').gsub('.', ' dot ')
     end
 
+    # Set the correct maintainer for the PKGBUILD.
+    #
+    # If the current maintainer is nil (no old pkgbuild was passed), then do
+    # nothing. If there is a maintainer then compare it to the configured
+    # maintainer and if they are different then make the old maintainer a
+    # contributor before setting the correct maintainer. If the maintainer is
+    # nil then just set the confgured maintainer.
+    #
+    # @todo Write rpsec tests (after testing configuration)
+    #
+    # @return [String] the pkgbuild maintainer
     def fetch_maintainer
       configured_maintainer = Gembuild.configure
       m = "#{configured_maintainer[:name]} <#{configured_maintainer[:email]}>"
       new_maintainer = format_contact_information(m)
 
-      if not maintainer.nil? and new_maintainer != maintainer
-        # TODO: make the old maintainer a contributor
+      unless maintainer.nil? || new_maintainer == maintainer
+        @contributor.unshift(maintainer)
       end
 
-      maintainer = new_maintainer
+      @maintainer = new_maintainer
     end
 
     private
