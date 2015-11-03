@@ -35,6 +35,12 @@ describe Gembuild::GemScraper do
         expect { Gembuild::GemScraper.new(nil) }.to raise_exception(Gembuild::UndefinedGemNameError)
       end
     end
+
+    context 'with empty gemname' do
+      it 'should raise an error' do
+        expect { Gembuild::GemScraper.new('') }.to raise_exception(Gembuild::UndefinedGemNameError)
+      end
+    end
   end
 
   describe '#query_latest_version' do

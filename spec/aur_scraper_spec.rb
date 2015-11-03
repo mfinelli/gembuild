@@ -27,6 +27,12 @@ describe Gembuild::AurScraper do
         expect { Gembuild::AurScraper.new(nil) }.to raise_exception(Gembuild::UndefinedPkgnameError)
       end
     end
+
+    context 'with empty package name' do
+      it 'should raise an UndefinedPkgnameError' do
+        expect { Gembuild::AurScraper.new('') }.to raise_exception(Gembuild::UndefinedPkgnameError)
+      end
+    end
   end
 
   describe '#query_aur' do
