@@ -23,9 +23,14 @@ require 'gembuild/pkgbuild'
 require 'gembuild/project'
 require 'gembuild/version'
 
+# Create Arch Linux PKGBUILDs for ruby gems.
 module Gembuild
   class << self
-
+    # Read from the configuration file if it exists, otherwise prompt for the
+    # configuration and save it to file.
+    #
+    # @return [Hash] the configuration options: maintainer name and email
+    #   address and where to checkout packages
     def configure
       conf_file = File.expand_path(File.join('~', '.gembuild'))
 
@@ -35,12 +40,12 @@ module Gembuild
         pkgdir = get_pkgdir
 
         File.write(
-            conf_file,
-            {
-                name: name,
-                email: email,
-                pkgdir: pkgdir
-            }.to_yaml)
+          conf_file,
+          {
+            name: name,
+            email: email,
+            pkgdir: pkgdir
+          }.to_yaml)
       end
 
       YAML.load_file(conf_file)
@@ -90,6 +95,5 @@ module Gembuild
       puts 'Where should projects be checked out?'
       File.expand_path(gets.chomp)
     end
-
   end
 end
