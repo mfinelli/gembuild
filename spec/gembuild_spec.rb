@@ -102,6 +102,29 @@ describe Gembuild do
     end
   end
 
+  describe '.fetch_git_global_name' do
+    context 'with successful call to git and confirmation' do
+      it 'should return the value from git' do
+        expect(Gembuild).to receive(:`).with('git config --global user.name').and_return('A Name')
+        allow($CHILD_STATUS).to receive(:success?).and_return(true)
+        expect(STDOUT).to receive(:puts).with('Detected "A Name", is this correct? (y/n)')
+        allow(Gembuild).to receive(:gets) { "y\n" }
+        expect(Gembuild.fetch_git_global_name).to eql('A Name')
+      end
+    end
+
+    context 'with a failure call to git' do
+      it 'should return the value entered' do
+        expect(Gembuild).to receive(:`).with('git config --global user.name').and_return('Fail Name')
+        allow($CHILD_STATUS).to receive(:success?).and_return(false)
+        expect(STDOUT).to receive(:puts).with('Could not detect name from git configuration.')
+        expect(STDOUT).to receive(:puts).with('Please enter desired name: ')
+        allow(Gembuild).to receive(:gets) { "A Name After Failure\n" }
+        expect(Gembuild.fetch_git_global_name).to eql('A Name After Failure')
+      end
+    end
+  end
+
   describe '.configure' do
     context 'with normal behavior' do
       it 'should respond to configure' do
