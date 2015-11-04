@@ -63,6 +63,45 @@ describe Gembuild do
     end
   end
 
+  describe '.prompt_for_git_name' do
+    context 'with message' do
+      it 'should display the message' do
+        expect(STDOUT).to receive(:puts).with('Test Message')
+        expect(STDOUT).to receive(:puts).with('Please enter desired name: ')
+        allow(Gembuild).to receive(:gets) { "test\n" }
+        Gembuild.prompt_for_git_name('Test Message')
+      end
+
+      it 'should return what was entered' do
+        allow(STDOUT).to receive(:puts)
+        allow(Gembuild).to receive(:gets) { "My Name\n" }
+        expect(Gembuild.prompt_for_git_name('Test Message')).to eql('My Name')
+      end
+    end
+
+    context 'with no message' do
+      it 'should only display the enter message' do
+        expect(STDOUT).to receive(:puts).with('Please enter desired name: ')
+        allow(Gembuild).to receive(:gets) { "test\n" }
+        Gembuild.prompt_for_git_name
+      end
+
+      it 'should return what was entered' do
+        allow(STDOUT).to receive(:puts)
+        allow(Gembuild).to receive(:gets) { "Another Name\n" }
+        expect(Gembuild.prompt_for_git_name).to eql('Another Name')
+      end
+    end
+
+    context 'with empty message' do
+      it 'should only display the enter message' do
+        expect(STDOUT).to receive(:puts).with('Please enter desired name: ')
+        allow(Gembuild).to receive(:gets) { "test\n" }
+        Gembuild.prompt_for_git_name('')
+      end
+    end
+  end
+
   describe '.configure' do
     context 'with normal behavior' do
       it 'should respond to configure' do
