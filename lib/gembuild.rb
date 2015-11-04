@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require 'English'
+
 require 'gembuild/aur_scraper'
 require 'gembuild/exceptions'
 require 'gembuild/gem_scraper'
@@ -40,7 +42,7 @@ module Gembuild
     #   address and where to checkout packages
     def configure
       unless File.file?(conf_file)
-        name = get_git_name
+        name = fetch_git_global_name
         email = get_git_email
         pkgdir = get_pkgdir
 
@@ -53,24 +55,47 @@ module Gembuild
       YAML.load_file(conf_file)
     end
 
-    def get_git_name
+    # Attempt to read the global git name, prompting the user for the name if
+    # unsuccessful
+    #
+    # @return [String] the name to use as package maintainer
+    def fetch_git_global_name
       name = `git config --global user.name`.strip
 
-      if $?.success?
-        puts "Detected \"#{name}\", is this correct? (y/n)"
-        response = gets.chomp.downcase[0, 1]
-
-        if response == 'y'
+      if $CHILD_STATUS.success?
+        if prompt_for_confirmation(name)
           return name
         else
-          puts 'Please enter desired name: '
-          return gets.chomp
+          prompt_for_git_name
         end
       else
-        puts 'Could not detect name from git configuration.'
-        puts 'Please enter desired name: '
-        gets.chomp
+        prompt_for_git_name('Could not detect name from git configuration.')
       end
+    end
+
+    # Prompt the user for the name to use.
+    #
+    # This method is only called if reading the global git configuration was
+    # unsuccessful or the user specified that it was incorrect.
+    #
+    # @param msg [String, nil] An optional message to display before
+    #   prompting.
+    # @return [String] the name to use as package maintainer
+    def prompt_for_git_name(msg = nil)
+      puts msg unless msg.nil? || msg.empty?
+      puts 'Please enter desired name: '
+      gets.chomp
+    end
+
+    # Ask the user to confirm the detected value.
+    #
+    # @param detected [String] The value that was detected.
+    # @return [Boolean] whether or not the value is correct
+    def prompt_for_confirmation(detected)
+      puts "Detected \"#{detected}\", is this correct? (y/n)"
+      response = gets.chomp.downcase[0, 1]
+
+      (response == 'y') ? true : false
     end
 
     def get_git_email
