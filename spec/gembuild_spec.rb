@@ -16,15 +16,15 @@ describe Gembuild do
 
     context 'with existing configuration' do
       it 'shoudl return a hash' do
-        File.stub(:file?).and_return(true)
-        YAML.stub(:load_file).and_return({name: 'Mario Finelli', email: 'mario@example.com', pkgdir: '/tmp/packages'})
+        allow(File).to receive(:file?).and_return(true)
+        allow(YAML).to receive(:load_file).and_return({name: 'Mario Finelli', email: 'mario@example.com', pkgdir: '/tmp/packages'})
 
         expect(Gembuild.configure).to be_a(Hash)
       end
 
       it 'should return the correct configuration' do
-        File.stub(:file?).and_return(true)
-        YAML.stub(:load_file).and_return({name: 'Mario Finelli', email: 'mario@example.com', pkgdir: '/tmp/packages'})
+        allow(File).to receive(:file?).and_return(true)
+        allow(YAML).to receive(:load_file).and_return({name: 'Mario Finelli', email: 'mario@example.com', pkgdir: '/tmp/packages'})
 
         expect(Gembuild.configure).to eql({name: 'Mario Finelli', email: 'mario@example.com', pkgdir: '/tmp/packages'})
       end
