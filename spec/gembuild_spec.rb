@@ -113,6 +113,18 @@ describe Gembuild do
       end
     end
 
+    context 'with successful call to git and negation' do
+      it 'should return the value entered' do
+        expect(Gembuild).to receive(:`).with('git config --global user.name').and_return('Bad Name')
+        allow($CHILD_STATUS).to receive(:success?).and_return(true)
+        expect(STDOUT).to receive(:puts).with('Detected "Bad Name", is this correct? (y/n)')
+        allow(Gembuild).to receive(:gets) { "n\n" }
+        expect(STDOUT).to receive(:puts).with('Please enter desired name: ')
+        allow(Gembuild).to receive(:gets) { "New name" }
+        expect(Gembuild.fetch_git_global_name).to eql('New name')
+      end
+    end
+
     context 'with a failure call to git' do
       it 'should return the value entered' do
         expect(Gembuild).to receive(:`).with('git config --global user.name').and_return('Fail Name')
