@@ -1,6 +1,12 @@
 # encoding: utf-8
 
 describe Gembuild do
+  describe '#conf_file' do
+    it 'should return .gembuild in the home directory' do
+      expect(Gembuild.conf_file).to eql(File.join(File.expand_path('~'), '.gembuild'))
+    end
+  end
+
   describe '#configure' do
     context 'with normal behavior' do
       it 'should respond to configure' do
