@@ -11,13 +11,13 @@ describe Gembuild do
     context 'with unimportant input' do
       it 'should output the detected value' do
         expect(STDOUT).to receive(:puts).with('Detected "test", is this correct? (y/n)')
-        allow(Gembuild).to receive(:gets) { 'Yes' }
+        allow(Gembuild).to receive(:gets) { "Yes\n" }
         Gembuild.prompt_for_confirmation('test')
       end
 
       it 'should return a boolean' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { 'Yes' }
+        allow(Gembuild).to receive(:gets) { "Yes\n" }
         expect(Gembuild.prompt_for_confirmation('test')).to be_truthy
       end
     end
@@ -25,7 +25,7 @@ describe Gembuild do
     context 'with negative uppercase response' do
       it 'should return false' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { 'No' }
+        allow(Gembuild).to receive(:gets) { "No\n" }
         expect(Gembuild.prompt_for_confirmation('test')).to eql(false)
       end
     end
@@ -33,7 +33,7 @@ describe Gembuild do
     context 'with negative lowercase response' do
       it 'should return false' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { 'n' }
+        allow(Gembuild).to receive(:gets) { "n\n" }
         expect(Gembuild.prompt_for_confirmation('test')).to eql(false)
       end
     end
@@ -41,7 +41,7 @@ describe Gembuild do
     context 'with affermative uppercase response' do
       it 'should return true' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { 'Y' }
+        allow(Gembuild).to receive(:gets) { "Y\n" }
         expect(Gembuild.prompt_for_confirmation('test')).to eql(true)
       end
     end
@@ -49,7 +49,7 @@ describe Gembuild do
     context 'with affermative lowercase response' do
       it 'should return true' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { 'yes' }
+        allow(Gembuild).to receive(:gets) { "yes\n" }
         expect(Gembuild.prompt_for_confirmation('test')).to eql(true)
       end
     end
@@ -57,7 +57,7 @@ describe Gembuild do
     context 'with invalid response' do
       it 'should return false' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { 'AAA' }
+        allow(Gembuild).to receive(:gets) { "AAA\n" }
         expect(Gembuild.prompt_for_confirmation('test')).to eql(false)
       end
     end
