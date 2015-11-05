@@ -290,6 +290,7 @@ describe Gembuild do
         allow(Gembuild).to receive(:fetch_git_global_name).and_return('Mario Finelli')
         allow(Gembuild).to receive(:fetch_git_global_email).and_return('mario@example.com')
         allow(Gembuild).to receive(:fetch_pkgdir).and_return('/tmp/aur-packages')
+        allow(YAML).to receive(:load_file)
         expect(File).to receive(:write).with(Gembuild.conf_file, File.read(File.join(File.dirname(__FILE__), 'fixtures', 'configuration.yml')))
         Gembuild.configure
       end
