@@ -105,6 +105,7 @@ describe Gembuild do
   describe '.fetch_git_global_name' do
     context 'with successful call to git and confirmation' do
       it 'should return the value from git' do
+        allow_message_expectations_on_nil
         expect(Gembuild).to receive(:`).with('git config --global user.name').and_return('A Name')
         allow($CHILD_STATUS).to receive(:success?).and_return(true)
         expect(STDOUT).to receive(:puts).with('Detected "A Name", is this correct? (y/n)')
@@ -115,6 +116,7 @@ describe Gembuild do
 
     context 'with successful call to git and negation' do
       it 'should return the value entered' do
+        allow_message_expectations_on_nil
         expect(Gembuild).to receive(:`).with('git config --global user.name').and_return('Bad Name')
         allow($CHILD_STATUS).to receive(:success?).and_return(true)
         expect(STDOUT).to receive(:puts).with('Detected "Bad Name", is this correct? (y/n)')
@@ -127,6 +129,7 @@ describe Gembuild do
 
     context 'with a failure call to git' do
       it 'should return the value entered' do
+        allow_message_expectations_on_nil
         expect(Gembuild).to receive(:`).with('git config --global user.name').and_return('Fail Name')
         allow($CHILD_STATUS).to receive(:success?).and_return(false)
         expect(STDOUT).to receive(:puts).with('Could not detect name from git configuration.')
