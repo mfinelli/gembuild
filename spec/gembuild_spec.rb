@@ -102,6 +102,45 @@ describe Gembuild do
     end
   end
 
+  describe '.prompt_for_git_email' do
+    context 'with message' do
+      it 'should display the message' do
+        expect(STDOUT).to receive(:puts).with('Test Email Message')
+        expect(STDOUT).to receive(:puts).with('Please enter desired email: ')
+        allow(Gembuild).to receive(:gets) { "test\n" }
+        Gembuild.prompt_for_git_email('Test Email Message')
+      end
+
+      it 'should return what was entered' do
+        allow(STDOUT).to receive(:puts)
+        allow(Gembuild).to receive(:gets) { "me@example.com\n" }
+        expect(Gembuild.prompt_for_git_email('Test Email Message')).to eql('me@example.com')
+      end
+    end
+
+    context 'with no message' do
+      it 'should only display the enter message' do
+        expect(STDOUT).to receive(:puts).with('Please enter desired email: ')
+        allow(Gembuild).to receive(:gets) { "test\n" }
+        Gembuild.prompt_for_git_email
+      end
+
+      it 'should return what was entered' do
+        allow(STDOUT).to receive(:puts)
+        allow(Gembuild).to receive(:gets) { "me@example.org\n" }
+        expect(Gembuild.prompt_for_git_email).to eql('me@example.org')
+      end
+    end
+
+    context 'with empty message' do
+      it 'should only display the enter message' do
+        expect(STDOUT).to receive(:puts).with('Please enter desired email: ')
+        allow(Gembuild).to receive(:gets) { "test\n" }
+        Gembuild.prompt_for_git_email('')
+      end
+    end
+  end
+
   describe '.fetch_git_global_name' do
     context 'with successful call to git and confirmation' do
       it 'should return the value from git' do

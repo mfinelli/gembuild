@@ -87,6 +87,20 @@ module Gembuild
       gets.chomp
     end
 
+    # Prompt the user for the email to use.
+    #
+    # This method is only called if reading the global git configuration was
+    # unsuccessful or the user specified that it was incorrect.
+    #
+    # @param msg [String, nil] An optional message to display before
+    #   prompting.
+    # @return [String] the email address to use as package maintainer
+    def prompt_for_git_email(msg=nil)
+      puts msg unless msg.nil? || msg.empty?
+      puts 'Please enter desired email: '
+      gets.chomp
+    end
+
     # Ask the user to confirm the detected value.
     #
     # @param detected [String] The value that was detected.
