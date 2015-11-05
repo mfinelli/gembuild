@@ -259,5 +259,50 @@ describe Gembuild do
         expect(Gembuild.configure).to eql({name: 'Mario Finelli', email: 'mario@example.com', pkgdir: '/tmp/packages'})
       end
     end
+
+    context 'with no existing configuration' do
+      it 'should ask the user name' do
+        allow(File).to receive(:file?).and_return(false)
+        allow(Gembuild).to receive(:fetch_git_global_email)
+        allow(Gembuild).to receive(:fetch_pkgdir)
+        expect(Gembuild).to receive(:fetch_git_global_name)
+        Gembuild.configure
+      end
+
+      it 'should ask the user email' do
+        allow(File).to receive(:file?).and_return(false)
+        allow(Gembuild).to receive(:fetch_git_global_name)
+        allow(Gembuild).to receive(:fetch_pkgdir)
+        expect(Gembuild).to receive(:fetch_git_global_email)
+        Gembuild.configure
+      end
+
+      it 'should ask the user where to store directories' do
+        allow(File).to receive(:file?).and_return(false)
+        allow(Gembuild).to receive(:fetch_git_global_name)
+        allow(Gembuild).to receive(:fetch_git_global_email)
+        expect(Gembuild).to receive(:fetch_pkgdir)
+        Gembuild.configure
+      end
+
+      it 'should write a new configuration file' do
+        allow(File).to receive(:file?).and_return(false)
+        allow(Gembuild).to receive(:fetch_git_global_name).and_return('Mario Finelli')
+        allow(Gembuild).to receive(:fetch_git_global_email).and_return('mario@example.com')
+        allow(Gembuild).to receive(:fetch_pkgdir).and_return('/tmp/aur-packages')
+        expect(File).to receive(:write).with(Gembuild.conf_file, File.read(File.join(File.dirname(__FILE__), 'fixtures', 'configuration.yml')))
+        Gembuild.configure
+      end
+
+      it 'should return the correct configuration' do
+        allow(File).to receive(:file?).and_return(false)
+        allow(Gembuild).to receive(:fetch_git_global_name).and_return('Mario Finelli')
+        allow(Gembuild).to receive(:fetch_git_global_email).and_return('mario@example.com')
+        allow(Gembuild).to receive(:fetch_pkgdir).and_return('/tmp/aur-packages')
+        allow(File).to receive(:write)
+        allow(YAML).to receive(:load_file).and_return(YAML.load_file(File.join(File.dirname(__FILE__), 'fixtures', 'configuration.yml')))
+        expect(Gembuild.configure).to eql(YAML.load_file(File.join(File.dirname(__FILE__), 'fixtures', 'configuration.yml')))
+      end
+    end
   end
 end
