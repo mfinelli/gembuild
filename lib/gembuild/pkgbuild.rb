@@ -88,7 +88,7 @@ module Gembuild
     #
     # @param gemname [String] The rubygem for which to create a PKGBUILD.
     # @param existing_pkgbuild [nil, String] An old PKGBUILD that can be
-    #   parsed for maintainer anc contributor information.
+    #   parsed for maintainer and contributor information.
     # @return [Gembuild::Pkgbuild] a new Pkgbuild instance
     def initialize(gemname, existing_pkgbuild = nil)
       unless existing_pkgbuild.nil? || existing_pkgbuild.is_a?(String)
@@ -122,16 +122,25 @@ module Gembuild
       { maintainer: maintainer, contributor: contributor, depends: deps }
     end
 
-    def self.create(gemname)
-      pkgbuild = Pkgbuild.new(gemname)
+    # Create a new Pkgbuild instance with all information from the scraped
+    # sources assigned.
+    #
+    # @todo Write rspec tests
+    #
+    # @param gemname [String] The rubygem for which to create a Pkgbuild.
+    # @param existing_pkgbuild [String, nil] An old PKGBUILD that can be
+    #   parsed for maintainer information.
+    # @return [Gembuild::Pkgbuild] a new Pkgbuild instance
+    def self.create(gemname, existing_pkgbuild = nil)
+      pkgbuild = Pkgbuild.new(gemname, existing_pkgbuild)
 
       pkgbuild.fetch_maintainer
 
-      s = Gembuild::GemScraper.new(gemname)
-      pkgbuild = s.scrape!
+      gem_details = Gembuild::GemScraper.new(gemname).scrape!
+      aur_details = Gembuild::AurScraper.new(pkgbuild.pkgname).scrape!
 
-      s = Gembuild::AurScraper.new(pkgbuild)
-      s.scrape!
+      pkgbuild.assign_gem_details(gem_details)
+      pkgbuild.assign_aur_details(aur_details)
 
       pkgbuild
     end
@@ -194,6 +203,41 @@ module Gembuild
       @maintainer = new_maintainer
     end
 
+    # Add the data scraped from rubygems.org to the pkgbuild.
+    #
+    # @todo Write rspec tests
+    #
+    # @param details [Hash] The results from GemScraper scrape.
+    # @return [void]
+    def assign_gem_details(details)
+      @pkgver = details.fetch(:version)
+      @pkgdesc = details.fetch(:description)
+      @checksum = details.fetch(:checksum)
+      @license = details.fetch(:license)
+      @url = details.fetch(:homepage)
+
+      details.fetch(:dependencies).each do |dependency|
+        @depends << "ruby-#{dependency}"
+      end
+    end
+
+    # Assign version information based on the information gathered from the
+    # AUR.
+    #
+    # @todo Write rspec tests
+    #
+    # @param details [Hash, nil] The results from AurScraper scrape or nil if
+    #   the package does not yet exist on the AUR.
+    # @return [void]
+    def assign_aur_details(details)
+      if details.nil?
+        @epoch = 0
+        @pkgrel = 1
+      else
+        perform_version_reconciliation(details)
+      end
+    end
+
     private
 
     # Set the static variables of a new pkgbuild.
@@ -228,6 +272,26 @@ module Gembuild
       deps.reject { |e| e.match(/^ruby/) }
     rescue
       []
+    end
+
+    # Assign the correct pkgrel and epoch depending on the current pkgver on
+    # the AUR and the version of the gem from rubygems.org.
+    #
+    # @todo Write rspec tests (Needs to be done in {#assign_aur_details})
+    #
+    # @param details [Hash] The results from AurScraper scrape
+    # @return [void]
+    def perform_version_reconciliation(details)
+      if pkgver > details.fetch(:pkgver)
+        @epoch = details.fetch(:epoch)
+        @pkgrel = 1
+      elsif pkgver < details.fetch(:pkgver)
+        @epoch = details.fetch(:epoch) + 1
+        @pkgrel = 1
+      else
+        @epoch = details.fetch(:epoch)
+        @pkgrel = details.fetch(:pkgrel) + 1
+      end
     end
   end
 end
