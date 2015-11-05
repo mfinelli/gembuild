@@ -136,14 +136,27 @@ module Gembuild
       pkgbuild
     end
 
+    # Generate a PKGBUILD from the class using the pkgbuild erb template.
+    #
+    # @todo Write rspec tests after filling out the rest of the PKGBUILD
+    #
+    # @return [String] the PKGBUILD
     def render
       ERB.new(template, 0, '-').result(binding)
     end
 
+    # Get the PKGBUILD erb template.
+    #
+    # @return [String] the pkgbuild erb template
     def template
       File.read(File.join(File.dirname(__FILE__), 'pkgbuild.erb'))
     end
 
+    # Write the PKGBUILD to disk.
+    #
+    # @todo Write rspec tests after writing them for {#render}
+    #
+    # @return [Fixnum] the number of bytes written
     def write
       File.write('PKGBUILD', render)
     end

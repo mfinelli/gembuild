@@ -244,4 +244,14 @@ describe Gembuild::Pkgbuild do
       end
     end
   end
+
+  describe '#template' do
+    it 'should return a string' do
+      expect(Gembuild::Pkgbuild.new('mina').template).to be_a(String)
+    end
+
+    it 'should return the template' do
+      expect(Gembuild::Pkgbuild.new('mina').template).to eql(File.read(File.join(File.dirname(__FILE__), '..', 'lib', 'gembuild', 'pkgbuild.erb')))
+    end
+  end
 end
