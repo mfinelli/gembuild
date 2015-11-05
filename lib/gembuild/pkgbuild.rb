@@ -205,13 +205,11 @@ module Gembuild
 
     # Add the data scraped from rubygems.org to the pkgbuild.
     #
-    # @todo Write rspec tests
-    #
     # @param details [Hash] The results from GemScraper scrape.
     # @return [void]
     def assign_gem_details(details)
       @pkgver = details.fetch(:version)
-      @pkgdesc = details.fetch(:description)
+      @description = details.fetch(:description)
       @checksum = details.fetch(:checksum)
       @license = details.fetch(:license)
       @url = details.fetch(:homepage)

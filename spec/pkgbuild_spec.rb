@@ -254,4 +254,84 @@ describe Gembuild::Pkgbuild do
       expect(Gembuild::Pkgbuild.new('mina').template).to eql(File.read(File.join(File.dirname(__FILE__), '..', 'lib', 'gembuild', 'pkgbuild.erb')))
     end
   end
+
+  describe '#assign_gem_details' do
+    context 'with gem netrc' do
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('netrc') }
+      let(:gem_details) {
+        VCR.use_cassette('gem_scraper_netrc') do
+          Gembuild::GemScraper.new('netrc').scrape!
+        end
+      }
+
+      it 'should assign the checksum' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.checksum).to eql('de1ce33da8c99ab1d97871726cba75151113f117146becbe45aa85cb3dabee3f')
+      end
+
+      it 'should assign the version' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.11.0'))
+      end
+
+      it 'should assign the description' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.description).to eql('This library can read and update netrc files, preserving formatting including comments and whitespace.')
+      end
+
+      it 'should assign the license' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.license).to eql(['MIT'])
+      end
+
+      it 'should not assign any extra dependencies' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.depends).to eql(['ruby'])
+      end
+
+      it 'should assign the homepage' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.url).to eql('https://github.com/geemus/netrc')
+      end
+    end
+
+    context 'with gem twitter' do
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('twitter') }
+      let(:gem_details) {
+        VCR.use_cassette('gem_scraper_twitter') do
+          Gembuild::GemScraper.new('twitter').scrape!
+        end
+      }
+
+      it 'should assign the checksum' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.checksum).to eql('71856f234ab671c26c787f07032ce98acbc345c8fbb3194668f8de14a404bb41')
+      end
+
+      it 'should assign the version' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.pkgver).to eql(Gem::Version.new('5.15.0'))
+      end
+
+      it 'should assign the description' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.description).to eql('A Ruby interface to the Twitter API.')
+      end
+
+      it 'should assign the license' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.license).to eql(['MIT'])
+      end
+
+      it 'should assign the other dependencies' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.depends).to eql(['ruby', 'ruby-simple_oauth', 'ruby-naught', 'ruby-memoizable', 'ruby-json', 'ruby-http_parser.rb', 'ruby-http', 'ruby-faraday', 'ruby-equalizer', 'ruby-buftok', 'ruby-addressable'])
+      end
+
+      it 'should assign the homepage' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.url).to eql('http://sferik.github.com/twitter/')
+      end
+    end
+  end
 end
