@@ -179,6 +179,44 @@ describe Gembuild do
     end
   end
 
+  describe '.fetch_git_global_email' do
+    context 'with successful call to git and confirmation' do
+      it 'should return the value from git' do
+        allow_message_expectations_on_nil
+        expect(Gembuild).to receive(:`).with('git config --global user.email').and_return('my@email.com')
+        allow($CHILD_STATUS).to receive(:success?).and_return(true)
+        expect(STDOUT).to receive(:puts).with('Detected "my@email.com", is this correct? (y/n)')
+        allow(Gembuild).to receive(:gets) { "y\n" }
+        expect(Gembuild.fetch_git_global_email).to eql('my@email.com')
+      end
+    end
+
+    context 'with successful call to git and negation' do
+      it 'should return the value entered' do
+        allow_message_expectations_on_nil
+        expect(Gembuild).to receive(:`).with('git config --global user.email').and_return('bad@email.com')
+        allow($CHILD_STATUS).to receive(:success?).and_return(true)
+        expect(STDOUT).to receive(:puts).with('Detected "bad@email.com", is this correct? (y/n)')
+        allow(Gembuild).to receive(:gets) { "n\n" }
+        expect(STDOUT).to receive(:puts).with('Please enter desired email: ')
+        allow(Gembuild).to receive(:gets) { "new@email.com" }
+        expect(Gembuild.fetch_git_global_email).to eql('new@email.com')
+      end
+    end
+
+    context 'with a failure call to git' do
+      it 'should return the value entered' do
+        allow_message_expectations_on_nil
+        expect(Gembuild).to receive(:`).with('git config --global user.email').and_return('fail@email.com')
+        allow($CHILD_STATUS).to receive(:success?).and_return(false)
+        expect(STDOUT).to receive(:puts).with('Could not detect email from git configuration.')
+        expect(STDOUT).to receive(:puts).with('Please enter desired email: ')
+        allow(Gembuild).to receive(:gets) { "good@email.com\n" }
+        expect(Gembuild.fetch_git_global_email).to eql('good@email.com')
+      end
+    end
+  end
+
   describe '.configure' do
     context 'with normal behavior' do
       it 'should respond to configure' do

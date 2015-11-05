@@ -43,7 +43,7 @@ module Gembuild
     def configure
       unless File.file?(conf_file)
         name = fetch_git_global_name
-        email = get_git_email
+        email = fetch_git_global_email
         pkgdir = get_pkgdir
 
         File.write(
@@ -56,7 +56,7 @@ module Gembuild
     end
 
     # Attempt to read the global git name, prompting the user for the name if
-    # unsuccessful
+    # unsuccessful.
     #
     # @return [String] the name to use as package maintainer
     def fetch_git_global_name
@@ -70,6 +70,24 @@ module Gembuild
         end
       else
         prompt_for_git_name('Could not detect name from git configuration.')
+      end
+    end
+
+    # Attempt to read the global git email, prompting the user for the email
+    # if unsuccessful.
+    #
+    # @return [String] the email to use as package maintainer
+    def fetch_git_global_email
+      email = `git config --global user.email`.strip
+
+      if $CHILD_STATUS.success?
+        if prompt_for_confirmation(email)
+          return email
+        else
+          prompt_for_git_email
+        end
+      else
+        prompt_for_git_email('Could not detect email from git configuration.')
       end
     end
 
@@ -95,7 +113,7 @@ module Gembuild
     # @param msg [String, nil] An optional message to display before
     #   prompting.
     # @return [String] the email address to use as package maintainer
-    def prompt_for_git_email(msg=nil)
+    def prompt_for_git_email(msg = nil)
       puts msg unless msg.nil? || msg.empty?
       puts 'Please enter desired email: '
       gets.chomp
@@ -110,26 +128,6 @@ module Gembuild
       response = gets.chomp.downcase[0, 1]
 
       (response == 'y') ? true : false
-    end
-
-    def get_git_email
-      email = `git config --global user.email`.strip
-
-      if $?.success?
-        puts "Detected \"#{email}\", is this correct? (y/n)"
-        response = gets.chomp.downcase[0, 1]
-
-        if response == 'y'
-          return email
-        else
-          puts 'Please enter desired email: '
-          return gets.chomp
-        end
-      else
-        puts 'Could not detect email from git configuration.'
-        puts 'Please enter desired email: '
-        gets.chomp
-      end
     end
 
     def get_pkgdir
