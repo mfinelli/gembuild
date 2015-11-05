@@ -44,7 +44,7 @@ module Gembuild
       unless File.file?(conf_file)
         name = fetch_git_global_name
         email = fetch_git_global_email
-        pkgdir = get_pkgdir
+        pkgdir = fetch_pkgdir
 
         File.write(
           conf_file,
@@ -130,7 +130,11 @@ module Gembuild
       (response == 'y') ? true : false
     end
 
-    def get_pkgdir
+    # Prompt the user for the location where they would like to store
+    # checked-out packages.
+    #
+    # @return [String] the filepath where to store package repositories
+    def fetch_pkgdir
       puts 'Where should projects be checked out?'
       File.expand_path(gets.chomp)
     end

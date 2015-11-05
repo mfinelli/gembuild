@@ -217,6 +217,26 @@ describe Gembuild do
     end
   end
 
+  describe '.fetch_pkgdir' do
+    it 'should prompt the user for the directory' do
+      expect(STDOUT).to receive(:puts).with('Where should projects be checked out?')
+      allow(Gembuild).to receive(:gets) { "test\n" }
+      Gembuild.fetch_pkgdir
+    end
+
+    it 'should return the value entered' do
+      expect(STDOUT).to receive(:puts)
+      allow(Gembuild).to receive(:gets) { '/tmp/packages' }
+      expect(Gembuild.fetch_pkgdir).to eql('/tmp/packages')
+    end
+
+    it 'should expand the given path' do
+      expect(STDOUT).to receive(:puts)
+      allow(Gembuild).to receive(:gets) { '~/packages' }
+      expect(Gembuild.fetch_pkgdir).to eql(File.expand_path('~/packages'))
+    end
+  end
+
   describe '.configure' do
     context 'with normal behavior' do
       it 'should respond to configure' do
