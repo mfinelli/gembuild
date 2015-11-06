@@ -280,14 +280,12 @@ module Gembuild
     # @param details [Hash] The results from AurScraper scrape
     # @return [void]
     def perform_version_reconciliation(details)
-      if pkgver > details.fetch(:pkgver)
-        @epoch = details.fetch(:epoch)
-        @pkgrel = 1
-      elsif pkgver < details.fetch(:pkgver)
-        @epoch = details.fetch(:epoch) + 1
-        @pkgrel = 1
-      else
-        @epoch = details.fetch(:epoch)
+      @epoch = details.fetch(:epoch)
+      @pkgrel = 1
+
+      if pkgver < details.fetch(:pkgver)
+        @epoch += 1
+      elsif @pkgver == details.fetch(:pkgver)
         @pkgrel = details.fetch(:pkgrel) + 1
       end
     end
