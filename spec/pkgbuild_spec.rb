@@ -378,5 +378,51 @@ describe Gembuild::Pkgbuild do
         expect(pkgbuild.pkgrel).to eql(2)
       end
     end
+
+    context 'with pkgver less than version' do
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('mina') }
+      let(:results) { { epoch: 1, pkgver: Gem::Version.new('0.3.6'), pkgrel: 2 } }
+
+      it 'should leave the epoch alone' do
+        pkgbuild.pkgver = Gem::Version.new('0.3.7')
+        pkgbuild.assign_aur_details(results)
+        expect(pkgbuild.epoch).to eql(1)
+      end
+
+      it 'should leave the version alone' do
+        pkgbuild.pkgver = Gem::Version.new('0.3.7')
+        pkgbuild.assign_aur_details(results)
+        expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.3.7'))
+      end
+
+      it 'should set the pkgrel to one' do
+        pkgbuild.pkgver = Gem::Version.new('0.3.7')
+        pkgbuild.assign_aur_details(results)
+        expect(pkgbuild.pkgrel).to eql(1)
+      end
+    end
+
+    context 'with pkgver greater than version' do
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('mina') }
+      let(:results) { { epoch: 1, pkgver: Gem::Version.new('0.3.7'), pkgrel: 2 } }
+
+      it 'should increment the epoch' do
+        pkgbuild.pkgver = Gem::Version.new('0.3.6')
+        pkgbuild.assign_aur_details(results)
+        expect(pkgbuild.epoch).to eql(2)
+      end
+
+      it 'should leave the version alone' do
+        pkgbuild.pkgver = Gem::Version.new('0.3.6')
+        pkgbuild.assign_aur_details(results)
+        expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.3.6'))
+      end
+
+      it 'should set the pkgrel to one' do
+        pkgbuild.pkgver = Gem::Version.new('0.3.6')
+        pkgbuild.assign_aur_details(results)
+        expect(pkgbuild.pkgrel).to eql(1)
+      end
+    end
   end
 end
