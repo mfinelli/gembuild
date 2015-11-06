@@ -334,4 +334,49 @@ describe Gembuild::Pkgbuild do
       end
     end
   end
+
+  describe '#assign_aur_details' do
+    context 'with nil response' do
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('mina') }
+
+      it 'should set the epoch to zero' do
+        pkgbuild.assign_aur_details(nil)
+        expect(pkgbuild.epoch).to eql(0)
+      end
+
+      it 'should set the pkgrel to one' do
+        pkgbuild.assign_aur_details(nil)
+        expect(pkgbuild.pkgrel).to eql(1)
+      end
+
+      it 'should leave the version alone' do
+        pkgbuild.pkgver = Gem::Version.new('0.3.7')
+        pkgbuild.assign_aur_details(nil)
+        expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.3.7'))
+      end
+    end
+
+    context 'with equal versions' do
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('mina') }
+      let(:results) { { epoch: 1, pkgver: Gem::Version.new('0.3.7'), pkgrel: 1 } }
+
+      it 'should leave the epoch alone' do
+        pkgbuild.pkgver = Gem::Version.new('0.3.7')
+        pkgbuild.assign_aur_details(results)
+        expect(pkgbuild.epoch).to eql(1)
+      end
+
+      it 'should leave the version alone' do
+        pkgbuild.pkgver = Gem::Version.new('0.3.7')
+        pkgbuild.assign_aur_details(results)
+        expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.3.7'))
+      end
+
+      it 'should increment the pkgrel' do
+        pkgbuild.pkgver = Gem::Version.new('0.3.7')
+        pkgbuild.assign_aur_details(results)
+        expect(pkgbuild.pkgrel).to eql(2)
+      end
+    end
+  end
 end
