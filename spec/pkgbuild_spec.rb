@@ -474,4 +474,177 @@ describe Gembuild::Pkgbuild do
       end
     end
   end
+
+  describe '.create' do
+    context 'with gem mina and no existing pkgbuild' do
+      let(:pkgbuild) {
+        VCR.use_cassette('pkgbuild_mina') do
+          allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario@example.com'})
+          Gembuild::Pkgbuild.create('mina')
+        end
+      }
+
+      it 'should return a pkgbuild' do
+        expect(pkgbuild).to be_a(Gembuild::Pkgbuild)
+      end
+
+      it 'should have the correct maintainer' do
+        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario at example dot com>')
+      end
+
+      it 'should have the correct architecture' do
+        expect(pkgbuild.arch).to eql(['any'])
+      end
+
+      it 'should have the correct checksum' do
+        expect(pkgbuild.checksum).to eql('bd1fa2b56ed1aded882a12f6365a04496f5cf8a14c07f8c4f1f3cfc944ef34f6')
+      end
+
+      it 'should have the correct checksum type' do
+        expect(pkgbuild.checksum_type).to eql('sha256')
+      end
+
+      it 'should have the correct contributor' do
+        expect(pkgbuild.contributor).to eql([])
+      end
+
+      it 'should have the correct dependencies' do
+        expect(pkgbuild.depends).to eql(['ruby', 'ruby-open4', 'ruby-rake'])
+      end
+
+      it 'should have the correct description' do
+        expect(pkgbuild.description).to eql('Really fast deployer and server automation tool.')
+      end
+
+      it 'should have the correct epoch' do
+        expect(pkgbuild.epoch).to eql(0)
+      end
+
+      it 'should have the correct gemname' do
+        expect(pkgbuild.gemname).to eql('mina')
+      end
+
+      it 'should have the correct license' do
+        expect(pkgbuild.license).to eql([])
+      end
+
+      it 'should have the correct makedepends' do
+        expect(pkgbuild.makedepends).to eql(['rubygems'])
+      end
+
+      it 'should have the correct noextract' do
+        expect(pkgbuild.noextract).to eql(['$_gemname-$pkgver.gem'])
+      end
+
+      it 'should have the correct options' do
+        expect(pkgbuild.options).to eql(['!emptydirs'])
+      end
+
+      it 'should have the correct pkgname' do
+        expect(pkgbuild.pkgname).to eql('ruby-mina')
+      end
+
+      it 'should have the correct pkgrel' do
+        expect(pkgbuild.pkgrel).to eql(2)
+      end
+
+      it 'should have the correct pkgver' do
+        expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.3.7'))
+      end
+
+      it 'should have the correct source' do
+        expect(pkgbuild.source).to eql(['https://rubygems.org/downloads/$_gemname-$pkgver.gem'])
+      end
+
+      it 'should have the correct url' do
+        expect(pkgbuild.url).to eql('http://github.com/nadarei/mina')
+      end
+    end
+
+    context 'with gem choice and an existing pkgbuild' do
+      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_choice')) }
+      let(:pkgbuild) {
+        VCR.use_cassette('pkgbuild_choice') do
+          allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
+          Gembuild::Pkgbuild.create('choice', pkgbuild_file)
+        end
+      }
+
+      it 'should return a pkgbuild' do
+        expect(pkgbuild).to be_a(Gembuild::Pkgbuild)
+      end
+
+      it 'should have the correct maintainer' do
+        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
+      end
+
+      it 'should have the correct architecture' do
+        expect(pkgbuild.arch).to eql(['any'])
+      end
+
+      it 'should have the correct checksum' do
+        expect(pkgbuild.checksum).to eql('a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974')
+      end
+
+      it 'should have the correct checksum type' do
+        expect(pkgbuild.checksum_type).to eql('sha256')
+      end
+
+      it 'should have the correct contributor' do
+        expect(pkgbuild.contributor).to eql(['Christopher Eby <kreed at kreed dot org>'])
+      end
+
+      it 'should have the correct dependencies' do
+        expect(pkgbuild.depends).to eql(['ruby'])
+      end
+
+      it 'should have the correct description' do
+        expect(pkgbuild.description).to eql('Choice is a simple little gem for easily defining and parsing command line options with a friendly DSL.')
+      end
+
+      it 'should have the correct epoch' do
+        expect(pkgbuild.epoch).to eql(0)
+      end
+
+      it 'should have the correct gemname' do
+        expect(pkgbuild.gemname).to eql('choice')
+      end
+
+      it 'should have the correct license' do
+        expect(pkgbuild.license).to eql(['MIT'])
+      end
+
+      it 'should have the correct makedepends' do
+        expect(pkgbuild.makedepends).to eql(['rubygems'])
+      end
+
+      it 'should have the correct noextract' do
+        expect(pkgbuild.noextract).to eql(['$_gemname-$pkgver.gem'])
+      end
+
+      it 'should have the correct options' do
+        expect(pkgbuild.options).to eql(['!emptydirs'])
+      end
+
+      it 'should have the correct pkgname' do
+        expect(pkgbuild.pkgname).to eql('ruby-choice')
+      end
+
+      it 'should have the correct pkgrel' do
+        expect(pkgbuild.pkgrel).to eql(3)
+      end
+
+      it 'should have the correct pkgver' do
+        expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.2.0'))
+      end
+
+      it 'should have the correct source' do
+        expect(pkgbuild.source).to eql(['https://rubygems.org/downloads/$_gemname-$pkgver.gem'])
+      end
+
+      it 'should have the correct url' do
+        expect(pkgbuild.url).to eql('http://www.github.com/defunkt/choice')
+      end
+    end
+  end
 end

@@ -125,8 +125,6 @@ module Gembuild
     # Create a new Pkgbuild instance with all information from the scraped
     # sources assigned.
     #
-    # @todo Write rspec tests
-    #
     # @param gemname [String] The rubygem for which to create a Pkgbuild.
     # @param existing_pkgbuild [String, nil] An old PKGBUILD that can be
     #   parsed for maintainer information.

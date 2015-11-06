@@ -1,0 +1,371 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://rubygems.org/api/v1/versions/choice.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - rubygems.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 06 Nov 2015 02:11:06 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Status:
+      - 200 OK
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Last-Modified:
+      - Sat, 21 Feb 2015 08:50:58 GMT
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - 30261c31-15df-4cef-91a6-8bf64bebab92
+      X-Runtime:
+      - '0.014227'
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Content-Encoding:
+      - gzip
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA92XbYvjRgzHv4rx6yRI8zyBvihXKIX2VRcKvR6HZkZzMTjO
+        1nZ6LMd+98q7XKHX4m1oD9wDg+2JZkbOT/pL8/pDS9f5dBmn9th+O9IwN19f
+        p7kbds2r09hNzU80TPNI86ndtena9fNbmsVUAZo9qr3GO4Dj03UAgJ/FKo9M
+        M5e/2KE/KnVU/qA8LnaFpzx293N3GWTBV6dLl7mRHamZuvN9z03fzbPc3vG5
+        qZexYZq6/qEpXLuhG941NJTmnsZpec6X83l577uBm8vTmlPzvptPslodOx6K
+        zPzmx+8Py76X90N/oTK9zZfrIB+D4JSFXXvmmQrN1B4/PO7a4XpOPIpncFAH
+        kHnTVfYYHz7x9W92fvKKx2Wv+55m8f0sk8ZrepCR5fb2Nxa3nz77lyuA5q+a
+        ZYP7kUfu5TO5PVbqJ961vfwnw8QC53X7w3d37RtZgH+9diOfeZiXYRmZTuJy
+        Sxgd+upLLSYqTDpQsAUcOmOcU1DYBUuImrMryDkHm0pyPlUdcvSmfdz9y1hQ
+        4Z/FwmKHRyuxoA/ehG3FAsZgzEos4MFvPxYEeA0hMSGHAMaG5G3FanJIETiW
+        RMo5h9rIj1HXGpjJgSGPMZWg8ZNYeEkJ1B70XrkX6X+0U3iUABD62sZt0Qf0
+        yupV/O4z4R+uff+CBjyb/FkAnseeJUAR6EKVsZhUjIfiKinQqlQmFuYk9FU2
+        TiM6T5qULUhWi/55iyIXt2PHvbJ34NcLgGBXe3wuFFID4iGC3xZ2FVVchW63
+        C52ytTWbGmpMGZNzploNRseKwZEt2QRhTtVQdtYlkXtVQBnDyTCF6m6DDnGP
+        IOl+h+tV/w87yXUr8SFV39pNQQ+L0q9CN9uFrnONXLJyTCW6FEKwgCL0CCR4
+        tS0OtMbkNUNBrVXliqVU1JmclHx1M/Qlg+NLmS7QwS+KgOGowtGGjy3hZlo9
+        JS3SKnO9XebVpmA0OvKGUkpcUBo5BSlLkkvdzlmBdWC1d6pGI7gBvA6eY9IV
+        qs83Mnci2XsQdQ+r6v4/YK71ekVX22Uu/ZkuVZFPxuZoCpkI5EguDTnIY3WJ
+        USTdg4uE0rqVmLW0cxWMCVxuZr7kr/oC8hzD2oEOD7hd5oY5JRU4EvtkSc5o
+        GSBJb5c560reWVICmCXZnTe1qJxj9Us50zabwrczN3sNXwLzuJ7nn+sQ/x90
+        7jbaasCRSsUXZbkYDtFoSIQ+qGh1cViD4+CiHNhySoAuxCj9PtVC3raPb34H
+        kekVS8oRAAA=
+    http_version: 
+  recorded_at: Fri, 06 Nov 2015 02:11:06 GMT
+- request:
+    method: get
+    uri: https://rubygems.org/api/v1/dependencies?gems=choice
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - rubygems.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 06 Nov 2015 02:11:07 GMT
+      Content-Type:
+      - application/octet-stream
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Content-Type-Options:
+      - nosniff
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIADsMPFYAA2LhiOar5rTizEvMTfVU4k7OyM9MTmWzYnMNseLOK81NSi3y
+        VOIy0DPSM2CzZgux4i3ISSxJyy/K9VTiLCpNqgQLCqakFqTmpaTmJWemFkcz
+        VHNaMyCMAiqwZgebYahnDuZxIOm15sSn3oxE9aYkqjcgUb0JieqNSVRvSKJ6
+        I6zqAQAAAP//AwDiqF+t0wEAAA==
+    http_version: 
+  recorded_at: Fri, 06 Nov 2015 02:11:07 GMT
+- request:
+    method: get
+    uri: https://rubygems.org/gems/choice
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - rubygems.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 06 Nov 2015 02:11:07 GMT
+      Content-Type:
+      - text/html; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Status:
+      - 200 OK
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Etag:
+      - W/"f26060264c8051f499c1df510ef29c77"
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Set-Cookie:
+      - _rubygems_session=WVdkQzB0N0Vtck1GSi9obWJ2WXI5ejRzYkxuQUU3RUFhSDZvUHoxSit1N3dOS29MbE13bkhKSkZ5ZTlSS0VUZ2s5c3BZUzJPTlpnYWVLWks4dkRhUzFtTGtoaSt5U29WNm5vRUpwM1FJWHIxaWxOWnNPdkJmUUd6QjUyY0xTMWNhS2dQVExSN2pyNmJFM2psWUlIS3Z3PT0tLVc2VllmS2hERGs3RzF4Znl5WENVd1E9PQ%3D%3D--545a8fddb33c9065a4becebac2c8d1ab392cd1d7;
+        path=/; secure; HttpOnly
+      X-Request-Id:
+      - 1986950c-c36b-4873-bb14-b689b5cf66a7
+      X-Runtime:
+      - '0.039829'
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Content-Encoding:
+      - gzip
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+    http_version: 
+  recorded_at: Fri, 06 Nov 2015 02:11:07 GMT
+- request:
+    method: get
+    uri: https://aur.archlinux.org/rpc.php?arg=ruby-choice&type=info
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - aur.archlinux.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.8.0
+      Date:
+      - Fri, 06 Nov 2015 02:11:08 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Expires:
+      - Tue, 11 Oct 1988 22:00:00 GMT
+      Cache-Control:
+      - public, must-revalidate, max-age=0
+      Etag:
+      - W/"9f728da638e31d9f615c5b2e48015516"
+      Strict-Transport-Security:
+      - max-age=16070400
+      Content-Encoding:
+      - gzip
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA2VQy26DMBD8FeQzgQRCEzi2qFKkvNS0OXFxYAlWwEb2uhWN
+        8u9dE7Vq1YMl78zOeDxX9g7aCCVZNvMZDj2wjAlZK+YzDca2WCorcWTvs2HZ
+        la1ylkXTRTojeMs7J9L2NEzKRokSSLvn5YWf4ZEbcLtJGs+Xf9B/iuN3DjYN
+        omA6iQjLwZRa9HjHc6iFBI/Lyuu5NuCVquvc1DpYjWvG+xDYeNyrtQBZtYOX
+        H9YBWb29rMmiQexNVoRFeKY1ewrIoggrqK28YBH+hNna7qgQ6K+Rz3YWd3XO
+        kTJL27Y+23AhkQ5osjS2B91xLVxlz0IbPNhTJxChotbieBGlyTxNfLbmBjeq
+        ErUYmXn8EEXLZOkYelSOlWxWr/ese44NzRSJghYhtzoYL0by3jSKbr/aC5AT
+        /UnKJ0p5Vnpwnc9uty+UkEOp3gEAAA==
+    http_version: 
+  recorded_at: Fri, 06 Nov 2015 02:11:08 GMT
+recorded_with: VCR 3.0.0

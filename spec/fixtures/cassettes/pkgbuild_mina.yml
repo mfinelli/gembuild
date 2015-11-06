@@ -1,0 +1,385 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://rubygems.org/api/v1/versions/mina.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - rubygems.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 06 Nov 2015 01:51:30 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Status:
+      - 200 OK
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Last-Modified:
+      - Wed, 08 Jul 2015 13:13:33 GMT
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - d6ccd6f6-322b-4b82-bff7-f2905d2230e2
+      X-Runtime:
+      - '0.018304'
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Content-Encoding:
+      - gzip
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+    http_version: 
+  recorded_at: Fri, 06 Nov 2015 01:51:30 GMT
+- request:
+    method: get
+    uri: https://rubygems.org/api/v1/dependencies?gems=mina
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - rubygems.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 06 Nov 2015 01:51:31 GMT
+      Content-Type:
+      - application/octet-stream
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      X-Content-Type-Options:
+      - nosniff
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Via:
+      - 1.1 vegur
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAKMHPFYAA2LhiBat5rTizEvMTfVU4szNzEtks2JzDbHizivNTUot8lTi
+        MtAz1DNgs2YLseItyEksScsvygWqLCpNqgQLCqakFqTmpaTmJWemFkezR7OD
+        JBOzU0GSQKadrQJYM0icKx+o0gRNoprTmgFmM5BrzQ620ljPHMzjQLLKmhNi
+        PLIxvHV2CoZA1SYwO7DZjcsKM9pbYUJ7K4xpb4Uh7a0wwGkFFVKTIR4fUMF4
+        I9oab6hnRDPj+UGuN9ArKEqlqR1AL9DLDhrHNO3SKdgLxjT3gjGe1ERybgYA
+        AAD//wMAyvYRwz8GAAA=
+    http_version: 
+  recorded_at: Fri, 06 Nov 2015 01:51:31 GMT
+- request:
+    method: get
+    uri: https://rubygems.org/gems/mina
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - rubygems.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx
+      Date:
+      - Fri, 06 Nov 2015 01:51:31 GMT
+      Content-Type:
+      - text/html; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Status:
+      - 200 OK
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Set-Cookie:
+      - _rubygems_session=TFM4bG41Ny9vS24vZ1paVnlGbzc0K1k0SmlNQ1JPeHEzOW5RVEFxMVdaZGQ0b2RWZExsOXgydE5zek9FWUQwZmlLemF5K2hYUTduUXJYVXNjRzQrYTFqdjFxZmMzcnc0MitmeE5OcS9NNDBzZWk4elB3ZVBNVEkvdVJaV3k3akhGc0EyN1Q3SEdxNlREYm11bGlSMmhBPT0tLVJubDM2aE5oeDNKTmU1bitPckxidHc9PQ%3D%3D--57ec65ae9e71a6289c03857427f2aa5e9037e29a;
+        path=/; secure; HttpOnly
+      X-Request-Id:
+      - cd8d7f60-4a6e-4a01-85bd-a162dd18ec89
+      X-Runtime:
+      - '0.035551'
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Content-Encoding:
+      - gzip
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+    http_version: 
+  recorded_at: Fri, 06 Nov 2015 01:51:31 GMT
+- request:
+    method: get
+    uri: https://aur.archlinux.org/rpc.php?arg=ruby-mina&type=info
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip,deflate,identity
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Mechanize/2.7.3 Ruby/2.2.3p173 (http://github.com/sparklemotion/mechanize/)
+      Accept-Charset:
+      - ISO-8859-1,utf-8;q=0.7,*;q=0.7
+      Accept-Language:
+      - en-us,en;q=0.5
+      Host:
+      - aur.archlinux.org
+      Connection:
+      - keep-alive
+      Keep-Alive:
+      - 300
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.8.0
+      Date:
+      - Fri, 06 Nov 2015 01:51:32 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Vary:
+      - Accept-Encoding
+      Expires:
+      - Tue, 11 Oct 1988 22:00:00 GMT
+      Cache-Control:
+      - public, must-revalidate, max-age=0
+      Etag:
+      - W/"9baf91d57224ad536d0e9f5a5516da0d"
+      Strict-Transport-Security:
+      - max-age=16070400
+      Content-Encoding:
+      - gzip
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA11Qy07DMBD8lcjnNI8mpZAjVEiV+lKBnnLZJpvGIrEje10p
+        VP13Nikg4GBpd2dnPDsXcUZjpVYii31BfYciE1JVWvjCoHUNFdopGtFbb0V2
+        EcuFyKbJfXQ39cUG2oFk3LGftFIBM3dQvMMJH8HisBlHcfow/TP+Rzh8mxBR
+        kATzScyzBdrCyI5u8z1C0/ReBZa8ErtG92g8UKVn0ZyH0pFuYVj2SOsmYIG3
+        /YqJNVGX5WEeniTV7hgUus1DBSUYlHn49f/GtQdNyLdFvtg62lYLIDapXNP4
+        Yg1SET80rGddh6YFI4eInqWx9OKOrSTCki9N0zSZpdGcZVZsda1LWclfSJzM
+        GJEFqjGD9fL1ZnQHVHOfhwXbzENwJhgLq6CztebqJ66AgMEP5j2xx5M2/Zjx
+        9foJI4RKBMwBAAA=
+    http_version: 
+  recorded_at: Fri, 06 Nov 2015 01:51:32 GMT
+recorded_with: VCR 3.0.0
