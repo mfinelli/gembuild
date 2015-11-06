@@ -180,9 +180,6 @@ describe Gembuild::Pkgbuild do
       end
     end
 
-    context 'with different maintainer' do
-    end
-
     context 'with other dependencies' do
       let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_mini_magick')) }
       let(:pkgbuild) { Gembuild::Pkgbuild.new('maruku', pkgbuild_file) }
@@ -241,6 +238,58 @@ describe Gembuild::Pkgbuild do
     context 'with no information to change' do
       it 'should not change anything' do
         expect(pkgbuild.format_contact_information('some information')).to eql('some information')
+      end
+    end
+  end
+
+  describe '#fetch_maintainer' do
+    context 'with no existing maintainer' do
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('mina') }
+
+      it 'should have only the configured maintainer' do
+        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
+        pkgbuild.fetch_maintainer
+        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
+      end
+
+      it 'should have no contributors' do
+        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
+        pkgbuild.fetch_maintainer
+        expect(pkgbuild.contributor).to eql([])
+      end
+    end
+
+    context 'with the same maintainer' do
+      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_choice')) }
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', pkgbuild_file) }
+
+      it 'should have only the configured maintainer' do
+        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
+        pkgbuild.fetch_maintainer
+        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
+      end
+
+      it 'should not adjust the contributors' do
+        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
+        pkgbuild.fetch_maintainer
+        expect(pkgbuild.contributor).to eql(['Christopher Eby <kreed at kreed dot org>'])
+      end
+    end
+
+    context 'with different maintainer' do
+      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_choice')) }
+      let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', pkgbuild_file) }
+
+      it 'should have only the configured maintainer' do
+        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario@new.com'})
+        pkgbuild.fetch_maintainer
+        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario at new dot com>')
+      end
+
+      it 'should add the old maintainer to the contributor list' do
+        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario@new.com'})
+        pkgbuild.fetch_maintainer
+        expect(pkgbuild.contributor).to eql(['Mario Finelli <mario dot finelli at yahoo dot com>', 'Christopher Eby <kreed at kreed dot org>'])
       end
     end
   end

@@ -188,8 +188,6 @@ module Gembuild
     # contributor before setting the correct maintainer. If the maintainer is
     # nil then just set the confgured maintainer.
     #
-    # @todo Write rpsec tests (after testing configuration)
-    #
     # @return [String] the pkgbuild maintainer
     def fetch_maintainer
       configured_maintainer = Gembuild.configure
@@ -221,8 +219,6 @@ module Gembuild
 
     # Assign version information based on the information gathered from the
     # AUR.
-    #
-    # @todo Write rspec tests
     #
     # @param details [Hash, nil] The results from AurScraper scrape or nil if
     #   the package does not yet exist on the AUR.
@@ -274,8 +270,6 @@ module Gembuild
 
     # Assign the correct pkgrel and epoch depending on the current pkgver on
     # the AUR and the version of the gem from rubygems.org.
-    #
-    # @todo Write rspec tests (Needs to be done in {#assign_aur_details})
     #
     # @param details [Hash] The results from AurScraper scrape
     # @return [void]
