@@ -833,4 +833,28 @@ describe Gembuild::Pkgbuild do
       end
     end
   end
+
+  describe '#write' do
+    let(:pkgbuild) {
+      VCR.use_cassette('pkgbuild_mina') do
+        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario@example.com'})
+        Gembuild::Pkgbuild.create('mina')
+      end
+    }
+
+    it 'should default to the current path' do
+      expect(File).to receive(:write).with(File.join(File.expand_path('.'), 'PKGBUILD'), pkgbuild.render)
+      pkgbuild.write
+    end
+
+    it 'should take any path' do
+      expect(File).to receive(:write).with(File::Separator + File.join('tmp', 'pkg', 'PKGBUILD'), pkgbuild.render)
+      pkgbuild.write('/tmp/pkg')
+    end
+
+    it 'should expand the path' do
+      expect(File).to receive(:write).with(File.join(File.expand_path('~'), 'PKGBUILD'), pkgbuild.render)
+      pkgbuild.write('~')
+    end
+  end
 end

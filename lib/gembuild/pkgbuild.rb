@@ -145,8 +145,6 @@ module Gembuild
 
     # Generate a PKGBUILD from the class using the pkgbuild erb template.
     #
-    # @todo Write rspec tests after filling out the rest of the PKGBUILD
-    #
     # @return [String] the PKGBUILD
     def render
       ERB.new(template, 0, '-').result(binding)
@@ -161,11 +159,10 @@ module Gembuild
 
     # Write the PKGBUILD to disk.
     #
-    # @todo Write rspec tests after writing them for {#render}
-    #
+    # @param path [String] The directory to write the PKGBUILD.
     # @return [Fixnum] the number of bytes written
-    def write
-      File.write('PKGBUILD', render)
+    def write(path = '')
+      File.write(File.join(File.expand_path(path), 'PKGBUILD'), render)
     end
 
     # Obfuscate the maintainer/contributors' email addresses to (help to)
