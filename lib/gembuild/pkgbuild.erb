@@ -1,5 +1,8 @@
 # Generated with gembuild (https://github.com/mfinelli/gembuild)
 # Maintainer: <%= maintainer %>
+<% unless contributor.count.zero? -%><% contributor.each do |c| -%>
+# Contributor: <%= c %>
+<% end -%><% end -%>
 
 _gemname=<%= gemname %>
 pkgname=ruby-$_gemname
@@ -11,7 +14,7 @@ epoch=<%= epoch %>
 pkgdesc='<%= description %>'
 arch=('<%= arch.join("' '") %>')
 url='<%= url %>'
-<% unless license.nil? -%>
+<% unless license.count.zero? -%>
 license=('<%= license.join("' '") %>')
 <% end -%>
 options=(<%= options.join(' ') %>)
