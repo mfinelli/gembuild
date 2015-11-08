@@ -17,9 +17,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module Gembuild
+  # This class is mostly responsible for creating new AUR packages: checking
+  # out, adding files and committing to git.
+  #
+  # @!attribute [r] pkgname
+  #   @return [String] the AUR package
   class Project
-
     attr_reader :pkgname
+
+    # Return a new project instance.
+    #
+    # @param gemname [String] The ruby gem for which to create a project.
+    # @return [Gembuild::Project] the new project instance
+    def initialize(gemname)
+      @pkgname = "ruby-#{gemname}"
+    end
 
     def clone(pkg)
       `git clone ssh://aur@aur4.archlinux.org/#{pkg}.git #{File.join(@path, pkg)}`
@@ -49,24 +61,24 @@ module Gembuild
       end
     end
 
-    def initialize(gem)
-      @pkgname = "ruby-#{gem}"
-      config = Gembuild.configure
+    # def initialize(gem)
+    #   @pkgname = "ruby-#{gem}"
+    #   config = Gembuild.configure
 
-      FileUtils.mkdir_p config[:pkgdir]
-      @path = config[:pkgdir]
+    #   FileUtils.mkdir_p config[:pkgdir]
+    #   @path = config[:pkgdir]
 
-      clone "ruby-#{gem}" unless File.directory? File.join(@path, "ruby-#{gem}")
-      write_gitignore unless File.file? File.join(@path, @pkgname, '.gitignore')
+    #   clone "ruby-#{gem}" unless File.directory? File.join(@path, "ruby-#{gem}")
+    #   write_gitignore unless File.file? File.join(@path, @pkgname, '.gitignore')
 
-      git_configure(config[:name], config[:email])
+    #   git_configure(config[:name], config[:email])
 
-      pkgbuild = Gembuild::Pkgbuild.create(gem)
-      File.write(File.join(@path, @pkgname, 'PKGBUILD'), pkgbuild.render)
+    #   pkgbuild = Gembuild::Pkgbuild.create(gem)
+    #   File.write(File.join(@path, @pkgname, 'PKGBUILD'), pkgbuild.render)
 
-      stage_changes
-      `cd #{File.join(@path, @pkgname)} && git commit -m "#{commit_message(pkgbuild.pkgver)}"`
-    end
+    #   stage_changes
+    #   `cd #{File.join(@path, @pkgname)} && git commit -m "#{commit_message(pkgbuild.pkgver)}"`
+    # end
 
   end
 end
