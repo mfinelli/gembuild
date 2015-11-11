@@ -34,6 +34,25 @@ module Gembuild
     #
     # @raise [Gembuild::UndefinedPkgnameError] if the pkgname is nil or empty
     #
+    # @example Create new AurScraper object
+    #   Gembuild::AurScraper.new('ruby-mina')
+    #   # => #<Gembuild::AurScraper:0x000000040659b0
+    #   #  @agent=
+    #   #   #<Mechanize
+    #   #    #<Mechanize::CookieJar:0x000000040658c0
+    #   #     @store=
+    #   #      #<HTTP::CookieJar::HashStore:0x000000040813b8
+    #   #       @gc_index=0,
+    #   #       @gc_threshold=150,
+    #   #       @jar={},
+    #   #       @logger=nil,
+    #   #       @mon_count=0,
+    #   #       @mon_mutex=#<Mutex:0x00000004081368>,
+    #   #       @mon_owner=nil>>
+    #   #    nil>,
+    #   #  @pkgname="ruby-mina",
+    #   #  @url="https://aur.archlinux.org/rpc.php?type=info&arg=ruby-mina">
+    #
     # @param pkgname [String] The name of the package about which to query.
     # @return [Gembuild::AurScraper] a new AurScraper instance
     def initialize(pkgname)
@@ -48,6 +67,29 @@ module Gembuild
     # Query the AUR for information about a package and then parse the JSON
     # results.
     #
+    # @example Query the AUR about a package
+    #   s = Gembuild::AurScraper.new('ruby-mina')
+    #   r = s.query_aur
+    #   #=> {:version=>1,
+    #   # :type=>"info",
+    #   # :resultcount=>1,
+    #   # :results=>
+    #   #  {:ID=>238062,
+    #   #   :Name=>"ruby-mina",
+    #   #   :PackageBaseID=>101492,
+    #   #   :PackageBase=>"ruby-mina",
+    #   #   :Version=>"0.3.7-1",
+    #   #   :Description=>"Really fast deployer and server automation tool.",
+    #   #   :URL=>"http://github.com/nadarei/mina",
+    #   #   :NumVotes=>0,
+    #   #   :OutOfDate=>nil,
+    #   #   :Maintainer=>"supermario",
+    #   #   :FirstSubmitted=>1444354070,
+    #   #   :LastModified=>1444354135,
+    #   #   :License=>"MIT",
+    #   #   :URLPath=>"/cgit/aur.git/snapshot/ruby-mina.tar.gz",
+    #   #   :CategoryID=>1}}
+    #
     # @return [Hash] the information about the package
     def query_aur
       JSON.parse(agent.get(url).body, symbolize_names: true)
@@ -55,6 +97,11 @@ module Gembuild
 
     # Determine whether the package already exists on the AUR by the number of
     # results returned.
+    #
+    # @example Check if package exists on the AUR
+    #   s = Gembuild::AurScraper.new('ruby-mina')
+    #   r = s.query_aur
+    #   s.package_exists?(r) #=> true
     #
     # @param response [Hash] The JSON parsed response from the AUR.
     # @return [Boolean] whether or not the package exists already on the AUR
@@ -72,6 +119,12 @@ module Gembuild
     # use the first as the epoch value. Finally, whatever is left is the
     # actual version of the gem.
     #
+    # @example Get package version from the AUR
+    #   s = Gembuild::AurScraper.new('ruby-mina')
+    #   r = s.query_aur
+    #   s.get_version_hash(r)
+    #   #=> {:epoch=>0, :pkgver=>Gem::Version.new("0.3.7"), :pkgrel=>1}
+    #
     # @param response [Hash] The JSON parsed response from the AUR.
     # @return [Hash] a hash of the different version parts
     def get_version_hash(response)
@@ -88,6 +141,11 @@ module Gembuild
     end
 
     # Query the AUR and returned the parsed results.
+    #
+    # @example Query the AUR for information about a package
+    #   s = Gembuild::AurScraper.new('ruby-mina')
+    #   s.scrape!
+    #   #=> {:epoch=>0, :pkgver=>Gem::Version.new("0.3.7"), :pkgrel=>1}
     #
     # @return [nil, Hash] the version hash or nil if the package doesn't exist
     def scrape!
