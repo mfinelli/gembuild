@@ -20,10 +20,12 @@ module Gembuild
   # This class is mostly responsible for creating new AUR packages: checking
   # out, adding files and committing to git.
   #
+  # @!attribute [r] pkgdir
+  #   @return [String] where repositories are checked out
   # @!attribute [r] pkgname
   #   @return [String] the AUR package
   class Project
-    attr_reader :pkgname
+    attr_reader :pkgdir, :pkgname
 
     # Return a new project instance.
     #
@@ -31,6 +33,7 @@ module Gembuild
     # @return [Gembuild::Project] the new project instance
     def initialize(gemname)
       @pkgname = "ruby-#{gemname}"
+      @pkgdir = ensure_pkgdir
     end
 
     def clone(pkg)
@@ -59,6 +62,20 @@ module Gembuild
       else
         "Bump version to #{version}"
       end
+    end
+
+    private
+
+    # Get the gembuild configuration and ensure that the pkgdir exists
+    # creating it if necessary.
+    #
+    # @return [String] the pkgdir
+    def ensure_pkgdir
+      pkgdir = Gembuild.configure[:pkgdir]
+
+      FileUtils.mkdir_p(pkgdir) unless File.directory?(pkgdir)
+
+      pkgdir
     end
 
     # def initialize(gem)
