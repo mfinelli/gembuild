@@ -12,6 +12,11 @@ describe Gembuild::Project do
       expect(Gembuild::Project.new('mina').pkgname).to eql('ruby-mina')
     end
 
+    it 'should have the name' do
+      allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+      expect(Gembuild::Project.new('mina').gemname).to eql('mina')
+    end
+
     it 'should have the correct pkgdir' do
       allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
       expect(Gembuild::Project.new('mina').pkgdir).to eql('/tmp/pkg')
@@ -44,6 +49,26 @@ describe Gembuild::Project do
         allow(File).to receive(:directory?).and_return(false)
         expect(FileUtils).to receive(:mkdir_p).with('/tmp/pkg')
         Gembuild::Project.new('mina').ensure_pkgdir!
+      end
+    end
+  end
+
+  describe '#write_gitignore!' do
+    context 'with existing gitignore file' do
+      it 'should not write a file' do
+        allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+        allow(File).to receive(:exist?).with('/tmp/pkg/ruby-mina/.gitignore').and_return(true)
+        expect(File).to_not receive(:write)
+        Gembuild::Project.new('mina').write_gitignore!
+      end
+    end
+
+    context 'with no gitignore file' do
+      it 'should write a file' do
+        allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+        allow(File).to receive(:exist?).with('/tmp/pkg/ruby-mina/.gitignore').and_return(false)
+        expect(File).to receive(:write).with('/tmp/pkg/ruby-mina/.gitignore', Gembuild::Project::GITIGNORE)
+        Gembuild::Project.new('mina').write_gitignore!
       end
     end
   end
