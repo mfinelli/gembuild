@@ -151,4 +151,24 @@ describe Gembuild::Project do
       end
     end
   end
+
+  describe '#commit_message' do
+    context 'with first commit' do
+      it 'should return initial commit' do
+        allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+        allow_any_instance_of(Gembuild::Project).to receive(:`).with('cd /tmp/pkg/ruby-mina && git rev-parse HEAD &> /dev/null')
+        allow($CHILD_STATUS).to receive(:success?).and_return(false)
+        expect(Gembuild::Project.new('mina').commit_message(Gem::Version.new('0.3.7'))).to eql('Initial commit')
+      end
+    end
+
+    context 'with other commits' do
+      it 'should return bump to version' do
+        allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+        allow_any_instance_of(Gembuild::Project).to receive(:`).with('cd /tmp/pkg/ruby-mina && git rev-parse HEAD &> /dev/null')
+        allow($CHILD_STATUS).to receive(:success?).and_return(true)
+        expect(Gembuild::Project.new('mina').commit_message(Gem::Version.new('0.3.7'))).to eql('Bump version to 0.3.7')
+      end
+    end
+  end
 end
