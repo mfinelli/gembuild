@@ -100,7 +100,8 @@ module Gembuild
 
       set_package_defaults
 
-      parse_existing_pkgbuild(existing_pkgbuild) unless existing_pkgbuild.nil?
+      no_parse_pkgbuild = existing_pkgbuild.nil? || existing_pkgbuild.empty?
+      parse_existing_pkgbuild(existing_pkgbuild) unless no_parse_pkgbuild
     end
 
     # Parse the old pkgbuild (if it exists) to get information about old

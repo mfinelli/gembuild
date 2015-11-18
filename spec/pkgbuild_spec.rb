@@ -114,6 +114,27 @@ describe Gembuild::Pkgbuild do
       end
     end
 
+    context 'with empty string pkgbuild' do
+      it 'should not call parse_existing_pkgbuild' do
+        expect_any_instance_of(Gembuild::Pkgbuild).to_not receive(:parse_existing_pkgbuild)
+        Gembuild::Pkgbuild.new('mina', '')
+      end
+    end
+
+    context 'with nil pkgbuild' do
+      it 'should not call parse_existing_pkgbuild' do
+        expect_any_instance_of(Gembuild::Pkgbuild).to_not receive(:parse_existing_pkgbuild)
+        Gembuild::Pkgbuild.new('mina', nil)
+      end
+    end
+
+    context 'with non-nil, non-empty pkgbuild' do
+      it 'should call parse_existing_pkgbuild' do
+        expect_any_instance_of(Gembuild::Pkgbuild).to receive(:parse_existing_pkgbuild).with('TEST')
+        Gembuild::Pkgbuild.new('mina', 'TEST')
+      end
+    end
+
     context 'with non-string pkgbuild' do
       it 'should raise an exception' do
         expect { Gembuild::Pkgbuild.new('mechanize', {}) }.to raise_exception(Gembuild::InvalidPkgbuildError)
