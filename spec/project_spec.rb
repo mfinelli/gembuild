@@ -109,4 +109,46 @@ describe Gembuild::Project do
       Gembuild::Project.new('mina').stage_changes!
     end
   end
+
+  describe '#commit_changes!' do
+    it 'should call shell commands' do
+      allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+      expect_any_instance_of(Gembuild::Project).to receive(:`).with('cd /tmp/pkg/ruby-mina && git commit -m "test message"')
+      Gembuild::Project.new('mina').commit_changes!('test message')
+    end
+  end
+
+  describe '#load_existing_pkgbuild' do
+    context 'with an existing pkgbuild' do
+      it 'should return a string' do
+        allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+        allow(File).to receive(:file?).with('/tmp/pkg/ruby-mina/PKGBUILD').and_return(true)
+        allow(File).to receive(:read).with('/tmp/pkg/ruby-mina/PKGBUILD').and_return('test pkgbuild')
+        expect(Gembuild::Project.new('mina').load_existing_pkgbuild).to be_a(String)
+      end
+
+      it 'should return the existing pkgbuild' do
+        allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+        allow(File).to receive(:file?).with('/tmp/pkg/ruby-mina/PKGBUILD').and_return(true)
+        allow(File).to receive(:read).with('/tmp/pkg/ruby-mina/PKGBUILD').and_return('test pkgbuild')
+        expect(Gembuild::Project.new('mina').load_existing_pkgbuild).to eql('test pkgbuild')
+      end
+    end
+
+    context 'with no existing pkgbuild' do
+      it 'should return a string' do
+        allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+        allow(File).to receive(:file?).with('/tmp/pkg/ruby-mina/PKGBUILD').and_return(false)
+        expect(File).to_not receive(:read)
+        expect(Gembuild::Project.new('mina').load_existing_pkgbuild).to be_a(String)
+      end
+
+      it 'should return an empty string' do
+        allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+        allow(File).to receive(:file?).with('/tmp/pkg/ruby-mina/PKGBUILD').and_return(false)
+        expect(File).to_not receive(:read)
+        expect(Gembuild::Project.new('mina').load_existing_pkgbuild).to eql('')
+      end
+    end
+  end
 end
