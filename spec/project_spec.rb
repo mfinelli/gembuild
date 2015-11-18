@@ -92,4 +92,21 @@ describe Gembuild::Project do
       end
     end
   end
+
+  describe '#configure_git!' do
+    it 'should call git config commands' do
+      allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+      expect_any_instance_of(Gembuild::Project).to receive(:`).with('cd /tmp/pkg/ruby-mina && git config user.name "Mario Finelli"')
+      expect_any_instance_of(Gembuild::Project).to receive(:`).with('cd /tmp/pkg/ruby-mina && git config user.email "mario@example.com"')
+      Gembuild::Project.new('mina').configure_git!('Mario Finelli', 'mario@example.com')
+    end
+  end
+
+  describe '#stage_changes!' do
+    it 'should call shell commands' do
+      allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+      expect_any_instance_of(Gembuild::Project).to receive(:`).with('cd /tmp/pkg/ruby-mina && mksrcinfo && git add .')
+      Gembuild::Project.new('mina').stage_changes!
+    end
+  end
 end
