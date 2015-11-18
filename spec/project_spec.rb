@@ -72,4 +72,24 @@ describe Gembuild::Project do
       end
     end
   end
+
+  describe '#clone_and_update!' do
+    context 'with existing directory' do
+      it 'should update the master branch' do
+        allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+        allow(File).to receive(:directory?).with('/tmp/pkg/ruby-mina').and_return(true)
+        expect_any_instance_of(Gembuild::Project).to receive(:`).with('cd /tmp/pkg/ruby-mina && git checkout master && git pull origin master')
+        Gembuild::Project.new('mina').clone_and_update!
+      end
+    end
+
+    context 'with non-existing directory' do
+      it 'should clone the repository' do
+        allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+        allow(File).to receive(:directory?).with('/tmp/pkg/ruby-mina').and_return(false)
+        expect_any_instance_of(Gembuild::Project).to receive(:`).with('git clone ssh://aur@aur4.archlinux.org/ruby-mina.git /tmp/pkg/ruby-mina')
+        Gembuild::Project.new('mina').clone_and_update!
+      end
+    end
+  end
 end
