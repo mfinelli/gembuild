@@ -16,6 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require 'English'
+
 module Gembuild
   # This class is mostly responsible for creating new AUR packages: checking
   # out, adding files and committing to git.
@@ -66,11 +68,9 @@ module Gembuild
     #
     # @return [void]
     def write_gitignore!
-      gitignore_path = File.join(full_path,'.gitignore')
+      ignore_path = File.join(full_path, '.gitignore')
 
-      unless File.exists?(gitignore_path)
-        File.write(gitignore_path, GITIGNORE)
-      end
+      File.write(ignore_path, GITIGNORE) unless File.exist?(ignore_path)
     end
 
     # Ensure that the git user and email address are correct for the
@@ -115,13 +115,17 @@ module Gembuild
     def commit_message(version)
       `cd #{full_path} && git rev-parse HEAD &> /dev/null`
 
-      if not $?.success?
+      if !$CHILD_STATUS.success?
         'Initial commit'
       else
         "Bump version to #{version}"
       end
     end
 
+    # Commit the currently staged changeset.
+    #
+    # @param message [String] The requested commit message.
+    # @return [void]
     def commit_changes(message)
       `cd #{full_path} && git commit -m "#{message}"`
     end
