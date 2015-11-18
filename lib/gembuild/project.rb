@@ -24,12 +24,14 @@ module Gembuild
   #   @return [Hash] the response from Gembuild.configure
   # @!attribute [r] full_path
   #   @return [String] the full local path to the project
+  # @!attribute [r] gemname
+  #   @return [String] the name of the gem
   # @!attribute [r] pkgdir
   #   @return [String] where repositories are checked out
   # @!attribute [r] pkgname
   #   @return [String] the AUR package
   class Project
-    attr_reader :config, :full_path, :pkgdir, :pkgname
+    attr_reader :config, :full_path, :gemname, :pkgdir, :pkgname
 
     # A standard gitignore for new projects that only allows the following
     # whitelisted files: itself, the PKGBUILD and the .SRCINFO.
@@ -41,6 +43,7 @@ module Gembuild
     # @return [Gembuild::Project] the new project instance
     def initialize(gemname)
       @pkgname = "ruby-#{gemname}"
+      @gemname = gemname
 
       @config = Gembuild.configure
       @pkgdir = @config[:pkgdir]
@@ -70,24 +73,57 @@ module Gembuild
       end
     end
 
-    def git_configure(name, email)
-      `cd #{File.join(@path, @pkgname)} && git config user.name "#{name}"`
-      `cd #{File.join(@path, @pkgname)} && git config user.email #{email}`
+    # Ensure that the git user and email address are correct for the
+    # repository.
+    #
+    # @param name [String] The user name to send to git.
+    # @param email [String] The user email to send to git.
+    # @return [void]
+    def configure_git!(name, email)
+      `cd #{full_path} && git config user.name "#{name}"`
+      `cd #{full_path} && git config user.email "#{email}"`
     end
 
-    def stage_changes
+    # Read into memory the PKGBUILD in the project's directory or an empty
+    # string if none exists.
+    #
+    # @return [String] the existing pkgbuild or an empty string
+    def load_existing_pkgbuild
+      pkgbuild_path = File.join(full_path, 'PKGBUILD')
 
-      `cd #{File.join(@path, @pkgname)} && mksrcinfo && git add .`
+      if File.file?(pkgbuild_path)
+        File.read(pkgbuild_path)
+      else
+        ''
+      end
     end
 
+    # Update the package metadata with mksrcinfo and then stage all changes
+    # with git.
+    #
+    # @return [void]
+    def stage_changes!
+      `cd #{full_path} && mksrcinfo && git add .`
+    end
+
+    # Determine the commit message depending upon whether it's the initial
+    # commit or we're bumping the release.
+    #
+    # @param version [String] The version of the package to include in the
+    #   commit message.
+    # @return [String] the appropriate commit message
     def commit_message(version)
-      `cd #{File.join(@path, @pkgname)} && git rev-parse HEAD &> /dev/null`
+      `cd #{full_path} && git rev-parse HEAD &> /dev/null`
 
       if not $?.success?
         'Initial commit'
       else
         "Bump version to #{version}"
       end
+    end
+
+    def commit_changes(message)
+      `cd #{full_path} && git commit -m "#{message}"`
     end
 
     # Get the gembuild configuration and ensure that the pkgdir exists
@@ -98,24 +134,17 @@ module Gembuild
       FileUtils.mkdir_p(pkgdir) unless File.directory?(pkgdir)
     end
 
-    # def initialize(gem)
-    #   @pkgname = "ruby-#{gem}"
-    #   config = Gembuild.configure
+    def all_together
+      ensure_pkgdir!
+      clone_and_update!
+      write_gitignore!
+      configure_git!(config[:name], config[:email])
 
-    #   FileUtils.mkdir_p config[:pkgdir]
-    #   @path = config[:pkgdir]
+      pkgbuild = Gembuild::Pkgbuild.create(gemname, load_existing_pkgbuild)
+      pkgbuild.write(full_path)
 
-    #   clone "ruby-#{gem}" unless File.directory? File.join(@path, "ruby-#{gem}")
-    #   write_gitignore unless File.file? File.join(@path, @pkgname, '.gitignore')
-
-    #   git_configure(config[:name], config[:email])
-
-    #   pkgbuild = Gembuild::Pkgbuild.create(gem)
-    #   File.write(File.join(@path, @pkgname, 'PKGBUILD'), pkgbuild.render)
-
-    #   stage_changes
-    #   `cd #{File.join(@path, @pkgname)} && git commit -m "#{commit_message(pkgbuild.pkgver)}"`
-    # end
-
+      stage_changes!
+      commit_changes(commit_message(pkgbuild.pkgver))
+    end
   end
 end
