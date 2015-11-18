@@ -20,12 +20,20 @@ module Gembuild
   # This class is mostly responsible for creating new AUR packages: checking
   # out, adding files and committing to git.
   #
+  # @!attribute [r] config
+  #   @return [Hash] the response from Gembuild.configure
+  # @!attribute [r] full_path
+  #   @return [String] the full local path to the project
   # @!attribute [r] pkgdir
   #   @return [String] where repositories are checked out
   # @!attribute [r] pkgname
   #   @return [String] the AUR package
   class Project
-    attr_reader :pkgdir, :pkgname
+    attr_reader :config, :full_path, :pkgdir, :pkgname
+
+    # A standard gitignore for new projects that only allows the following
+    # whitelisted files: itself, the PKGBUILD and the .SRCINFO.
+    GITIGNORE = "*\n!.gitignore\n!PKGBUILD\n!.SRCINFO\n"
 
     # Return a new project instance.
     #
@@ -33,15 +41,33 @@ module Gembuild
     # @return [Gembuild::Project] the new project instance
     def initialize(gemname)
       @pkgname = "ruby-#{gemname}"
-      @pkgdir = ensure_pkgdir
+
+      @config = Gembuild.configure
+      @pkgdir = @config[:pkgdir]
+      @full_path = File.join(@pkgdir, @pkgname)
     end
 
-    def clone(pkg)
-      `git clone ssh://aur@aur4.archlinux.org/#{pkg}.git #{File.join(@path, pkg)}`
+    # Git clone the project if it hasn't already been checked out. If it has
+    # then pull master to ensure the most recent update.
+    #
+    # @return [void]
+    def clone_and_update!
+      if File.directory?(full_path)
+        `cd #{full_path} && git checkout master && git pull origin master`
+      else
+        `git clone ssh://aur@aur4.archlinux.org/#{pkgname}.git #{full_path}`
+      end
     end
 
-    def write_gitignore
-      File.write(File.join(@path, @pkgname, '.gitignore'), "*\n!.gitignore\n!PKGBUILD\n!.SRCINFO\n")
+    # Write a standard gitignore file if none exists.
+    #
+    # @return [void]
+    def write_gitignore!
+      gitignore_path = File.join(full_path,'.gitignore')
+
+      unless File.exists?(gitignore_path)
+        File.write(gitignore_path, GITIGNORE)
+      end
     end
 
     def git_configure(name, email)
@@ -64,18 +90,12 @@ module Gembuild
       end
     end
 
-    private
-
     # Get the gembuild configuration and ensure that the pkgdir exists
     # creating it if necessary.
     #
-    # @return [String] the pkgdir
-    def ensure_pkgdir
-      pkgdir = Gembuild.configure[:pkgdir]
-
+    # @return [void]
+    def ensure_pkgdir!
       FileUtils.mkdir_p(pkgdir) unless File.directory?(pkgdir)
-
-      pkgdir
     end
 
     # def initialize(gem)

@@ -4,20 +4,27 @@ describe Gembuild::Project do
   describe '#initialize' do
     it 'should return a project' do
       allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
-      allow(File).to receive(:directory?).and_return(true)
       expect(Gembuild::Project.new('mina')).to be_a(Gembuild::Project)
     end
 
     it 'should have the ruby project name' do
       allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
-      allow(File).to receive(:directory?).and_return(true)
       expect(Gembuild::Project.new('mina').pkgname).to eql('ruby-mina')
     end
 
     it 'should have the correct pkgdir' do
       allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
-      allow(File).to receive(:directory?).and_return(true)
       expect(Gembuild::Project.new('mina').pkgdir).to eql('/tmp/pkg')
+    end
+
+    it 'should have the correct config' do
+      allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+      expect(Gembuild::Project.new('mina').config).to eql({pkgdir: '/tmp/pkg'})
+    end
+
+    it 'should have the correct full path' do
+      allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
+      expect(Gembuild::Project.new('mina').full_path).to eql('/tmp/pkg/ruby-mina')
     end
   end
 
@@ -27,7 +34,7 @@ describe Gembuild::Project do
         allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
         allow(File).to receive(:directory?).and_return(true)
         expect(FileUtils).to_not receive(:mkdir_p)
-        Gembuild::Project.new('mina')
+        Gembuild::Project.new('mina').ensure_pkgdir!
       end
     end
 
@@ -36,7 +43,7 @@ describe Gembuild::Project do
         allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg'})
         allow(File).to receive(:directory?).and_return(false)
         expect(FileUtils).to receive(:mkdir_p).with('/tmp/pkg')
-        Gembuild::Project.new('mina')
+        Gembuild::Project.new('mina').ensure_pkgdir!
       end
     end
   end
