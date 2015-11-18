@@ -126,7 +126,7 @@ module Gembuild
     #
     # @param message [String] The requested commit message.
     # @return [void]
-    def commit_changes(message)
+    def commit_changes!(message)
       `cd #{full_path} && git commit -m "#{message}"`
     end
 
@@ -138,17 +138,24 @@ module Gembuild
       FileUtils.mkdir_p(pkgdir) unless File.directory?(pkgdir)
     end
 
-    def all_together
+    # Ensure that the project directory has been created and is up-to-date.
+    #
+    # @return [void]
+    def prepare_working_directory!
       ensure_pkgdir!
       clone_and_update!
       write_gitignore!
       configure_git!(config[:name], config[:email])
+    end
+
+    def all_together
+      prepare_working_directory!
 
       pkgbuild = Gembuild::Pkgbuild.create(gemname, load_existing_pkgbuild)
       pkgbuild.write(full_path)
 
       stage_changes!
-      commit_changes(commit_message(pkgbuild.pkgver))
+      commit_changes!(commit_message(pkgbuild.pkgver))
     end
   end
 end
