@@ -171,4 +171,15 @@ describe Gembuild::Project do
       end
     end
   end
+
+  describe '#prepare_working_directory!' do
+    it 'should call all of the prepare methods' do
+      allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg', name: 'Test', email: 'test@example.com'})
+      expect_any_instance_of(Gembuild::Project).to receive(:ensure_pkgdir!)
+      expect_any_instance_of(Gembuild::Project).to receive(:clone_and_update!)
+      expect_any_instance_of(Gembuild::Project).to receive(:write_gitignore!)
+      expect_any_instance_of(Gembuild::Project).to receive(:configure_git!).with('Test', 'test@example.com')
+      Gembuild::Project.new('mina').prepare_working_directory!
+    end
+  end
 end
