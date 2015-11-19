@@ -148,7 +148,13 @@ module Gembuild
       configure_git!(config[:name], config[:email])
     end
 
-    def all_together
+    # Make sure that the working directory is created and up to date, and that
+    # git is configured for the project. Then create an updated PKGBUILD based
+    # on the most recent version of the gem and write it out. Generate the
+    # updated metadata using `mksrcinfo` and then commit all changes to git.
+    #
+    # @return [void]
+    def clone_and_commit!
       prepare_working_directory!
 
       pkgbuild = Gembuild::Pkgbuild.create(gemname, load_existing_pkgbuild)

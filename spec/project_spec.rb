@@ -182,4 +182,17 @@ describe Gembuild::Project do
       Gembuild::Project.new('mina').prepare_working_directory!
     end
   end
+
+  describe '#clone_and_commit!' do
+    it 'should make all of the method calls' do
+      allow(Gembuild).to receive(:configure).and_return({pkgdir: '/tmp/pkg', name: 'Test', email: 'test@example.com'})
+      expect_any_instance_of(Gembuild::Project).to receive(:prepare_working_directory!)
+      expect(Gembuild::Pkgbuild).to receive(:create).and_return(Gembuild::Pkgbuild.new('mina'))
+      expect_any_instance_of(Gembuild::Pkgbuild).to receive(:write)
+      expect_any_instance_of(Gembuild::Project).to receive(:stage_changes!)
+      expect_any_instance_of(Gembuild::Project).to receive(:commit_changes!)
+      expect_any_instance_of(Gembuild::Project).to receive(:commit_message)
+      Gembuild::Project.new('mina').clone_and_commit!
+    end
+  end
 end
