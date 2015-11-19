@@ -127,7 +127,7 @@ module Gembuild
       puts "Detected \"#{detected}\", is this correct? (y/n)"
       response = gets.chomp.downcase[0, 1]
 
-      (response == 'y') ? true : false
+      response == 'y'
     end
 
     # Prompt the user for the location where they would like to store
