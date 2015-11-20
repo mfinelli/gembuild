@@ -3,10 +3,10 @@
 describe Gembuild::AurScraper do
   describe '#initialize' do
     context 'with normal package name' do
-      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
+      let(:aur_scraper) { described_class.new('ruby-mina') }
 
       it 'returns an AurScraper instance' do
-        expect(aur_scraper).to be_a(Gembuild::AurScraper)
+        expect(aur_scraper).to be_a(described_class)
       end
 
       it 'has a mechanize agent' do
@@ -26,21 +26,21 @@ describe Gembuild::AurScraper do
     context 'with nil package name' do
       it 'raises an UndefinedPkgnameError' do
         ex = Gembuild::UndefinedPkgnameError
-        expect { Gembuild::AurScraper.new(nil) }.to raise_exception(ex)
+        expect { described_class.new(nil) }.to raise_exception(ex)
       end
     end
 
     context 'with empty package name' do
       it 'raises an UndefinedPkgnameError' do
         ex = Gembuild::UndefinedPkgnameError
-        expect { Gembuild::AurScraper.new('') }.to raise_exception(ex)
+        expect { described_class.new('') }.to raise_exception(ex)
       end
     end
   end
 
   describe '#query_aur' do
     context 'with package that exists: ruby-mina' do
-      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
+      let(:aur_scraper) { described_class.new('ruby-mina') }
 
       it 'returns a hash' do
         VCR.use_cassette('aur_scraper_ruby_mina') do
@@ -59,7 +59,7 @@ describe Gembuild::AurScraper do
     end
 
     context 'with package that does not exist: ruby-asdfg' do
-      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-asdfg') }
+      let(:aur_scraper) { described_class.new('ruby-asdfg') }
 
       it 'returns a hash' do
         VCR.use_cassette('aur_scraper_ruby_asdfg') do
@@ -71,7 +71,7 @@ describe Gembuild::AurScraper do
 
   describe '#package_exists?' do
     context 'with package that exists: ruby-mina' do
-      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
+      let(:aur_scraper) { described_class.new('ruby-mina') }
       let(:results) do
         VCR.use_cassette('aur_scraper_ruby_mina') do
           aur_scraper.query_aur
@@ -84,7 +84,7 @@ describe Gembuild::AurScraper do
     end
 
     context 'with package that does not exist: ruby-asdfg' do
-      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-asdfg') }
+      let(:aur_scraper) { described_class.new('ruby-asdfg') }
       let(:results) do
         VCR.use_cassette('aur_scraper_ruby_asdfg') do
           aur_scraper.query_aur
@@ -99,7 +99,7 @@ describe Gembuild::AurScraper do
 
   describe '#get_version_hash' do
     context 'with package with no epoch' do
-      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
+      let(:aur_scraper) { described_class.new('ruby-mina') }
       let(:results) do
         VCR.use_cassette('aur_scraper_ruby_mina') do
           aur_scraper.get_version_hash(aur_scraper.query_aur)
@@ -132,7 +132,7 @@ describe Gembuild::AurScraper do
     end
 
     context 'with package with an epoch' do
-      let(:aur_scraper) { Gembuild::AurScraper.new('vim-puppet') }
+      let(:aur_scraper) { described_class.new('vim-puppet') }
       let(:results) do
         VCR.use_cassette('aur_scraper_vim_puppet') do
           aur_scraper.get_version_hash(aur_scraper.query_aur)
@@ -167,7 +167,7 @@ describe Gembuild::AurScraper do
 
   describe '#scrape!' do
     context 'with package that exists' do
-      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
+      let(:aur_scraper) { described_class.new('ruby-mina') }
       let(:results) do
         VCR.use_cassette('aur_scraper_ruby_mina') do
           aur_scraper.scrape!
@@ -186,7 +186,7 @@ describe Gembuild::AurScraper do
     end
 
     context 'with package that doesn\'t exist' do
-      let(:aur_scraper) { Gembuild::AurScraper.new('ruby-asdfg') }
+      let(:aur_scraper) { described_class.new('ruby-asdfg') }
       let(:results) do
         VCR.use_cassette('aur_scraper_ruby_asdfg') do
           aur_scraper.scrape!
