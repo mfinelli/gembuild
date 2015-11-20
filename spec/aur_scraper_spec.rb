@@ -5,32 +5,35 @@ describe Gembuild::AurScraper do
     context 'with normal package name' do
       let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
 
-      it 'should return an AurScraper instance' do
+      it 'returns an AurScraper instance' do
         expect(aur_scraper).to be_a(Gembuild::AurScraper)
       end
 
-      it 'should have a mechanize agent' do
+      it 'has a mechanize agent' do
         expect(aur_scraper.agent).to be_a(Mechanize)
       end
 
-      it 'should have the pkgname set to the parameter' do
+      it 'has the pkgname set to the parameter' do
         expect(aur_scraper.pkgname).to eql('ruby-mina')
       end
 
-      it 'should have the correct aur URL' do
-        expect(aur_scraper.url).to eql('https://aur.archlinux.org/rpc.php?type=info&arg=ruby-mina')
+      it 'has the correct aur URL' do
+        url = 'https://aur.archlinux.org/rpc.php?type=info&arg=ruby-mina'
+        expect(aur_scraper.url).to eql(url)
       end
     end
 
     context 'with nil package name' do
-      it 'should raise an UndefinedPkgnameError' do
-        expect { Gembuild::AurScraper.new(nil) }.to raise_exception(Gembuild::UndefinedPkgnameError)
+      it 'raises an UndefinedPkgnameError' do
+        ex = Gembuild::UndefinedPkgnameError
+        expect { Gembuild::AurScraper.new(nil) }.to raise_exception(ex)
       end
     end
 
     context 'with empty package name' do
-      it 'should raise an UndefinedPkgnameError' do
-        expect { Gembuild::AurScraper.new('') }.to raise_exception(Gembuild::UndefinedPkgnameError)
+      it 'raises an UndefinedPkgnameError' do
+        ex = Gembuild::UndefinedPkgnameError
+        expect { Gembuild::AurScraper.new('') }.to raise_exception(ex)
       end
     end
   end
@@ -39,15 +42,18 @@ describe Gembuild::AurScraper do
     context 'with package that exists: ruby-mina' do
       let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
 
-      it 'should return a hash' do
+      it 'returns a hash' do
         VCR.use_cassette('aur_scraper_ruby_mina') do
           expect(aur_scraper.query_aur).to be_a(Hash)
         end
       end
 
-      it 'should have symbols for keys' do
+      it 'has symbols for keys' do
         VCR.use_cassette('aur_scraper_ruby_mina') do
-          expect(aur_scraper.query_aur.keys).to include(:version, :type, :resultcount, :results)
+          expect(aur_scraper.query_aur.keys).to include(:version,
+                                                        :type,
+                                                        :resultcount,
+                                                        :results)
         end
       end
     end
@@ -55,7 +61,7 @@ describe Gembuild::AurScraper do
     context 'with package that does not exist: ruby-asdfg' do
       let(:aur_scraper) { Gembuild::AurScraper.new('ruby-asdfg') }
 
-      it 'should return a hash' do
+      it 'returns a hash' do
         VCR.use_cassette('aur_scraper_ruby_asdfg') do
           expect(aur_scraper.query_aur).to be_a(Hash)
         end
@@ -66,21 +72,27 @@ describe Gembuild::AurScraper do
   describe '#package_exists?' do
     context 'with package that exists: ruby-mina' do
       let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
-
-      it 'should return true' do
+      let(:results) do
         VCR.use_cassette('aur_scraper_ruby_mina') do
-          expect(aur_scraper.package_exists?(aur_scraper.query_aur)).to eql(true)
+          aur_scraper.query_aur
         end
+      end
+
+      it 'returns true' do
+        expect(aur_scraper.package_exists?(results)).to eql(true)
       end
     end
 
     context 'with package that does not exist: ruby-asdfg' do
       let(:aur_scraper) { Gembuild::AurScraper.new('ruby-asdfg') }
-
-      it 'should return false' do
+      let(:results) do
         VCR.use_cassette('aur_scraper_ruby_asdfg') do
-          expect(aur_scraper.package_exists?(aur_scraper.query_aur)).to eql(false)
+          aur_scraper.query_aur
         end
+      end
+
+      it 'returns false' do
+        expect(aur_scraper.package_exists?(results)).to eql(false)
       end
     end
   end
@@ -88,66 +100,66 @@ describe Gembuild::AurScraper do
   describe '#get_version_hash' do
     context 'with package with no epoch' do
       let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
-      let(:results) {
+      let(:results) do
         VCR.use_cassette('aur_scraper_ruby_mina') do
           aur_scraper.get_version_hash(aur_scraper.query_aur)
         end
-      }
+      end
 
-      it 'should return a hash' do
+      it 'returns a hash' do
         expect(results).to be_a(Hash)
       end
 
-      it 'should have no epoch' do
+      it 'has no epoch' do
         expect(results[:epoch]).to eql(0)
       end
 
-      it 'should return a version object' do
+      it 'returns a version object' do
         expect(results[:pkgver]).to be_a(Gem::Version)
       end
 
-      it 'should have the right version' do
+      it 'has the right version' do
         expect(results[:pkgver]).to eql(Gem::Version.new('0.3.7'))
       end
 
-      it 'should have the right release' do
+      it 'has the right release' do
         expect(results[:pkgrel]).to eql(1)
       end
 
-      it 'should only have three values' do
+      it 'only has three values' do
         expect(results.keys.count).to eql(3)
       end
     end
 
     context 'with package with an epoch' do
       let(:aur_scraper) { Gembuild::AurScraper.new('vim-puppet') }
-      let(:results) {
+      let(:results) do
         VCR.use_cassette('aur_scraper_vim_puppet') do
           aur_scraper.get_version_hash(aur_scraper.query_aur)
         end
-      }
+      end
 
-      it 'should return a hash' do
+      it 'returns a hash' do
         expect(results).to be_a(Hash)
       end
 
-      it 'should have no epoch' do
+      it 'has no epoch' do
         expect(results[:epoch]).to eql(1)
       end
 
-      it 'should reurn a version object' do
+      it 'returns a version object' do
         expect(results[:pkgver]).to be_a(Gem::Version)
       end
 
-      it 'should have the right version' do
+      it 'has the right version' do
         expect(results[:pkgver]).to eql(Gem::Version.new('4.2.1'))
       end
 
-      it 'should have the right release' do
+      it 'has the right release' do
         expect(results[:pkgrel]).to eql(1)
       end
 
-      it 'should only have three values' do
+      it 'only has three values' do
         expect(results.keys.count).to eql(3)
       end
     end
@@ -156,30 +168,32 @@ describe Gembuild::AurScraper do
   describe '#scrape!' do
     context 'with package that exists' do
       let(:aur_scraper) { Gembuild::AurScraper.new('ruby-mina') }
-      let(:results) {
+      let(:results) do
         VCR.use_cassette('aur_scraper_ruby_mina') do
           aur_scraper.scrape!
         end
-      }
+      end
 
-      it 'should return a hash' do
+      it 'returns a hash' do
         expect(results).to be_a(Hash)
       end
 
-      it 'should have the correct results' do
-        expect(results).to eql({ epoch: 0, pkgver: Gem::Version.new('0.3.7'), pkgrel: 1 })
+      it 'has the correct results' do
+        expect(results).to eql(epoch: 0,
+                               pkgver: Gem::Version.new('0.3.7'),
+                               pkgrel: 1)
       end
     end
 
     context 'with package that doesn\'t exist' do
       let(:aur_scraper) { Gembuild::AurScraper.new('ruby-asdfg') }
-      let(:results) {
+      let(:results) do
         VCR.use_cassette('aur_scraper_ruby_asdfg') do
           aur_scraper.scrape!
         end
-      }
+      end
 
-      it 'should return nil' do
+      it 'returns nil' do
         expect(results).to be_nil
       end
     end
