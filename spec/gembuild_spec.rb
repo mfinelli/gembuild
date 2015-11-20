@@ -2,141 +2,146 @@
 
 describe Gembuild do
   describe '.conf_file' do
-    it 'should return .gembuild in the home directory' do
-      expect(Gembuild.conf_file).to eql(File.join(File.expand_path('~'), '.gembuild'))
+    it 'returns .gembuild in the home directory' do
+      expect(described_class.conf_file).to eql(File.join(
+                                                 File.expand_path('~'),
+                                                 '.gembuild'))
     end
   end
 
   describe '.prompt_for_confirmation' do
     context 'with unimportant input' do
-      it 'should output the detected value' do
-        expect(STDOUT).to receive(:puts).with('Detected "test", is this correct? (y/n)')
-        allow(Gembuild).to receive(:gets) { "Yes\n" }
-        Gembuild.prompt_for_confirmation('test')
+      it 'outputs the detected value' do
+        output = 'Detected "test", is this correct? (y/n)'
+        expect(STDOUT).to receive(:puts).with(output)
+        allow(described_class).to receive(:gets) { "Yes\n" }
+        described_class.prompt_for_confirmation('test')
       end
 
-      it 'should return a boolean' do
+      it 'returns a boolean' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { "Yes\n" }
-        expect(Gembuild.prompt_for_confirmation('test')).to be_truthy
+        allow(described_class).to receive(:gets) { "Yes\n" }
+        expect(described_class.prompt_for_confirmation('test')).to be_truthy
       end
     end
 
     context 'with negative uppercase response' do
-      it 'should return false' do
+      it 'returns false' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { "No\n" }
-        expect(Gembuild.prompt_for_confirmation('test')).to eql(false)
+        allow(described_class).to receive(:gets) { "No\n" }
+        expect(described_class.prompt_for_confirmation('test')).to eql(false)
       end
     end
 
     context 'with negative lowercase response' do
-      it 'should return false' do
+      it 'returns false' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { "n\n" }
-        expect(Gembuild.prompt_for_confirmation('test')).to eql(false)
+        allow(described_class).to receive(:gets) { "n\n" }
+        expect(described_class.prompt_for_confirmation('test')).to eql(false)
       end
     end
 
     context 'with affermative uppercase response' do
-      it 'should return true' do
+      it 'returns true' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { "Y\n" }
-        expect(Gembuild.prompt_for_confirmation('test')).to eql(true)
+        allow(described_class).to receive(:gets) { "Y\n" }
+        expect(described_class.prompt_for_confirmation('test')).to eql(true)
       end
     end
 
     context 'with affermative lowercase response' do
-      it 'should return true' do
+      it 'returns true' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { "yes\n" }
-        expect(Gembuild.prompt_for_confirmation('test')).to eql(true)
+        allow(described_class).to receive(:gets) { "yes\n" }
+        expect(described_class.prompt_for_confirmation('test')).to eql(true)
       end
     end
 
     context 'with invalid response' do
-      it 'should return false' do
+      it 'returns false' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { "AAA\n" }
-        expect(Gembuild.prompt_for_confirmation('test')).to eql(false)
+        allow(described_class).to receive(:gets) { "AAA\n" }
+        expect(described_class.prompt_for_confirmation('test')).to eql(false)
       end
     end
   end
 
   describe '.prompt_for_git_name' do
     context 'with message' do
-      it 'should display the message' do
+      it 'displays the message' do
         expect(STDOUT).to receive(:puts).with('Test Message')
         expect(STDOUT).to receive(:puts).with('Please enter desired name: ')
-        allow(Gembuild).to receive(:gets) { "test\n" }
-        Gembuild.prompt_for_git_name('Test Message')
+        allow(described_class).to receive(:gets) { "test\n" }
+        described_class.prompt_for_git_name('Test Message')
       end
 
-      it 'should return what was entered' do
+      it 'returns what was entered' do
+        e = 'My Name'
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { "My Name\n" }
-        expect(Gembuild.prompt_for_git_name('Test Message')).to eql('My Name')
+        allow(described_class).to receive(:gets) { "My Name\n" }
+        expect(described_class.prompt_for_git_name('Test Message')).to eql(e)
       end
     end
 
     context 'with no message' do
-      it 'should only display the enter message' do
+      it 'only displays the entered message' do
         expect(STDOUT).to receive(:puts).with('Please enter desired name: ')
-        allow(Gembuild).to receive(:gets) { "test\n" }
-        Gembuild.prompt_for_git_name
+        allow(described_class).to receive(:gets) { "test\n" }
+        described_class.prompt_for_git_name
       end
 
-      it 'should return what was entered' do
+      it 'returns what was entered' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { "Another Name\n" }
-        expect(Gembuild.prompt_for_git_name).to eql('Another Name')
+        allow(described_class).to receive(:gets) { "Another Name\n" }
+        expect(described_class.prompt_for_git_name).to eql('Another Name')
       end
     end
 
     context 'with empty message' do
-      it 'should only display the enter message' do
+      it 'only displays the enter message' do
         expect(STDOUT).to receive(:puts).with('Please enter desired name: ')
-        allow(Gembuild).to receive(:gets) { "test\n" }
-        Gembuild.prompt_for_git_name('')
+        allow(described_class).to receive(:gets) { "test\n" }
+        described_class.prompt_for_git_name('')
       end
     end
   end
 
   describe '.prompt_for_git_email' do
     context 'with message' do
-      it 'should display the message' do
+      it 'displays the message' do
         expect(STDOUT).to receive(:puts).with('Test Email Message')
         expect(STDOUT).to receive(:puts).with('Please enter desired email: ')
-        allow(Gembuild).to receive(:gets) { "test\n" }
-        Gembuild.prompt_for_git_email('Test Email Message')
+        allow(described_class).to receive(:gets) { "test\n" }
+        described_class.prompt_for_git_email('Test Email Message')
       end
 
-      it 'should return what was entered' do
+      it 'returns what was entered' do
+        e = 'me@example.com'
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { "me@example.com\n" }
-        expect(Gembuild.prompt_for_git_email('Test Email Message')).to eql('me@example.com')
+        allow(described_class).to receive(:gets) { "me@example.com\n" }
+        expect(described_class.prompt_for_git_email('test message')).to eql(e)
       end
     end
 
     context 'with no message' do
-      it 'should only display the enter message' do
+      it 'only displays the enter message' do
         expect(STDOUT).to receive(:puts).with('Please enter desired email: ')
-        allow(Gembuild).to receive(:gets) { "test\n" }
-        Gembuild.prompt_for_git_email
+        allow(described_class).to receive(:gets) { "test\n" }
+        described_class.prompt_for_git_email
       end
 
-      it 'should return what was entered' do
+      it 'returns what was entered' do
         allow(STDOUT).to receive(:puts)
-        allow(Gembuild).to receive(:gets) { "me@example.org\n" }
-        expect(Gembuild.prompt_for_git_email).to eql('me@example.org')
+        allow(described_class).to receive(:gets) { "me@example.org\n" }
+        expect(described_class.prompt_for_git_email).to eql('me@example.org')
       end
     end
 
     context 'with empty message' do
-      it 'should only display the enter message' do
+      it 'only displays the enter message' do
         expect(STDOUT).to receive(:puts).with('Please enter desired email: ')
-        allow(Gembuild).to receive(:gets) { "test\n" }
-        Gembuild.prompt_for_git_email('')
+        allow(described_class).to receive(:gets) { "test\n" }
+        described_class.prompt_for_git_email('')
       end
     end
   end
