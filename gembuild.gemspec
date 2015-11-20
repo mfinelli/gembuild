@@ -10,11 +10,14 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Mario Finelli']
   spec.email         = ['mario@finel.li']
 
-  spec.summary       = %q{Generate PKGBUILDs for ruby gems.}
-  spec.description   = %q{Generate PKGBUILDs for ruby gems.}
+  spec.summary       = 'Generate PKGBUILDs for ruby gems.'
+  spec.description   = 'Generate PKGBUILDs for ruby gems.'
   spec.homepage      = 'https://github.com/mfinelli/gembuild'
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
+    f.match(%r{^(test|spec|features)/})
+  end
+
   spec.bindir        = 'bin'
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
