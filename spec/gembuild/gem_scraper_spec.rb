@@ -3,10 +3,10 @@
 describe Gembuild::GemScraper do
   describe '#initialize' do
     context 'with normal gem name' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+      let(:gem_scraper) { described_class.new('netrc') }
 
       it 'returns a GemScraper instance' do
-        expect(gem_scraper).to be_a(Gembuild::GemScraper)
+        expect(gem_scraper).to be_a(described_class)
       end
 
       it 'has a mechanize agent' do
@@ -35,21 +35,21 @@ describe Gembuild::GemScraper do
     context 'with no gemname' do
       it 'raises an error' do
         ex = Gembuild::UndefinedGemNameError
-        expect { Gembuild::GemScraper.new(nil) }.to raise_exception(ex)
+        expect { described_class.new(nil) }.to raise_exception(ex)
       end
     end
 
     context 'with empty gemname' do
       it 'raises an error' do
         ex = Gembuild::UndefinedGemNameError
-        expect { Gembuild::GemScraper.new('') }.to raise_exception(ex)
+        expect { described_class.new('') }.to raise_exception(ex)
       end
     end
   end
 
   describe '#query_latest_version' do
     context 'with normal gem' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+      let(:gem_scraper) { described_class.new('netrc') }
 
       it 'returns a Hash' do
         VCR.use_cassette('gem_scraper_versions_netrc') do
@@ -68,7 +68,7 @@ describe Gembuild::GemScraper do
     end
 
     context 'with a prerelease gem' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('pry') }
+      let(:gem_scraper) { described_class.new('pry') }
 
       it 'returns a Hash' do
         VCR.use_cassette('gem_scraper_versions_pry') do
@@ -84,7 +84,7 @@ describe Gembuild::GemScraper do
     end
 
     context 'with gem that doesn\'t exist' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('asdfg') }
+      let(:gem_scraper) { described_class.new('asdfg') }
 
       it 'raises an exception' do
         VCR.use_cassette('gem_scraper_versions_asdfg') do
@@ -97,7 +97,7 @@ describe Gembuild::GemScraper do
 
   describe '#get_version_from_response' do
     context 'with normal gem' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+      let(:gem_scraper) { described_class.new('netrc') }
 
       let(:results) do
         VCR.use_cassette('gem_scraper_versions_netrc') do
@@ -121,7 +121,7 @@ describe Gembuild::GemScraper do
 
   describe '#format_description_from_response' do
     context 'with a normal gem' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+      let(:gem_scraper) { described_class.new('netrc') }
 
       let(:results) do
         VCR.use_cassette('gem_scraper_versions_netrc') do
@@ -148,7 +148,7 @@ describe Gembuild::GemScraper do
     end
 
     context 'with a gem without a description' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('git') }
+      let(:gem_scraper) { described_class.new('git') }
 
       let(:results) do
         VCR.use_cassette('gem_scraper_versions_git') do
@@ -176,7 +176,7 @@ describe Gembuild::GemScraper do
     end
 
     context 'with a gem not ending in a full-stop' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('benchmark_suite') }
+      let(:gem_scraper) { described_class.new('benchmark_suite') }
 
       let(:results) do
         VCR.use_cassette('gem_scraper_versions_benchmark_suite') do
@@ -202,7 +202,7 @@ describe Gembuild::GemScraper do
     end
 
     context 'with a gem with extra whitespace' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('addressable') }
+      let(:gem_scraper) { described_class.new('addressable') }
 
       let(:results) do
         VCR.use_cassette('gem_scraper_versions_addressable') do
@@ -232,7 +232,7 @@ describe Gembuild::GemScraper do
 
   describe '#get_checksum_from_response' do
     context 'with normal gem' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('http') }
+      let(:gem_scraper) { described_class.new('http') }
 
       let(:results) do
         VCR.use_cassette('gem_scraper_versions_http') do
@@ -252,7 +252,7 @@ describe Gembuild::GemScraper do
 
   describe '#get_licenses_from_response' do
     context 'with no license' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('mina') }
+      let(:gem_scraper) { described_class.new('mina') }
 
       let(:results) do
         VCR.use_cassette('gem_scraper_versions_mina') do
@@ -272,7 +272,7 @@ describe Gembuild::GemScraper do
     end
 
     context 'with a normal gem' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+      let(:gem_scraper) { described_class.new('netrc') }
 
       let(:results) do
         VCR.use_cassette('gem_scraper_versions_netrc') do
@@ -298,7 +298,7 @@ describe Gembuild::GemScraper do
 
   describe '#get_dependencies_for_version' do
     context 'with a gem with dependencies and a string version' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('oauth2-client') }
+      let(:gem_scraper) { described_class.new('oauth2-client') }
 
       let(:dependencies_response) do
         VCR.use_cassette('gem_scraper_dependencies_oauth2_client') do
@@ -316,7 +316,7 @@ describe Gembuild::GemScraper do
     end
 
     context 'with a gem with dependencies and a version version' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('httmultiparty') }
+      let(:gem_scraper) { described_class.new('httmultiparty') }
 
       let(:dependencies_response) do
         VCR.use_cassette('gem_scraper_dependencies_httmultiparty') do
@@ -336,7 +336,7 @@ describe Gembuild::GemScraper do
     end
 
     context 'with a gem with no dependencies' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('http_parser.rb') }
+      let(:gem_scraper) { described_class.new('http_parser.rb') }
 
       let(:dependencies_response) do
         VCR.use_cassette('gem_scraper_dependencies_http_parser_rb') do
@@ -356,7 +356,7 @@ describe Gembuild::GemScraper do
 
   describe '#scrape_frontend_for_homepage_url' do
     context 'with normal gem' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('oj') }
+      let(:gem_scraper) { described_class.new('oj') }
 
       it 'returns the correct homepage' do
         VCR.use_cassette('gem_scraper_frontend_oj') do
@@ -369,7 +369,7 @@ describe Gembuild::GemScraper do
 
   describe '#scrape!' do
     context 'with normal gem: netrc' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
+      let(:gem_scraper) { described_class.new('netrc') }
 
       let(:results) do
         VCR.use_cassette('gem_scraper_netrc') do
@@ -396,7 +396,7 @@ describe Gembuild::GemScraper do
     end
 
     context 'with normal gem: netrc' do
-      let(:gem_scraper) { Gembuild::GemScraper.new('twitter') }
+      let(:gem_scraper) { described_class.new('twitter') }
       let(:results) do
         VCR.use_cassette('gem_scraper_twitter') do
           gem_scraper.scrape!
