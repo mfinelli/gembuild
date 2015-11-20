@@ -149,55 +149,83 @@ describe Gembuild::GemScraper do
 
     context 'with a gem without a description' do
       let(:gem_scraper) { Gembuild::GemScraper.new('git') }
-      let(:results) {
+
+      let(:results) do
         VCR.use_cassette('gem_scraper_versions_git') do
           gem_scraper.query_latest_version
         end
-      }
-      let(:description) { gem_scraper.format_description_from_response(results) }
+      end
 
-      it 'should be a string' do
+      let(:description) do
+        gem_scraper.format_description_from_response(results)
+      end
+
+      let(:expected_description) do
+        'Ruby/Git is a Ruby library that can be used to create, read and ' \
+        'manipulate Git repositories by wrapping system calls to the git ' \
+        'binary.'
+      end
+
+      it 'is a string' do
         expect(description).to be_a(String)
       end
 
-      it 'should have the correct description' do
-        expect(description).to eql('Ruby/Git is a Ruby library that can be used to create, read and manipulate Git repositories by wrapping system calls to the git binary.')
+      it 'has the correct description' do
+        expect(description).to eql(expected_description)
       end
     end
 
     context 'with a gem not ending in a full-stop' do
       let(:gem_scraper) { Gembuild::GemScraper.new('benchmark_suite') }
-      let(:results) {
+
+      let(:results) do
         VCR.use_cassette('gem_scraper_versions_benchmark_suite') do
           gem_scraper.query_latest_version
         end
-      }
-      let(:description) { gem_scraper.format_description_from_response(results) }
+      end
 
-      it 'should be a string' do
+      let(:description) do
+        gem_scraper.format_description_from_response(results)
+      end
+
+      let(:expected_description) do
+        'A set of enhancements to the standard library benchmark.rb.'
+      end
+
+      it 'is a string' do
         expect(description).to be_a(String)
       end
 
-      it 'should have the correct description' do
-        expect(description).to eql('A set of enhancements to the standard library benchmark.rb.')
+      it 'has the correct description' do
+        expect(description).to eql(expected_description)
       end
     end
 
     context 'with a gem with extra whitespace' do
       let(:gem_scraper) { Gembuild::GemScraper.new('addressable') }
-      let(:results) {
+
+      let(:results) do
         VCR.use_cassette('gem_scraper_versions_addressable') do
           gem_scraper.query_latest_version
         end
-      }
-      let(:description) { gem_scraper.format_description_from_response(results) }
+      end
 
-      it 'should be a string' do
+      let(:description) do
+        gem_scraper.format_description_from_response(results)
+      end
+
+      let(:expected_description) do
+        'Addressable is a replacement for the URI implementation that is ' \
+        'part of Ruby\'s standard library. It more closely conforms to the ' \
+        'relevant RFCs and adds support for IRIs and URI templates.'
+      end
+
+      it 'is a string' do
         expect(description).to be_a(String)
       end
 
-      it 'should have the correct description' do
-        expect(description).to eql('Addressable is a replacement for the URI implementation that is part of Ruby\'s standard library. It more closely conforms to the relevant RFCs and adds support for IRIs and URI templates.')
+      it 'has the correct description' do
+        expect(description).to eql(expected_description)
       end
     end
   end
@@ -205,14 +233,19 @@ describe Gembuild::GemScraper do
   describe '#get_checksum_from_response' do
     context 'with normal gem' do
       let(:gem_scraper) { Gembuild::GemScraper.new('http') }
-      let(:results) {
+
+      let(:results) do
         VCR.use_cassette('gem_scraper_versions_http') do
           gem_scraper.query_latest_version
         end
-      }
+      end
 
-      it 'should return the correct sha' do
-        expect(gem_scraper.get_checksum_from_response(results)).to eql('517790c159adc2755c0a6dac5b64d719d4dd8fb4437409e443f4a42b31ea89d2')
+      let(:sha) do
+        '517790c159adc2755c0a6dac5b64d719d4dd8fb4437409e443f4a42b31ea89d2'
+      end
+
+      it 'returns the correct sha' do
+        expect(gem_scraper.get_checksum_from_response(results)).to eql(sha)
       end
     end
   end
@@ -220,40 +253,44 @@ describe Gembuild::GemScraper do
   describe '#get_licenses_from_response' do
     context 'with no license' do
       let(:gem_scraper) { Gembuild::GemScraper.new('mina') }
-      let(:results) {
+
+      let(:results) do
         VCR.use_cassette('gem_scraper_versions_mina') do
           gem_scraper.query_latest_version
         end
-      }
+      end
+
       let(:license) { gem_scraper.get_licenses_from_response(results) }
 
-      it 'should be an array' do
+      it 'is an array' do
         expect(license).to be_a(Array)
       end
 
-      it 'should be empty' do
+      it 'is empty' do
         expect(license.count).to be_zero
       end
     end
 
     context 'with a normal gem' do
       let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
-      let(:results) {
+
+      let(:results) do
         VCR.use_cassette('gem_scraper_versions_netrc') do
           gem_scraper.query_latest_version
         end
-      }
+      end
+
       let(:license) { gem_scraper.get_licenses_from_response(results) }
 
-      it 'should be an array' do
+      it 'is an array' do
         expect(license).to be_a(Array)
       end
 
-      it 'should have one license' do
+      it 'has one license' do
         expect(license.count).to eql(1)
       end
 
-      it 'should have the correct license' do
+      it 'has the correct license' do
         expect(license).to eql(['MIT'])
       end
     end
@@ -263,48 +300,56 @@ describe Gembuild::GemScraper do
     context 'with a gem with dependencies and a string version' do
       let(:gem_scraper) { Gembuild::GemScraper.new('oauth2-client') }
 
-      it 'should return an array' do
+      let(:dependencies_response) do
         VCR.use_cassette('gem_scraper_dependencies_oauth2_client') do
-          expect(gem_scraper.get_dependencies_for_version('2.0.0')).to be_a(Array)
+          gem_scraper.get_dependencies_for_version('2.0.0')
         end
       end
 
-      it 'should have the correct dependencies' do
-        VCR.use_cassette('gem_scraper_dependencies_oauth2_client') do
-          expect(gem_scraper.get_dependencies_for_version('2.0.0')).to eql(['addressable', 'bcrypt-ruby'])
-        end
+      it 'returns an array' do
+        expect(dependencies_response).to be_a(Array)
+      end
+
+      it 'has the correct dependencies' do
+        expect(dependencies_response).to eql(['addressable', 'bcrypt-ruby'])
       end
     end
 
     context 'with a gem with dependencies and a version version' do
       let(:gem_scraper) { Gembuild::GemScraper.new('httmultiparty') }
 
-      it 'should return an array' do
+      let(:dependencies_response) do
         VCR.use_cassette('gem_scraper_dependencies_httmultiparty') do
-          expect(gem_scraper.get_dependencies_for_version(Gem::Version.new('0.3.16'))).to be_a(Array)
+          gem_scraper.get_dependencies_for_version(Gem::Version.new('0.3.16'))
         end
       end
 
-      it 'should have the correct dependencies' do
-        VCR.use_cassette('gem_scraper_dependencies_httmultiparty') do
-          expect(gem_scraper.get_dependencies_for_version(Gem::Version.new('0.3.16'))).to eql(['mimemagic', 'multipart-post', 'httparty'])
-        end
+      it 'returns an array' do
+        expect(dependencies_response).to be_a(Array)
+      end
+
+      it 'has the correct dependencies' do
+        expect(dependencies_response).to eql(['mimemagic',
+                                              'multipart-post',
+                                              'httparty'])
       end
     end
 
     context 'with a gem with no dependencies' do
       let(:gem_scraper) { Gembuild::GemScraper.new('http_parser.rb') }
 
-      it 'should return an array' do
+      let(:dependencies_response) do
         VCR.use_cassette('gem_scraper_dependencies_http_parser_rb') do
-          expect(gem_scraper.get_dependencies_for_version(Gem::Version.new('0.6.0'))).to be_a(Array)
+          gem_scraper.get_dependencies_for_version(Gem::Version.new('0.6.0'))
         end
       end
 
-      it 'should have no dependencies' do
-        VCR.use_cassette('gem_scraper_dependencies_http_parser_rb') do
-          expect(gem_scraper.get_dependencies_for_version(Gem::Version.new('0.6.0')).count).to be_zero
-        end
+      it 'returns an array' do
+        expect(dependencies_response).to be_a(Array)
+      end
+
+      it 'has no dependencies' do
+        expect(dependencies_response.count).to be_zero
       end
     end
   end
@@ -313,9 +358,10 @@ describe Gembuild::GemScraper do
     context 'with normal gem' do
       let(:gem_scraper) { Gembuild::GemScraper.new('oj') }
 
-      it 'should return the correct homepage' do
+      it 'returns the correct homepage' do
         VCR.use_cassette('gem_scraper_frontend_oj') do
-          expect(gem_scraper.scrape_frontend_for_homepage_url).to eql('http://www.ohler.com/oj')
+          url = 'http://www.ohler.com/oj'
+          expect(gem_scraper.scrape_frontend_for_homepage_url).to eql(url)
         end
       end
     end
@@ -324,52 +370,54 @@ describe Gembuild::GemScraper do
   describe '#scrape!' do
     context 'with normal gem: netrc' do
       let(:gem_scraper) { Gembuild::GemScraper.new('netrc') }
-      let(:results) {
+
+      let(:results) do
         VCR.use_cassette('gem_scraper_netrc') do
           gem_scraper.scrape!
         end
-      }
+      end
 
-      it 'should return a hash' do
+      it 'returns a hash' do
         expect(results).to be_a(Hash)
       end
 
-      it 'should return all of the correct values' do
+      it 'returns all of the correct values' do
         expect(results).to eql(
-          {
-            version: Gem::Version.new('0.11.0'),
-            description: 'This library can read and update netrc files, preserving formatting including comments and whitespace.',
-            checksum: 'de1ce33da8c99ab1d97871726cba75151113f117146becbe45aa85cb3dabee3f',
-            license: ['MIT'],
-            dependencies: [],
-            homepage: 'https://github.com/geemus/netrc'
-          }
+          version: Gem::Version.new('0.11.0'),
+          description: 'This library can read and update netrc files, ' \
+            'preserving formatting including comments and whitespace.',
+          checksum: 'de1ce33da8c99ab1d97871726cba7515' \
+            '1113f117146becbe45aa85cb3dabee3f',
+          license: ['MIT'],
+          dependencies: [],
+          homepage: 'https://github.com/geemus/netrc'
         )
       end
     end
 
     context 'with normal gem: netrc' do
       let(:gem_scraper) { Gembuild::GemScraper.new('twitter') }
-      let(:results) {
+      let(:results) do
         VCR.use_cassette('gem_scraper_twitter') do
           gem_scraper.scrape!
         end
-      }
+      end
 
-      it 'should return a hash' do
+      it 'returns a hash' do
         expect(results).to be_a(Hash)
       end
 
-      it 'should return all of the correct values' do
+      it 'returns all of the correct values' do
         expect(results).to eql(
-          {
-            version: Gem::Version.new('5.15.0'),
-            description: 'A Ruby interface to the Twitter API.',
-            checksum: '71856f234ab671c26c787f07032ce98acbc345c8fbb3194668f8de14a404bb41',
-            license: ['MIT'],
-            dependencies: ['simple_oauth', 'naught', 'memoizable', 'json', 'http_parser.rb', 'http', 'faraday', 'equalizer', 'buftok', 'addressable'],
-            homepage: 'http://sferik.github.com/twitter/'
-          }
+          version: Gem::Version.new('5.15.0'),
+          description: 'A Ruby interface to the Twitter API.',
+          checksum: '71856f234ab671c26c787f07032ce98a' \
+            'cbc345c8fbb3194668f8de14a404bb41',
+          license: ['MIT'],
+          dependencies: ['simple_oauth', 'naught', 'memoizable', 'json',
+                         'http_parser.rb', 'http', 'faraday', 'equalizer',
+                         'buftok', 'addressable'],
+          homepage: 'http://sferik.github.com/twitter/'
         )
       end
     end
