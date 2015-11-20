@@ -4,6 +4,8 @@ require 'rubocop/rake_task'
 require 'yard'
 
 RSpec::Core::RakeTask.new(:spec)
-RuboCop::RakeTask.new(:rubocop)
+RuboCop::RakeTask.new(:rubocop) do |task|
+  task.requires << 'rubocop-rspec'
+end
 YARD::Rake::YardocTask.new(:yard)
 task default: :spec
