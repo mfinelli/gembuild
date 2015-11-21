@@ -148,166 +148,212 @@ describe Gembuild do
 
   describe '.fetch_git_global_name' do
     context 'with successful call to git and confirmation' do
-      it 'should return the value from git' do
+      it 'returns the value from git' do
         allow_message_expectations_on_nil
-        expect(Gembuild).to receive(:`).with('git config --global user.name').and_return('A Name')
+        exec = 'git config --global user.name'
+        result = 'Detected "A Name", is this correct? (y/n)'
+        expect(described_class).to receive(:`).with(exec).and_return('A Name')
         allow($CHILD_STATUS).to receive(:success?).and_return(true)
-        expect(STDOUT).to receive(:puts).with('Detected "A Name", is this correct? (y/n)')
-        allow(Gembuild).to receive(:gets) { "y\n" }
-        expect(Gembuild.fetch_git_global_name).to eql('A Name')
+        expect(STDOUT).to receive(:puts).with(result)
+        allow(described_class).to receive(:gets) { "y\n" }
+        expect(described_class.fetch_git_global_name).to eql('A Name')
       end
     end
 
     context 'with successful call to git and negation' do
-      it 'should return the value entered' do
+      it 'returns the value entered' do
         allow_message_expectations_on_nil
-        expect(Gembuild).to receive(:`).with('git config --global user.name').and_return('Bad Name')
+        exec = 'git config --global user.name'
+        e_r = 'Bad Name'
+        results = 'Detected "Bad Name", is this correct? (y/n)'
+        expect(described_class).to receive(:`).with(exec).and_return(e_r)
         allow($CHILD_STATUS).to receive(:success?).and_return(true)
-        expect(STDOUT).to receive(:puts).with('Detected "Bad Name", is this correct? (y/n)')
-        allow(Gembuild).to receive(:gets) { "n\n" }
+        expect(STDOUT).to receive(:puts).with(results)
+        allow(described_class).to receive(:gets) { "n\n" }
         expect(STDOUT).to receive(:puts).with('Please enter desired name: ')
-        allow(Gembuild).to receive(:gets) { "New name" }
-        expect(Gembuild.fetch_git_global_name).to eql('New name')
+        allow(described_class).to receive(:gets) { "New name\n" }
+        expect(described_class.fetch_git_global_name).to eql('New name')
       end
     end
 
     context 'with a failure call to git' do
-      it 'should return the value entered' do
+      it 'returns the value entered' do
         allow_message_expectations_on_nil
-        expect(Gembuild).to receive(:`).with('git config --global user.name').and_return('Fail Name')
+        exec = 'git config --global user.name'
+        e_r = 'Fail Name'
+        output = 'Could not detect name from git configuration.'
+        results = 'A Name After Failure'
+        expect(described_class).to receive(:`).with(exec).and_return(e_r)
         allow($CHILD_STATUS).to receive(:success?).and_return(false)
-        expect(STDOUT).to receive(:puts).with('Could not detect name from git configuration.')
+        expect(STDOUT).to receive(:puts).with(output)
         expect(STDOUT).to receive(:puts).with('Please enter desired name: ')
-        allow(Gembuild).to receive(:gets) { "A Name After Failure\n" }
-        expect(Gembuild.fetch_git_global_name).to eql('A Name After Failure')
+        allow(described_class).to receive(:gets) { "A Name After Failure\n" }
+        expect(described_class.fetch_git_global_name).to eql(results)
       end
     end
   end
 
   describe '.fetch_git_global_email' do
     context 'with successful call to git and confirmation' do
-      it 'should return the value from git' do
+      it 'returns the value from git' do
         allow_message_expectations_on_nil
-        expect(Gembuild).to receive(:`).with('git config --global user.email').and_return('my@email.com')
+        exec = 'git config --global user.email'
+        e_r = 'my@email.com'
+        output = 'Detected "my@email.com", is this correct? (y/n)'
+        expect(described_class).to receive(:`).with(exec).and_return(e_r)
         allow($CHILD_STATUS).to receive(:success?).and_return(true)
-        expect(STDOUT).to receive(:puts).with('Detected "my@email.com", is this correct? (y/n)')
-        allow(Gembuild).to receive(:gets) { "y\n" }
-        expect(Gembuild.fetch_git_global_email).to eql('my@email.com')
+        expect(STDOUT).to receive(:puts).with(output)
+        allow(described_class).to receive(:gets) { "y\n" }
+        expect(described_class.fetch_git_global_email).to eql('my@email.com')
       end
     end
 
     context 'with successful call to git and negation' do
-      it 'should return the value entered' do
+      it 'returns the value entered' do
         allow_message_expectations_on_nil
-        expect(Gembuild).to receive(:`).with('git config --global user.email').and_return('bad@email.com')
+        exec = 'git config --global user.email'
+        e_r = 'bad@email.com'
+        output = 'Detected "bad@email.com", is this correct? (y/n)'
+        expect(described_class).to receive(:`).with(exec).and_return(e_r)
         allow($CHILD_STATUS).to receive(:success?).and_return(true)
-        expect(STDOUT).to receive(:puts).with('Detected "bad@email.com", is this correct? (y/n)')
-        allow(Gembuild).to receive(:gets) { "n\n" }
+        expect(STDOUT).to receive(:puts).with(output)
+        allow(described_class).to receive(:gets) { "n\n" }
         expect(STDOUT).to receive(:puts).with('Please enter desired email: ')
-        allow(Gembuild).to receive(:gets) { "new@email.com" }
-        expect(Gembuild.fetch_git_global_email).to eql('new@email.com')
+        allow(described_class).to receive(:gets) { "new@email.com\n" }
+        expect(described_class.fetch_git_global_email).to eql('new@email.com')
       end
     end
 
     context 'with a failure call to git' do
-      it 'should return the value entered' do
+      it 'returns the value entered' do
         allow_message_expectations_on_nil
-        expect(Gembuild).to receive(:`).with('git config --global user.email').and_return('fail@email.com')
+        exec = 'git config --global user.email'
+        e_r = 'fail@email.com'
+        output = 'Could not detect email from git configuration.'
+        results = 'good@email.com'
+        expect(described_class).to receive(:`).with(exec).and_return(e_r)
         allow($CHILD_STATUS).to receive(:success?).and_return(false)
-        expect(STDOUT).to receive(:puts).with('Could not detect email from git configuration.')
+        expect(STDOUT).to receive(:puts).with(output)
         expect(STDOUT).to receive(:puts).with('Please enter desired email: ')
-        allow(Gembuild).to receive(:gets) { "good@email.com\n" }
-        expect(Gembuild.fetch_git_global_email).to eql('good@email.com')
+        allow(described_class).to receive(:gets) { "good@email.com\n" }
+        expect(described_class.fetch_git_global_email).to eql(results)
       end
     end
   end
 
   describe '.fetch_pkgdir' do
-    it 'should prompt the user for the directory' do
-      expect(STDOUT).to receive(:puts).with('Where should projects be checked out?')
-      allow(Gembuild).to receive(:gets) { "test\n" }
-      Gembuild.fetch_pkgdir
+    it 'prompts the user for the directory' do
+      output = 'Where should projects be checked out?'
+      expect(STDOUT).to receive(:puts).with(output)
+      allow(described_class).to receive(:gets) { "test\n" }
+      described_class.fetch_pkgdir
     end
 
-    it 'should return the value entered' do
+    it 'returns the value entered' do
       expect(STDOUT).to receive(:puts)
-      allow(Gembuild).to receive(:gets) { '/tmp/packages' }
-      expect(Gembuild.fetch_pkgdir).to eql('/tmp/packages')
+      allow(described_class).to receive(:gets) { '/tmp/packages' }
+      expect(described_class.fetch_pkgdir).to eql('/tmp/packages')
     end
 
-    it 'should expand the given path' do
+    it 'expands the given path' do
+      path = File.expand_path('~/packages')
       expect(STDOUT).to receive(:puts)
-      allow(Gembuild).to receive(:gets) { '~/packages' }
-      expect(Gembuild.fetch_pkgdir).to eql(File.expand_path('~/packages'))
+      allow(described_class).to receive(:gets) { '~/packages' }
+      expect(described_class.fetch_pkgdir).to eql(path)
     end
   end
 
   describe '.configure' do
     context 'with normal behavior' do
-      it 'should respond to configure' do
-        expect(Gembuild).to respond_to(:configure)
+      it 'responds to configure' do
+        expect(described_class).to respond_to(:configure)
       end
     end
 
     context 'with existing configuration' do
-      it 'shoudl return a hash' do
+      it 'returns a hash' do
         allow(File).to receive(:file?).and_return(true)
-        allow(YAML).to receive(:load_file).and_return({name: 'Mario Finelli', email: 'mario@example.com', pkgdir: '/tmp/packages'})
+        allow(YAML).to receive(:load_file).and_return(
+          name: 'Mario Finelli',
+          email: 'mario@example.com',
+          pkgdir: '/tmp/packages')
 
-        expect(Gembuild.configure).to be_a(Hash)
+        expect(described_class.configure).to be_a(Hash)
       end
 
-      it 'should return the correct configuration' do
+      it 'returns the correct configuration' do
         allow(File).to receive(:file?).and_return(true)
-        allow(YAML).to receive(:load_file).and_return({name: 'Mario Finelli', email: 'mario@example.com', pkgdir: '/tmp/packages'})
+        allow(YAML).to receive(:load_file).and_return(
+          name: 'Mario Finelli',
+          email: 'mario@example.com',
+          pkgdir: '/tmp/packages')
 
-        expect(Gembuild.configure).to eql({name: 'Mario Finelli', email: 'mario@example.com', pkgdir: '/tmp/packages'})
+        expect(described_class.configure).to eql(
+          name: 'Mario Finelli',
+          email: 'mario@example.com',
+          pkgdir: '/tmp/packages')
       end
     end
 
     context 'with no existing configuration' do
-      it 'should ask the user name' do
+      it 'asks the user name' do
         allow(File).to receive(:file?).and_return(false)
-        allow(Gembuild).to receive(:fetch_git_global_email)
-        allow(Gembuild).to receive(:fetch_pkgdir)
-        expect(Gembuild).to receive(:fetch_git_global_name)
-        Gembuild.configure
+        allow(described_class).to receive(:fetch_git_global_email)
+        allow(described_class).to receive(:fetch_pkgdir)
+        expect(described_class).to receive(:fetch_git_global_name)
+        described_class.configure
       end
 
-      it 'should ask the user email' do
+      it 'asks the user email' do
         allow(File).to receive(:file?).and_return(false)
-        allow(Gembuild).to receive(:fetch_git_global_name)
-        allow(Gembuild).to receive(:fetch_pkgdir)
-        expect(Gembuild).to receive(:fetch_git_global_email)
-        Gembuild.configure
+        allow(described_class).to receive(:fetch_git_global_name)
+        allow(described_class).to receive(:fetch_pkgdir)
+        expect(described_class).to receive(:fetch_git_global_email)
+        described_class.configure
       end
 
-      it 'should ask the user where to store directories' do
+      it 'asks the user where to store directories' do
         allow(File).to receive(:file?).and_return(false)
-        allow(Gembuild).to receive(:fetch_git_global_name)
-        allow(Gembuild).to receive(:fetch_git_global_email)
-        expect(Gembuild).to receive(:fetch_pkgdir)
-        Gembuild.configure
+        allow(described_class).to receive(:fetch_git_global_name)
+        allow(described_class).to receive(:fetch_git_global_email)
+        expect(described_class).to receive(:fetch_pkgdir)
+        described_class.configure
       end
 
-      it 'should write a new configuration file' do
+      it 'writes a new configuration file' do
+        path = '/tmp/aur-packages'
         allow(File).to receive(:file?).and_return(false)
-        allow(Gembuild).to receive(:fetch_git_global_name).and_return('Mario Finelli')
-        allow(Gembuild).to receive(:fetch_git_global_email).and_return('mario@example.com')
-        allow(Gembuild).to receive(:fetch_pkgdir).and_return('/tmp/aur-packages')
+        allow(described_class).to receive(:fetch_git_global_name)
+          .and_return('Mario Finelli')
+        allow(described_class).to receive(:fetch_git_global_email)
+          .and_return('mario@example.com')
+        allow(described_class).to receive(:fetch_pkgdir).and_return(path)
         allow(YAML).to receive(:load_file)
-        expect(File).to receive(:write).with(Gembuild.conf_file, File.read(File.join(File.dirname(__FILE__), 'fixtures', 'configuration.yml')))
-        Gembuild.configure
+        expect(File).to receive(:write).with(
+          described_class.conf_file,
+          File.read(File.join(File.dirname(__FILE__),
+                              'fixtures',
+                              'configuration.yml')))
+        described_class.configure
       end
 
-      it 'should return the correct configuration' do
+      it 'returns the correct configuration' do
+        path = '/tmp/aur-packages'
         allow(File).to receive(:file?).and_return(false)
-        allow(Gembuild).to receive(:fetch_git_global_name).and_return('Mario Finelli')
-        allow(Gembuild).to receive(:fetch_git_global_email).and_return('mario@example.com')
-        allow(Gembuild).to receive(:fetch_pkgdir).and_return('/tmp/aur-packages')
+        allow(described_class).to receive(:fetch_git_global_name)
+          .and_return('Mario Finelli')
+        allow(described_class).to receive(:fetch_git_global_email)
+          .and_return('mario@example.com')
+        allow(described_class).to receive(:fetch_pkgdir).and_return(path)
         allow(File).to receive(:write)
-        allow(YAML).to receive(:load_file).and_return(YAML.load_file(File.join(File.dirname(__FILE__), 'fixtures', 'configuration.yml')))
-        expect(Gembuild.configure).to eql(YAML.load_file(File.join(File.dirname(__FILE__), 'fixtures', 'configuration.yml')))
+        allow(YAML).to receive(:load_file).and_return(
+          YAML.load_file(File.join(File.dirname(__FILE__),
+                                   'fixtures',
+                                   'configuration.yml')))
+        expect(described_class.configure).to eql(
+          YAML.load_file(File.join(File.dirname(__FILE__),
+                                   'fixtures',
+                                   'configuration.yml')))
       end
     end
   end
