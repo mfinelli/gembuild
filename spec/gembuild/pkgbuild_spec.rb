@@ -396,78 +396,97 @@ describe Gembuild::Pkgbuild do
 
   describe '#assign_gem_details' do
     context 'with gem netrc' do
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('netrc') }
-      let(:gem_details) {
+      let(:pkgbuild) { described_class.new('netrc') }
+
+      let(:gem_details) do
         VCR.use_cassette('gem_scraper_netrc') do
           Gembuild::GemScraper.new('netrc').scrape!
         end
-      }
-
-      it 'should assign the checksum' do
-        pkgbuild.assign_gem_details(gem_details)
-        expect(pkgbuild.checksum).to eql('de1ce33da8c99ab1d97871726cba75151113f117146becbe45aa85cb3dabee3f')
       end
 
-      it 'should assign the version' do
+      it 'assigns the checksum' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.checksum).to eql('de1ce33da8c99ab1d97871726cba7515' \
+                                         '1113f117146becbe45aa85cb3dabee3f')
+      end
+
+      it 'assigns the version' do
         pkgbuild.assign_gem_details(gem_details)
         expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.11.0'))
       end
 
-      it 'should assign the description' do
+      it 'assigns the description' do
+        description = 'This library can read and update netrc files, ' \
+                      'preserving formatting including comments and ' \
+                      'whitespace.'
+
         pkgbuild.assign_gem_details(gem_details)
-        expect(pkgbuild.description).to eql('This library can read and update netrc files, preserving formatting including comments and whitespace.')
+        expect(pkgbuild.description).to eql(description)
       end
 
-      it 'should assign the license' do
+      it 'assigns the license' do
         pkgbuild.assign_gem_details(gem_details)
         expect(pkgbuild.license).to eql(['MIT'])
       end
 
-      it 'should not assign any extra dependencies' do
+      it 'does not assign any extra dependencies' do
         pkgbuild.assign_gem_details(gem_details)
         expect(pkgbuild.depends).to eql(['ruby'])
       end
 
-      it 'should assign the homepage' do
+      it 'assigns the homepage' do
         pkgbuild.assign_gem_details(gem_details)
         expect(pkgbuild.url).to eql('https://github.com/geemus/netrc')
       end
     end
 
     context 'with gem twitter' do
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('twitter') }
-      let(:gem_details) {
+      let(:pkgbuild) { described_class.new('twitter') }
+
+      let(:gem_details) do
         VCR.use_cassette('gem_scraper_twitter') do
           Gembuild::GemScraper.new('twitter').scrape!
         end
-      }
-
-      it 'should assign the checksum' do
-        pkgbuild.assign_gem_details(gem_details)
-        expect(pkgbuild.checksum).to eql('71856f234ab671c26c787f07032ce98acbc345c8fbb3194668f8de14a404bb41')
       end
 
-      it 'should assign the version' do
+      it 'assigns the checksum' do
+        pkgbuild.assign_gem_details(gem_details)
+        expect(pkgbuild.checksum).to eql('71856f234ab671c26c787f07032ce98a' \
+                                         'cbc345c8fbb3194668f8de14a404bb41')
+      end
+
+      it 'assigns the version' do
         pkgbuild.assign_gem_details(gem_details)
         expect(pkgbuild.pkgver).to eql(Gem::Version.new('5.15.0'))
       end
 
-      it 'should assign the description' do
+      it 'assigns the description' do
+        description = 'A Ruby interface to the Twitter API.'
         pkgbuild.assign_gem_details(gem_details)
-        expect(pkgbuild.description).to eql('A Ruby interface to the Twitter API.')
+        expect(pkgbuild.description).to eql(description)
       end
 
-      it 'should assign the license' do
+      it 'assigns the license' do
         pkgbuild.assign_gem_details(gem_details)
         expect(pkgbuild.license).to eql(['MIT'])
       end
 
-      it 'should assign the other dependencies' do
+      it 'assigns the other dependencies' do
         pkgbuild.assign_gem_details(gem_details)
-        expect(pkgbuild.depends).to eql(['ruby', 'ruby-simple_oauth', 'ruby-naught', 'ruby-memoizable', 'ruby-json', 'ruby-http_parser.rb', 'ruby-http', 'ruby-faraday', 'ruby-equalizer', 'ruby-buftok', 'ruby-addressable'])
+        expect(pkgbuild.depends).to eql(['ruby',
+                                         'ruby-simple_oauth',
+                                         'ruby-naught',
+                                         'ruby-memoizable',
+                                         'ruby-json',
+                                         'ruby-http_parser.rb',
+                                         'ruby-http',
+                                         'ruby-faraday',
+                                         'ruby-equalizer',
+                                         'ruby-buftok',
+                                         'ruby-addressable'])
       end
 
-      it 'should assign the homepage' do
+      it 'assigns the homepage' do
         pkgbuild.assign_gem_details(gem_details)
         expect(pkgbuild.url).to eql('http://sferik.github.com/twitter/')
       end
@@ -476,19 +495,19 @@ describe Gembuild::Pkgbuild do
 
   describe '#assign_aur_details' do
     context 'with nil response' do
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('mina') }
+      let(:pkgbuild) { described_class.new('mina') }
 
-      it 'should set the epoch to zero' do
+      it 'sets the epoch to zero' do
         pkgbuild.assign_aur_details(nil)
         expect(pkgbuild.epoch).to eql(0)
       end
 
-      it 'should set the pkgrel to one' do
+      it 'sets the pkgrel to one' do
         pkgbuild.assign_aur_details(nil)
         expect(pkgbuild.pkgrel).to eql(1)
       end
 
-      it 'should leave the version alone' do
+      it 'sleaves the version alone' do
         pkgbuild.pkgver = Gem::Version.new('0.3.7')
         pkgbuild.assign_aur_details(nil)
         expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.3.7'))
@@ -496,22 +515,24 @@ describe Gembuild::Pkgbuild do
     end
 
     context 'with equal versions' do
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('mina') }
-      let(:results) { { epoch: 1, pkgver: Gem::Version.new('0.3.7'), pkgrel: 1 } }
+      let(:pkgbuild) { described_class.new('mina') }
+      let(:results) do
+        { epoch: 1, pkgver: Gem::Version.new('0.3.7'), pkgrel: 1 }
+      end
 
-      it 'should leave the epoch alone' do
+      it 'leaves the epoch alone' do
         pkgbuild.pkgver = Gem::Version.new('0.3.7')
         pkgbuild.assign_aur_details(results)
         expect(pkgbuild.epoch).to eql(1)
       end
 
-      it 'should leave the version alone' do
+      it 'leaves the version alone' do
         pkgbuild.pkgver = Gem::Version.new('0.3.7')
         pkgbuild.assign_aur_details(results)
         expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.3.7'))
       end
 
-      it 'should increment the pkgrel' do
+      it 'increments the pkgrel' do
         pkgbuild.pkgver = Gem::Version.new('0.3.7')
         pkgbuild.assign_aur_details(results)
         expect(pkgbuild.pkgrel).to eql(2)
@@ -519,22 +540,24 @@ describe Gembuild::Pkgbuild do
     end
 
     context 'with pkgver less than version' do
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('mina') }
-      let(:results) { { epoch: 1, pkgver: Gem::Version.new('0.3.6'), pkgrel: 2 } }
+      let(:pkgbuild) { described_class.new('mina') }
+      let(:results) do
+        { epoch: 1, pkgver: Gem::Version.new('0.3.6'), pkgrel: 2 }
+      end
 
-      it 'should leave the epoch alone' do
+      it 'leaves the epoch alone' do
         pkgbuild.pkgver = Gem::Version.new('0.3.7')
         pkgbuild.assign_aur_details(results)
         expect(pkgbuild.epoch).to eql(1)
       end
 
-      it 'should leave the version alone' do
+      it 'leaves the version alone' do
         pkgbuild.pkgver = Gem::Version.new('0.3.7')
         pkgbuild.assign_aur_details(results)
         expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.3.7'))
       end
 
-      it 'should set the pkgrel to one' do
+      it 'sets the pkgrel to one' do
         pkgbuild.pkgver = Gem::Version.new('0.3.7')
         pkgbuild.assign_aur_details(results)
         expect(pkgbuild.pkgrel).to eql(1)
@@ -542,22 +565,24 @@ describe Gembuild::Pkgbuild do
     end
 
     context 'with pkgver greater than version' do
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('mina') }
-      let(:results) { { epoch: 1, pkgver: Gem::Version.new('0.3.7'), pkgrel: 2 } }
+      let(:pkgbuild) { described_class.new('mina') }
+      let(:results) do
+        { epoch: 1, pkgver: Gem::Version.new('0.3.7'), pkgrel: 2 }
+      end
 
-      it 'should increment the epoch' do
+      it 'increments the epoch' do
         pkgbuild.pkgver = Gem::Version.new('0.3.6')
         pkgbuild.assign_aur_details(results)
         expect(pkgbuild.epoch).to eql(2)
       end
 
-      it 'should leave the version alone' do
+      it 'leaves the version alone' do
         pkgbuild.pkgver = Gem::Version.new('0.3.6')
         pkgbuild.assign_aur_details(results)
         expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.3.6'))
       end
 
-      it 'should set the pkgrel to one' do
+      it 'sets the pkgrel to one' do
         pkgbuild.pkgver = Gem::Version.new('0.3.6')
         pkgbuild.assign_aur_details(results)
         expect(pkgbuild.pkgrel).to eql(1)
