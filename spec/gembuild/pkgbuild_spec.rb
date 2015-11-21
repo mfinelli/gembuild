@@ -592,172 +592,187 @@ describe Gembuild::Pkgbuild do
 
   describe '.create' do
     context 'with gem mina and no existing pkgbuild' do
-      let(:pkgbuild) {
+      let(:pkgbuild) do
         VCR.use_cassette('pkgbuild_mina') do
-          allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario@example.com'})
-          Gembuild::Pkgbuild.create('mina')
+          allow(Gembuild).to receive(:configure).and_return(
+            name: 'Mario Finelli', email: 'mario@example.com')
+          described_class.create('mina')
         end
-      }
-
-      it 'should return a pkgbuild' do
-        expect(pkgbuild).to be_a(Gembuild::Pkgbuild)
       end
 
-      it 'should have the correct maintainer' do
-        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario at example dot com>')
+      it 'returns a pkgbuild' do
+        expect(pkgbuild).to be_a(described_class)
       end
 
-      it 'should have the correct architecture' do
+      it 'has the correct maintainer' do
+        maintainer = 'Mario Finelli <mario at example dot com>'
+        expect(pkgbuild.maintainer).to eql(maintainer)
+      end
+
+      it 'has the correct architecture' do
         expect(pkgbuild.arch).to eql(['any'])
       end
 
-      it 'should have the correct checksum' do
-        expect(pkgbuild.checksum).to eql('bd1fa2b56ed1aded882a12f6365a04496f5cf8a14c07f8c4f1f3cfc944ef34f6')
+      it 'has the correct checksum' do
+        expect(pkgbuild.checksum).to eql('bd1fa2b56ed1aded882a12f6365a0449' \
+                                         '6f5cf8a14c07f8c4f1f3cfc944ef34f6')
       end
 
-      it 'should have the correct checksum type' do
+      it 'has the correct checksum type' do
         expect(pkgbuild.checksum_type).to eql('sha256')
       end
 
-      it 'should have the correct contributor' do
+      it 'has the correct contributor' do
         expect(pkgbuild.contributor).to eql([])
       end
 
-      it 'should have the correct dependencies' do
+      it 'has the correct dependencies' do
         expect(pkgbuild.depends).to eql(['ruby', 'ruby-open4', 'ruby-rake'])
       end
 
-      it 'should have the correct description' do
-        expect(pkgbuild.description).to eql('Really fast deployer and server automation tool.')
+      it 'has the correct description' do
+        description = 'Really fast deployer and server automation tool.'
+        expect(pkgbuild.description).to eql(description)
       end
 
-      it 'should have the correct epoch' do
+      it 'has the correct epoch' do
         expect(pkgbuild.epoch).to eql(0)
       end
 
-      it 'should have the correct gemname' do
+      it 'has the correct gemname' do
         expect(pkgbuild.gemname).to eql('mina')
       end
 
-      it 'should have the correct license' do
+      it 'has the correct license' do
         expect(pkgbuild.license).to eql([])
       end
 
-      it 'should have the correct makedepends' do
+      it 'has the correct makedepends' do
         expect(pkgbuild.makedepends).to eql(['rubygems'])
       end
 
-      it 'should have the correct noextract' do
+      it 'has the correct noextract' do
         expect(pkgbuild.noextract).to eql(['$_gemname-$pkgver.gem'])
       end
 
-      it 'should have the correct options' do
+      it 'has the correct options' do
         expect(pkgbuild.options).to eql(['!emptydirs'])
       end
 
-      it 'should have the correct pkgname' do
+      it 'has the correct pkgname' do
         expect(pkgbuild.pkgname).to eql('ruby-mina')
       end
 
-      it 'should have the correct pkgrel' do
+      it 'has the correct pkgrel' do
         expect(pkgbuild.pkgrel).to eql(2)
       end
 
-      it 'should have the correct pkgver' do
+      it 'has the correct pkgver' do
         expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.3.7'))
       end
 
-      it 'should have the correct source' do
-        expect(pkgbuild.source).to eql(['https://rubygems.org/downloads/$_gemname-$pkgver.gem'])
+      it 'has the correct source' do
+        url = 'https://rubygems.org/downloads/$_gemname-$pkgver.gem'
+        expect(pkgbuild.source).to eql([url])
       end
 
-      it 'should have the correct url' do
+      it 'has the correct url' do
         expect(pkgbuild.url).to eql('http://github.com/nadarei/mina')
       end
     end
 
     context 'with gem choice and an existing pkgbuild' do
-      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_choice')) }
-      let(:pkgbuild) {
+      let(:pkgbuild_file) do
+        File.read(File.join(path_to_fixtures, 'pkgbuild_choice'))
+      end
+
+      let(:pkgbuild) do
         VCR.use_cassette('pkgbuild_choice') do
-          allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
-          Gembuild::Pkgbuild.create('choice', pkgbuild_file)
+          allow(Gembuild).to receive(:configure).and_return(
+            name: 'Mario Finelli', email: 'mario.finelli@yahoo.com')
+          described_class.create('choice', pkgbuild_file)
         end
-      }
-
-      it 'should return a pkgbuild' do
-        expect(pkgbuild).to be_a(Gembuild::Pkgbuild)
       end
 
-      it 'should have the correct maintainer' do
-        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
+      it 'returns a pkgbuild' do
+        expect(pkgbuild).to be_a(described_class)
       end
 
-      it 'should have the correct architecture' do
+      it 'has the correct maintainer' do
+        maintainer = 'Mario Finelli <mario dot finelli at yahoo dot com>'
+        expect(pkgbuild.maintainer).to eql(maintainer)
+      end
+
+      it 'has the correct architecture' do
         expect(pkgbuild.arch).to eql(['any'])
       end
 
-      it 'should have the correct checksum' do
-        expect(pkgbuild.checksum).to eql('a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974')
+      it 'has the correct checksum' do
+        expect(pkgbuild.checksum).to eql('a19617f7dfd4921b38a85d0616446620' \
+                                         'de685a113ec6d1ecc85bdb67bf38c974')
       end
 
-      it 'should have the correct checksum type' do
+      it 'has the correct checksum type' do
         expect(pkgbuild.checksum_type).to eql('sha256')
       end
 
-      it 'should have the correct contributor' do
-        expect(pkgbuild.contributor).to eql(['Christopher Eby <kreed at kreed dot org>'])
+      it 'has the correct contributor' do
+        contributor = 'Christopher Eby <kreed at kreed dot org>'
+        expect(pkgbuild.contributor).to eql([contributor])
       end
 
-      it 'should have the correct dependencies' do
+      it 'has the correct dependencies' do
         expect(pkgbuild.depends).to eql(['ruby'])
       end
 
-      it 'should have the correct description' do
-        expect(pkgbuild.description).to eql('Choice is a simple little gem for easily defining and parsing command line options with a friendly DSL.')
+      it 'has the correct description' do
+        description = 'Choice is a simple little gem for easily defining ' \
+                      'and parsing command line options with a friendly DSL.'
+        expect(pkgbuild.description).to eql(description)
       end
 
-      it 'should have the correct epoch' do
+      it 'has the correct epoch' do
         expect(pkgbuild.epoch).to eql(0)
       end
 
-      it 'should have the correct gemname' do
+      it 'has the correct gemname' do
         expect(pkgbuild.gemname).to eql('choice')
       end
 
-      it 'should have the correct license' do
+      it 'has the correct license' do
         expect(pkgbuild.license).to eql(['MIT'])
       end
 
-      it 'should have the correct makedepends' do
+      it 'has the correct makedepends' do
         expect(pkgbuild.makedepends).to eql(['rubygems'])
       end
 
-      it 'should have the correct noextract' do
+      it 'has the correct noextract' do
         expect(pkgbuild.noextract).to eql(['$_gemname-$pkgver.gem'])
       end
 
-      it 'should have the correct options' do
+      it 'has the correct options' do
         expect(pkgbuild.options).to eql(['!emptydirs'])
       end
 
-      it 'should have the correct pkgname' do
+      it 'has the correct pkgname' do
         expect(pkgbuild.pkgname).to eql('ruby-choice')
       end
 
-      it 'should have the correct pkgrel' do
+      it 'has the correct pkgrel' do
         expect(pkgbuild.pkgrel).to eql(3)
       end
 
-      it 'should have the correct pkgver' do
+      it 'has the correct pkgver' do
         expect(pkgbuild.pkgver).to eql(Gem::Version.new('0.2.0'))
       end
 
-      it 'should have the correct source' do
-        expect(pkgbuild.source).to eql(['https://rubygems.org/downloads/$_gemname-$pkgver.gem'])
+      it 'has the correct source' do
+        url = 'https://rubygems.org/downloads/$_gemname-$pkgver.gem'
+        expect(pkgbuild.source).to eql([url])
       end
 
-      it 'should have the correct url' do
+      it 'has the correct url' do
         expect(pkgbuild.url).to eql('http://www.github.com/defunkt/choice')
       end
     end
@@ -765,210 +780,248 @@ describe Gembuild::Pkgbuild do
 
   describe '#render' do
     context 'with gem with no license and no contributors: mina' do
-      let(:pkgbuild) {
+      let(:pkgbuild) do
         VCR.use_cassette('pkgbuild_mina') do
-          allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario@example.com'})
-          Gembuild::Pkgbuild.create('mina')
+          allow(Gembuild).to receive(:configure).and_return(
+            name: 'Mario Finelli', email: 'mario@example.com')
+          described_class.create('mina')
         end
-      }
+      end
       let(:output) { pkgbuild.render }
 
-      it 'should return a string' do
+      it 'returns a string' do
         expect(output).to be_a(String)
       end
 
-      it 'should have shameless self-promotion' do
-        expect(output).to start_with('# Generated with gembuild (https://github.com/mfinelli/gembuild)')
+      it 'has shameless self-promotion' do
+        m = '# Generated with gembuild (https://github.com/mfinelli/gembuild)'
+        expect(output).to start_with(m)
       end
 
-      it 'should have a maintainer' do
-        expect(output).to include('# Maintainer: Mario Finelli <mario at example dot com>')
+      it 'has a maintainer' do
+        maintainer = '# Maintainer: Mario Finelli <mario at example dot com>'
+        expect(output).to include(maintainer)
       end
 
-      it 'should not have a contributor' do
+      it 'does not have a contributor' do
         expect(output).to_not include('# Contributor')
       end
 
-      it 'should have the gem name' do
+      it 'has the gem name' do
         expect(output).to include('_gemname=mina')
       end
 
-      it 'should have the pkgname' do
+      it 'has the pkgname' do
         expect(output).to include('pkgname=ruby-$_gemname')
       end
 
-      it 'should have the pkgver' do
+      it 'has the pkgver' do
         expect(output).to include('pkgver=0.3.7')
       end
 
-      it 'should have the pkgrel' do
+      it 'has the pkgrel' do
         expect(output).to include('pkgrel=2')
       end
 
-      it 'should not have an epoch' do
+      it 'does not have an epoch' do
         expect(output).to_not include('epoch=')
       end
 
-      it 'should have a pkgdesc' do
-        expect(output).to include('pkgdesc=\'Really fast deployer and server automation tool.\'')
+      it 'has a pkgdesc' do
+        desc = 'pkgdesc=\'Really fast deployer and server automation tool.\''
+        expect(output).to include(desc)
       end
 
-      it 'should have the architecture' do
+      it 'has the architecture' do
         expect(output).to include('arch=(\'any\')')
       end
 
-      it 'should have the homepage' do
+      it 'has the homepage' do
         expect(output).to include('url=\'http://github.com/nadarei/mina\'')
       end
 
-      it 'should not have a license' do
+      it 'does not have a license' do
         expect(output).to_not include('license=')
       end
 
-      it 'should include the options' do
+      it 'includes the options' do
         expect(output).to include('options=(!emptydirs)')
       end
 
-      it 'should include the noextract' do
+      it 'includes the noextract' do
         expect(output).to include('noextract=($_gemname-$pkgver.gem)')
       end
 
-      it 'should have the dependencies' do
-        expect(output).to include('depends=(\'ruby\' \'ruby-open4\' \'ruby-rake\')')
+      it 'has the dependencies' do
+        depends = 'depends=(\'ruby\' \'ruby-open4\' \'ruby-rake\')'
+        expect(output).to include(depends)
       end
 
-      it 'should have the makedepends' do
+      it 'has the makedepends' do
         expect(output).to include('makedepends=(\'rubygems\')')
       end
 
-      it 'should have the source' do
-        expect(output).to include('source=("https://rubygems.org/downloads/$_gemname-$pkgver.gem")')
+      it 'has the source' do
+        s = 'source=("https://rubygems.org/downloads/$_gemname-$pkgver.gem")'
+        expect(output).to include(s)
       end
 
-      it 'should have the checksums' do
-        expect(output).to include('sha256sums=(\'bd1fa2b56ed1aded882a12f6365a04496f5cf8a14c07f8c4f1f3cfc944ef34f6\')')
+      it 'has the checksums' do
+        sha = 'sha256sums=(\'bd1fa2b56ed1aded882a12f6365a0449' \
+              '6f5cf8a14c07f8c4f1f3cfc944ef34f6\')'
+        expect(output).to include(sha)
       end
 
-      it 'should have the package function' do
-        expect(output).to include("package() {\n  cd \"$srcdir\"\n  local _gemdir=\"$(ruby -e'puts Gem.default_dir')\"\n\n  gem install --ignore-dependencies --no-user-install -i \"$pkgdir/$_gemdir\" -n \"$pkgdir/usr/bin\" $_gemname-$pkgver.gem\n}")
+      it 'has the package function' do
+        function = "package() {\n  cd \"$srcdir\"\n  local _gemdir=" \
+                   "\"$(ruby -e'puts Gem.default_dir')\"\n\n  gem " \
+                   'install --ignore-dependencies --no-user-install ' \
+                   "-i \"$pkgdir/$_gemdir\" -n \"$pkgdir/usr/bin\" " \
+                   "$_gemname-$pkgver.gem\n}"
+        expect(output).to include(function)
       end
     end
 
     context 'with gem with contributors and non-zero epoch: choice' do
-      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_choice')) }
-      let(:pkgbuild) {
+      let(:pkgbuild_file) do
+        File.read(File.join(path_to_fixtures, 'pkgbuild_choice'))
+      end
+
+      let(:pkgbuild) do
         VCR.use_cassette('pkgbuild_choice') do
-          allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
-          Gembuild::Pkgbuild.create('choice', pkgbuild_file)
+          allow(Gembuild).to receive(:configure).and_return(
+            name: 'Mario Finelli', email: 'mario.finelli@yahoo.com')
+          described_class.create('choice', pkgbuild_file)
         end
-      }
-      let(:output) {
+      end
+
+      let(:output) do
         pkgbuild.epoch = 1
         pkgbuild.render
-      }
+      end
 
-      it 'should return a string' do
+      it 'returns a string' do
         expect(output).to be_a(String)
       end
 
-      it 'should have shameless self-promotion' do
-        expect(output).to start_with('# Generated with gembuild (https://github.com/mfinelli/gembuild)')
+      it 'has shameless self-promotion' do
+        m = '# Generated with gembuild (https://github.com/mfinelli/gembuild)'
+        expect(output).to start_with(m)
       end
 
-      it 'should have a maintainer' do
-        expect(output).to include('# Maintainer: Mario Finelli <mario dot finelli at yahoo dot com>')
+      it 'has a maintainer' do
+        m = '# Maintainer: Mario Finelli <mario dot finelli at yahoo dot com>'
+        expect(output).to include(m)
       end
 
-      it 'should have a contributor' do
-        expect(output).to include('# Contributor: Christopher Eby <kreed at kreed dot org>')
+      it 'has a contributor' do
+        c = '# Contributor: Christopher Eby <kreed at kreed dot org>'
+        expect(output).to include(c)
       end
 
-      it 'should have the gem name' do
+      it 'has the gem name' do
         expect(output).to include('_gemname=choice')
       end
 
-      it 'should have the pkgname' do
+      it 'has the pkgname' do
         expect(output).to include('pkgname=ruby-$_gemname')
       end
 
-      it 'should have the pkgver' do
+      it 'has the pkgver' do
         expect(output).to include('pkgver=0.2.0')
       end
 
-      it 'should have the pkgrel' do
+      it 'has the pkgrel' do
         expect(output).to include('pkgrel=3')
       end
 
-      it 'should have an epoch' do
+      it 'has an epoch' do
         expect(output).to include('epoch=1')
       end
 
-      it 'should have a pkgdesc' do
-        expect(output).to include('pkgdesc=\'Choice is a simple little gem for easily defining and parsing command line options with a friendly DSL.\'')
+      it 'has a pkgdesc' do
+        description = 'pkgdesc=\'Choice is a simple little gem for easily ' \
+                      'defining and parsing command line options with a ' \
+                      'friendly DSL.\''
+        expect(output).to include(description)
       end
 
-      it 'should have the architecture' do
+      it 'has the architecture' do
         expect(output).to include('arch=(\'any\')')
       end
 
-      it 'should have the homepage' do
-        expect(output).to include('url=\'http://www.github.com/defunkt/choice\'')
+      it 'has the homepage' do
+        url = 'url=\'http://www.github.com/defunkt/choice\''
+        expect(output).to include(url)
       end
 
-      it 'should have a license' do
+      it 'has a license' do
         expect(output).to include('license=(\'MIT\')')
       end
 
-      it 'should include the options' do
+      it 'includes the options' do
         expect(output).to include('options=(!emptydirs)')
       end
 
-      it 'should include the noextract' do
+      it 'includes the noextract' do
         expect(output).to include('noextract=($_gemname-$pkgver.gem)')
       end
 
-      it 'should have the dependencies' do
+      it 'has the dependencies' do
         expect(output).to include('depends=(\'ruby\')')
       end
 
-      it 'should have the makedepends' do
+      it 'has the makedepends' do
         expect(output).to include('makedepends=(\'rubygems\')')
       end
 
-      it 'should have the source' do
-        expect(output).to include('source=("https://rubygems.org/downloads/$_gemname-$pkgver.gem")')
+      it 'has the source' do
+        s = 'source=("https://rubygems.org/downloads/$_gemname-$pkgver.gem")'
+        expect(output).to include(s)
       end
 
-      it 'should have the checksums' do
-        expect(output).to include('sha256sums=(\'a19617f7dfd4921b38a85d0616446620de685a113ec6d1ecc85bdb67bf38c974\')')
+      it 'has the checksums' do
+        sha = 'sha256sums=(\'a19617f7dfd4921b38a85d0616446620' \
+              'de685a113ec6d1ecc85bdb67bf38c974\')'
+        expect(output).to include(sha)
       end
 
-      it 'should have the package function' do
-        expect(output).to include("package() {\n  cd \"$srcdir\"\n  local _gemdir=\"$(ruby -e'puts Gem.default_dir')\"\n\n  gem install --ignore-dependencies --no-user-install -i \"$pkgdir/$_gemdir\" -n \"$pkgdir/usr/bin\" $_gemname-$pkgver.gem\n}")
+      it 'has the package function' do
+        function = "package() {\n  cd \"$srcdir\"\n  local _gemdir=" \
+                   "\"$(ruby -e'puts Gem.default_dir')\"\n\n  gem " \
+                   'install --ignore-dependencies --no-user-install ' \
+                   "-i \"$pkgdir/$_gemdir\" -n \"$pkgdir/usr/bin\" " \
+                   "$_gemname-$pkgver.gem\n}"
+        expect(output).to include(function)
       end
     end
   end
 
   describe '#write' do
-    let(:pkgbuild) {
+    let(:pkgbuild) do
       VCR.use_cassette('pkgbuild_mina') do
-        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario@example.com'})
-        Gembuild::Pkgbuild.create('mina')
+        allow(Gembuild).to receive(:configure).and_return(
+          name: 'Mario Finelli', email: 'mario@example.com')
+        described_class.create('mina')
       end
-    }
+    end
 
-    it 'should default to the current path' do
-      expect(File).to receive(:write).with(File.join(File.expand_path('.'), 'PKGBUILD'), pkgbuild.render)
+    it 'defaults to the current path' do
+      expect(File).to receive(:write).with(
+        File.join(File.expand_path('.'), 'PKGBUILD'), pkgbuild.render)
       pkgbuild.write
     end
 
-    it 'should take any path' do
-      expect(File).to receive(:write).with(File::Separator + File.join('tmp', 'pkg', 'PKGBUILD'), pkgbuild.render)
+    it 'takes any path' do
+      expect(File).to receive(:write).with(
+        File::Separator + File.join('tmp', 'pkg', 'PKGBUILD'),
+        pkgbuild.render)
       pkgbuild.write('/tmp/pkg')
     end
 
-    it 'should expand the path' do
-      expect(File).to receive(:write).with(File.join(File.expand_path('~'), 'PKGBUILD'), pkgbuild.render)
+    it 'expands the path' do
+      expect(File).to receive(:write).with(
+        File.join(File.expand_path('~'), 'PKGBUILD'), pkgbuild.render)
       pkgbuild.write('~')
     end
   end
