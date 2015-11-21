@@ -253,7 +253,7 @@ describe Gembuild::Pkgbuild do
       end
 
       it 'adds the dependencies to the pkgbuild' do
-        expect(pkgbuild.depends).to eql(['ruby', 'imagemagick'])
+        expect(pkgbuild.depends).to eql(%w(ruby imagemagick))
       end
     end
 
@@ -287,17 +287,21 @@ describe Gembuild::Pkgbuild do
   end
 
   describe '#format_contact_information' do
-    let(:pkgbuild) { Gembuild::Pkgbuild.new('test') }
+    let(:pkgbuild) { described_class.new('test') }
 
     context 'with normal information' do
-      it 'should have the characters exchanged' do
-        expect(pkgbuild.format_contact_information('Joe Smith <joe.smith@example.com>')).to eql('Joe Smith <joe dot smith at example dot com>')
+      it 'has the characters exchanged' do
+        input = 'Joe Smith <joe.smith@example.com>'
+        output = 'Joe Smith <joe dot smith at example dot com>'
+        expect(pkgbuild.format_contact_information(input)).to eql(output)
       end
     end
 
     context 'with no information to change' do
-      it 'should not change anything' do
-        expect(pkgbuild.format_contact_information('some information')).to eql('some information')
+      it 'does not change anything' do
+        input = 'some information'
+        output = 'some information'
+        expect(pkgbuild.format_contact_information(input)).to eql(output)
       end
     end
   end
