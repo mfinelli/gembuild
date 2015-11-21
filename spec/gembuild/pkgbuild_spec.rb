@@ -154,104 +154,133 @@ describe Gembuild::Pkgbuild do
 
   describe '#parse_existing_pkgbuild' do
     context 'with normal pkgbuild' do
-      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_choice')) }
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', pkgbuild_file) }
-
-      it 'should return a hash' do
-        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)).to be_a(Hash)
+      let(:pkgbuild_file) do
+        File.read(File.join(path_to_fixtures, 'pkgbuild_choice'))
       end
 
-      it 'should have found a maintainer' do
-        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:maintainer]).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
+      let(:pkgbuild) { described_class.new('choice', pkgbuild_file) }
+
+      let(:parsed_pkgbuild) do
+        pkgbuild.parse_existing_pkgbuild(pkgbuild_file)
       end
 
-      it 'should return a contributor array' do
-        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:contributor]).to be_a(Array)
+      it 'returns a hash' do
+        expect(parsed_pkgbuild).to be_a(Hash)
       end
 
-      it 'should find one contributor' do
-        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:contributor]).to eql(['Christopher Eby <kreed at kreed dot org>'])
+      it 'finds a maintainer' do
+        maintainer = 'Mario Finelli <mario dot finelli at yahoo dot com>'
+        expect(parsed_pkgbuild[:maintainer]).to eql(maintainer)
       end
 
-      it 'should return an dependencies array' do
-        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:depends]).to be_a(Array)
+      it 'returns a contributor array' do
+        expect(parsed_pkgbuild[:contributor]).to be_a(Array)
       end
 
-      it 'should not find any other dependencies' do
-        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:depends]).to eql([])
+      it 'finds one contributor' do
+        contributor = 'Christopher Eby <kreed at kreed dot org>'
+        expect(parsed_pkgbuild[:contributor]).to eql([contributor])
       end
 
-      it 'should set the pkgbuild maintainer' do
-        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
+      it 'returns an dependencies array' do
+        expect(parsed_pkgbuild[:depends]).to be_a(Array)
       end
 
-      it 'should set the pkgbuild contributor' do
-        expect(pkgbuild.contributor).to eql(['Christopher Eby <kreed at kreed dot org>'])
+      it 'does not find any other dependencies' do
+        expect(parsed_pkgbuild[:depends]).to eql([])
       end
 
-      it 'should leave the dependencies alone' do
+      it 'sets the pkgbuild maintainer' do
+        maintainer = 'Mario Finelli <mario dot finelli at yahoo dot com>'
+        expect(pkgbuild.maintainer).to eql(maintainer)
+      end
+
+      it 'sets the pkgbuild contributor' do
+        contributor = 'Christopher Eby <kreed at kreed dot org>'
+        expect(pkgbuild.contributor).to eql([contributor])
+      end
+
+      it 'leaves the dependencies alone' do
         expect(pkgbuild.depends).to eql(['ruby'])
       end
     end
 
     context 'with multiple contributors' do
-      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_maruku')) }
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('maruku', pkgbuild_file) }
-
-      it 'should find two contributors' do
-        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:contributor].count).to eql(2)
+      let(:pkgbuild_file) do
+        File.read(File.join(path_to_fixtures, 'pkgbuild_maruku'))
       end
 
-      it 'should find the correct contributors' do
-        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:contributor]).to eql(['Anatol Pomozov <anatol.pomozov at gmail dot com>', 'oliparcol <oliparcol at gmail dot com>'])
+      let(:pkgbuild) { described_class.new('maruku', pkgbuild_file) }
+
+      let(:parsed_pkgbuild) do
+        pkgbuild.parse_existing_pkgbuild(pkgbuild_file)
       end
 
-      it 'should set the pkgbuild contributor' do
-        expect(pkgbuild.contributor).to eql(['Anatol Pomozov <anatol.pomozov at gmail dot com>', 'oliparcol <oliparcol at gmail dot com>'])
+      it 'finds two contributors' do
+        expect(parsed_pkgbuild[:contributor].count).to eql(2)
+      end
+
+      it 'finds the correct contributors' do
+        contributors = ['Anatol Pomozov <anatol.pomozov at gmail dot com>',
+                        'oliparcol <oliparcol at gmail dot com>']
+        expect(parsed_pkgbuild[:contributor]).to eql(contributors)
+      end
+
+      it 'sets the pkgbuild contributor' do
+        contributors = ['Anatol Pomozov <anatol.pomozov at gmail dot com>',
+                        'oliparcol <oliparcol at gmail dot com>']
+        expect(pkgbuild.contributor).to eql(contributors)
       end
     end
 
     context 'with other dependencies' do
-      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_mini_magick')) }
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('maruku', pkgbuild_file) }
-
-      it 'should return an array' do
-        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:depends]).to be_a(Array)
+      let(:pkgbuild_file) do
+        File.read(File.join(path_to_fixtures, 'pkgbuild_mini_magick'))
       end
 
-      it 'should return the correct dependencies' do
-        expect(pkgbuild.parse_existing_pkgbuild(pkgbuild_file)[:depends]).to eql(['imagemagick'])
+      let(:pkgbuild) { described_class.new('maruku', pkgbuild_file) }
+
+      let(:parsed_pkgbuild) do
+        pkgbuild.parse_existing_pkgbuild(pkgbuild_file)
       end
 
-      it 'should add the dependencies to the pkgbuild' do
+      it 'returns an array' do
+        expect(parsed_pkgbuild[:depends]).to be_a(Array)
+      end
+
+      it 'returns the correct dependencies' do
+        expect(parsed_pkgbuild[:depends]).to eql(['imagemagick'])
+      end
+
+      it 'adds the dependencies to the pkgbuild' do
         expect(pkgbuild.depends).to eql(['ruby', 'imagemagick'])
       end
     end
 
     context 'with no matches in pkgbuild' do
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', '') }
+      let(:pkgbuild) { described_class.new('choice', '') }
 
-      it 'should return no maintainer' do
+      it 'returns no maintainer' do
         expect(pkgbuild.parse_existing_pkgbuild('')[:maintainer]).to be_nil
       end
 
-      it 'should return an empty contributor array' do
+      it 'returns an empty contributor array' do
         expect(pkgbuild.parse_existing_pkgbuild('')[:contributor]).to eql([])
       end
 
-      it 'should return an empty dependencies array' do
+      it 'returns an empty dependencies array' do
         expect(pkgbuild.parse_existing_pkgbuild('')[:depends]).to eql([])
       end
 
-      it 'should still have a nil maintainer in the pkgbuild' do
+      it 'still has a nil maintainer in the pkgbuild' do
         expect(pkgbuild.maintainer).to be_nil
       end
 
-      it 'should still have no contributor in the pkgbuild' do
+      it 'still has no contributor in the pkgbuild' do
         expect(pkgbuild.contributor).to eql([])
       end
 
-      it 'should still only have ruby dependency' do
+      it 'still only has the ruby dependency' do
         expect(pkgbuild.depends).to eql(['ruby'])
       end
     end
