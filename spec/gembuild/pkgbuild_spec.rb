@@ -308,63 +308,89 @@ describe Gembuild::Pkgbuild do
 
   describe '#fetch_maintainer' do
     context 'with no existing maintainer' do
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('mina') }
+      let(:pkgbuild) { described_class.new('mina') }
 
-      it 'should have only the configured maintainer' do
-        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
+      it 'has only the configured maintainer' do
+        expected = 'Mario Finelli <mario dot finelli at yahoo dot com>'
+        allow(Gembuild).to receive(:configure).and_return(
+          name: 'Mario Finelli',
+          email: 'mario.finelli@yahoo.com')
         pkgbuild.fetch_maintainer
-        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
+        expect(pkgbuild.maintainer).to eql(expected)
       end
 
-      it 'should have no contributors' do
-        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
+      it 'has no contributors' do
+        allow(Gembuild).to receive(:configure).and_return(
+          name: 'Mario Finelli',
+          email: 'mario.finelli@yahoo.com')
         pkgbuild.fetch_maintainer
         expect(pkgbuild.contributor).to eql([])
       end
     end
 
     context 'with the same maintainer' do
-      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_choice')) }
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', pkgbuild_file) }
-
-      it 'should have only the configured maintainer' do
-        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
-        pkgbuild.fetch_maintainer
-        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario dot finelli at yahoo dot com>')
+      let(:pkgbuild_file) do
+        File.read(File.join(path_to_fixtures, 'pkgbuild_choice'))
       end
 
-      it 'should not adjust the contributors' do
-        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
+      let(:pkgbuild) { described_class.new('choice', pkgbuild_file) }
+
+      it 'has only the configured maintainer' do
+        expected = 'Mario Finelli <mario dot finelli at yahoo dot com>'
+        allow(Gembuild).to receive(:configure).and_return(
+          name: 'Mario Finelli', email: 'mario.finelli@yahoo.com')
         pkgbuild.fetch_maintainer
-        expect(pkgbuild.contributor).to eql(['Christopher Eby <kreed at kreed dot org>'])
+        expect(pkgbuild.maintainer).to eql(expected)
+      end
+
+      it 'does not adjust the contributors' do
+        expected = 'Christopher Eby <kreed at kreed dot org>'
+        allow(Gembuild).to receive(:configure).and_return(
+          name: 'Mario Finelli', email: 'mario.finelli@yahoo.com')
+        pkgbuild.fetch_maintainer
+        expect(pkgbuild.contributor).to eql([expected])
       end
     end
 
     context 'with different maintainer' do
-      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_choice')) }
-      let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', pkgbuild_file) }
-
-      it 'should have only the configured maintainer' do
-        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario@new.com'})
-        pkgbuild.fetch_maintainer
-        expect(pkgbuild.maintainer).to eql('Mario Finelli <mario at new dot com>')
+      let(:pkgbuild_file) do
+        File.read(File.join(path_to_fixtures, 'pkgbuild_choice'))
       end
 
-      it 'should add the old maintainer to the contributor list' do
-        allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario@new.com'})
+      let(:pkgbuild) { described_class.new('choice', pkgbuild_file) }
+
+      it 'has only the configured maintainer' do
+        expected = 'Mario Finelli <mario at new dot com>'
+        allow(Gembuild).to receive(:configure).and_return(
+          name: 'Mario Finelli', email: 'mario@new.com')
         pkgbuild.fetch_maintainer
-        expect(pkgbuild.contributor).to eql(['Mario Finelli <mario dot finelli at yahoo dot com>', 'Christopher Eby <kreed at kreed dot org>'])
+        expect(pkgbuild.maintainer).to eql(expected)
+      end
+
+      it 'adds the old maintainer to the contributor list' do
+        expected = ['Mario Finelli <mario dot finelli at yahoo dot com>',
+                    'Christopher Eby <kreed at kreed dot org>']
+        allow(Gembuild).to receive(:configure).and_return(
+          name: 'Mario Finelli', email: 'mario@new.com')
+        pkgbuild.fetch_maintainer
+        expect(pkgbuild.contributor).to eql(expected)
       end
     end
   end
 
   describe '#template' do
-    it 'should return a string' do
-      expect(Gembuild::Pkgbuild.new('mina').template).to be_a(String)
+    it 'returns a string' do
+      expect(described_class.new('mina').template).to be_a(String)
     end
 
-    it 'should return the template' do
-      expect(Gembuild::Pkgbuild.new('mina').template).to eql(File.read(File.join(File.dirname(__FILE__), '..', '..', 'lib', 'gembuild', 'pkgbuild.erb')))
+    it 'returns the template' do
+      expect(described_class.new('mina').template).to eql(
+        File.read(File.join(File.dirname(__FILE__),
+                            '..',
+                            '..',
+                            'lib',
+                            'gembuild',
+                            'pkgbuild.erb')))
     end
   end
 
