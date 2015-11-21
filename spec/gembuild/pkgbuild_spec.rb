@@ -3,6 +3,10 @@
 require 'gembuild/pkgbuild'
 
 describe Gembuild::Pkgbuild do
+  let(:path_to_fixtures) do
+    File.join(File.dirname(__FILE__), '..', 'fixtures')
+  end
+
   describe '#initialize' do
     context 'with normal gem name' do
       let(:pkgbuild) { Gembuild::Pkgbuild.new('mechanize') }
@@ -144,7 +148,7 @@ describe Gembuild::Pkgbuild do
 
   describe '#parse_existing_pkgbuild' do
     context 'with normal pkgbuild' do
-      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_choice')) }
+      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_choice')) }
       let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', pkgbuild_file) }
 
       it 'should return a hash' do
@@ -185,7 +189,7 @@ describe Gembuild::Pkgbuild do
     end
 
     context 'with multiple contributors' do
-      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_maruku')) }
+      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_maruku')) }
       let(:pkgbuild) { Gembuild::Pkgbuild.new('maruku', pkgbuild_file) }
 
       it 'should find two contributors' do
@@ -202,7 +206,7 @@ describe Gembuild::Pkgbuild do
     end
 
     context 'with other dependencies' do
-      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_mini_magick')) }
+      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_mini_magick')) }
       let(:pkgbuild) { Gembuild::Pkgbuild.new('maruku', pkgbuild_file) }
 
       it 'should return an array' do
@@ -281,7 +285,7 @@ describe Gembuild::Pkgbuild do
     end
 
     context 'with the same maintainer' do
-      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_choice')) }
+      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_choice')) }
       let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', pkgbuild_file) }
 
       it 'should have only the configured maintainer' do
@@ -298,7 +302,7 @@ describe Gembuild::Pkgbuild do
     end
 
     context 'with different maintainer' do
-      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_choice')) }
+      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_choice')) }
       let(:pkgbuild) { Gembuild::Pkgbuild.new('choice', pkgbuild_file) }
 
       it 'should have only the configured maintainer' do
@@ -321,7 +325,7 @@ describe Gembuild::Pkgbuild do
     end
 
     it 'should return the template' do
-      expect(Gembuild::Pkgbuild.new('mina').template).to eql(File.read(File.join(File.dirname(__FILE__), '..', 'lib', 'gembuild', 'pkgbuild.erb')))
+      expect(Gembuild::Pkgbuild.new('mina').template).to eql(File.read(File.join(File.dirname(__FILE__), '..', '..', 'lib', 'gembuild', 'pkgbuild.erb')))
     end
   end
 
@@ -583,7 +587,7 @@ describe Gembuild::Pkgbuild do
     end
 
     context 'with gem choice and an existing pkgbuild' do
-      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_choice')) }
+      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_choice')) }
       let(:pkgbuild) {
         VCR.use_cassette('pkgbuild_choice') do
           allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
@@ -761,7 +765,7 @@ describe Gembuild::Pkgbuild do
     end
 
     context 'with gem with contributors and non-zero epoch: choice' do
-      let(:pkgbuild_file) { File.read(File.join(File.dirname(__FILE__), 'fixtures', 'pkgbuild_choice')) }
+      let(:pkgbuild_file) { File.read(File.join(path_to_fixtures, 'pkgbuild_choice')) }
       let(:pkgbuild) {
         VCR.use_cassette('pkgbuild_choice') do
           allow(Gembuild).to receive(:configure).and_return({name: 'Mario Finelli', email: 'mario.finelli@yahoo.com'})
