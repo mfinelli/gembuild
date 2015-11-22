@@ -8,4 +8,5 @@ RuboCop::RakeTask.new(:rubocop) do |task|
   task.requires << 'rubocop-rspec'
 end
 YARD::Rake::YardocTask.new(:yard)
-task default: :spec
+
+task default: [:rubocop, :spec]
