@@ -72,3 +72,9 @@ changes after creating or updating the PKGBUILD.
 ```ruby
 Gembuild::Project.new('mina').clone_and_commit!
 ```
+
+## License
+
+This project is licensed under the GPLv3 or any later version. For more
+information please see the LICENSE file included with the project or
+[https://www.gnu.org/licenses](https://www.gnu.org/licenses/gpl.html).
