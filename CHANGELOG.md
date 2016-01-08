@@ -4,8 +4,8 @@ Change Log
 This file keeps track of notable changes to the Gembuild project. It aims to
 adhere to [semantic versioning](http://semver.org/).
 
-[Unreleased]
-------------
+[1.0.0] - 2016-01-07
+--------------------
 
 Major refactor adding tests and documentation.
 
